@@ -1,7 +1,70 @@
 \chapter{Proposta de Solução}
 \label{cap:proposta}
 
+A solucao proposta para permitir a realizacao de experimentos de plataformas de Cidades Inteligentes em ambientes emulados abrangendo diferentes cenarios em diferentes escalas sera
+apresentada neste capitulo.
+A discussao sobre os requisitos de uma possivel solucao para esse problema se dara de maneira generica, contudo, ao abordarmos a arquitetura, entraremos em alguns detalhes referentes ao
+simulador e emulador de Cidades Inteligentes InterSCSimulator, a ferramenta utilizada neste trabalho.
+Alem disso, serao apresentados alguns exemplos de implementacao de cenarios de Cidades Inteligentes usando o InterSCSimulator seguindo a arquitetura proposta, trazendo em seguida os
+principais problemas e dificuldades encontradas nesse processo.
+
 \section{Requisitos da Solução}
+
+Para a realizacao de experimentos em ambientes emulados de Cidades Inteligentes temos requisitos em diferentes niveis, desde a capacidade do emulador de representar o contexto
+de uma cidade ate formas de comunicacao que permita a interacao entre o emulador e a plataforma de Cidades Inteligentes.
+Portanto, dividimos os requisitos em requisitos de \textbf{emulacao} e de \textbf{integracao}.
+
+Para que uma ferramenta possa refletir o contexto de Cidades Inteligentes, onde o sensoriamento de diversos aspectos das cidades ja e uma realidade, e a atuacao (modificacao do estado
+das cidades) segue uma crescente, consideramos que a mesma deva de alguma forma ter os conceitos abaixo representados:
+
+\begin{itemize}
+    \item \textit{Recursos da cidade}: esse recursos da cidade, sendo eles qualquer coisa no contexto da cidade (automoveis, aparelhos publicos, vias e etc.), serao objetos tanto de
+        sensoriamento e/ou atuacao por parte das plataformas de Cidades Inteligentes.
+
+    \item \textit{Modelos mais realistas possiveis}: a ferramenta deve implementar modelos que representem ao maximo a realidade de uma cidade, e nao apenas casos hipoteticos.
+        Por exemplo, modelos de fluxo de automoveis nas vias devem incluir possiveis engarrafamentos.
+
+    \item \textit{Capacidades inerentes a cada recurso da cidade}: cada \textit{recurso da cidade} tem as suas respectivas capacidades, sendo elas de sensoriamento ou atuacao.
+        Por exemplo, vagas de estacionamento podem ser monitoradas quanto a sua ocupacao, e semaforos de transito podem ter o seu estado modificado atraves de atuacao.
+
+    \item \textit{Tempo real}: a dinamica da cidade deve ser emulada, ou seja, em tempo real. Essa dinamica representada nao deve ser executada nem mais rapida nem mais lenta do que
+        aconteceria em um ambiente real de uma cidade.
+        Esse e um requisito importante pois o desencadeamento de acoes nas cidades sao muitas vezes devido ao processamento de acoes acontecidas anteriormente, e as plataformas
+        devem ter tempo habil para realizar tais acoes, como foi explicado nos capitulos anteriores.
+\end{itemize}
+
+Consideramos os pontos apresentados acima como \textbf{requisitos de emulacao}, sendo esses o minimo necessario para conseguirmos de fato representar um ambiente real de uma cidade.
+Caso a ferramenta atenda os requisitos apresentados, se torna possivel a emulacao de cenarios realistas de uma cidade contendo todos os recursos necessarios, onde os mesmos podem ser
+sensoriados e/ou sofrerem atuacoes, sendo esse o contexto esperado pra um experimento de uma plataforma de Cidades Inteligentes.
+Todavia, apenas essa emulacao nao viabiliza ainda a realizacao de experimentos com as plataformas, ainda precisamos atender alguns \textbf{requisitos de integracao} entre o emulador
+e a plataforma em questao.
+
+Para termos um ambiente integrado precisamos definir um meio de comunicacao de duas vias, envio e recebimento de dados, em tempo real entre o emulador e a plataforma de Cidades Inteligentes.
+Abaixo sao apresentados os \textbf{requisitos de integracao} necessarios para obtermos um ambiente integrado de experimentacao para essas plataformas:
+
+\begin{itemize}
+    \item \textit{Envio de dados de sensoriamento em tempo real}: para que as funcionalidades relativas a coleta e armazenamento de dados, e processamento dos mesmos possam ser
+        exercitadas pelas plataformas, precisamos enviar dados de todos os recursos presentes no cenario de experimentacao com tais capacidades em tempo real.
+        Quanto maior for a escala do cenario de experimentacao mais dificil se torna essa tarefa, pois se faz necessario enviar milhoes de dados de sensores simultaneamente atraves
+        do mesmo canal.
+        Apesar de a demanda de tempo real poder se tornar um problema, ela se faz necessaria para que possamos chegar mais proximo de um cenario realista, onde recursos sensoriados
+        da cidade poderao nao aguardar outros enviarem seus dados para enviar, apenas enviarao no tempo estipulado.
+
+    \item \textit{Recebimento de dados de atucao em tempo real}: as plataformas, em dados cenarios de experimentacao, precisarao enviar comandos de atuacao para a cidade (neste caso,
+        para o ambiente emulado) em tempo real.
+        Diferente dos dados de sensoriamento, o fluxo de dados de atuacao e bem menor.
+        Contudo, esse tipo de dado tem a sua propria peculiaridade, pois o emulador deve ser capaz de consumir essa dado em tempo de execucao e alterar o estado do ambiente emulado
+        imediatamente.
+        Isso porque ao modificar de alguma forma o estado do ambiente emulado influenciamos diretamente os dados de sensores naquele dado momento em diante, e os mesmos continuam
+        sendo enviados para a plataforma em paralelo.
+\end{itemize}
+
+Portanto, acreditamos que ao termos um ambiente que atenda tanto os \textbf{requisitos de emulacao} quanto os de \textbf{integracao}, se torna possivel realizarmos experimentos
+com plataformas de Cidades Inteligentes sem a necessidade de \textit{testbeds} reais.
+Isso nos possibilita testar cenarios em escalas reais de uma cidade, alem de nos permitir emular cenarios que ainda nao sao passiveis de reproducao atraves de \textit{testbeds},
+emulando tecnologias ainda nao existentes e cenarios futuristas.
+Por exemplo, podemos emular um ambiente onde todos os carros da cidade sao autonomos se comunicando atraves de tecnologia \textit{5G}.
+
 \section{Arquitetura}
-\section{Problemas e Dificuldades}
 \section{Exemplos}
+\section{Problemas e Dificuldades}
