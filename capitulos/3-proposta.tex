@@ -66,5 +66,59 @@ emulando tecnologias ainda nao existentes e cenarios futuristas.
 Por exemplo, podemos emular um ambiente onde todos os carros da cidade sao autonomos se comunicando atraves de tecnologia \textit{5G}.
 
 \section{Arquitetura}
-\section{Exemplos}
+
+Uma arquitetura de software foi desenhada visando atender principalmente os \textbf{requisitos de integração} para construção de um ambiente emulado de experimentação para plataformas
+de Cidades Inteligentes, e será apresentada nesta seção.
+A integração entre sistemas como apresentando no decorrer deste trabalho é uma tarefa complexa e demanda um projeto de software bem elaborado para que seja manutenível a longo prazo.
+Além do mais, os \textbf{requisitos de emulação} apresentados são dependentes da ferramenta que será utilizada como emulador, no contexto desta pesquisa utilizamos o InterSCSimulator
+que terá sua arquitetura e solução adotada apresentada em mais detalhes a seguir.
+
+\subsection{Integração Emulador-Plataforma}
+
+A integração entre emulador e plataforma de Cidades Inteligentes envolve principalmete a troca de dados em tempo de execução como foi apresentado neste capítulo.
+Essa interação para envio e recebimento de dados a primeira vista simples, se torna complexa quando adicionamos a necessidade de resposta de ambas as partes em tempo real.
+Por parte do emulador, a rápida reação ao receber um dado de atuação é essencial.
+O recebimento desse dado acarretará um atualização no estado da emulação, que por sua vez terá impacto direto no pronto envio de dados de sensores que, por muitas vezes,
+se dá de maneira temporizada.
+Já para a plataforma, é necessária uma tomada de decisão ágil ao receber diferentes dados de sensores.
+Os dados de sensores podem ser, por exemplo, utilizados como entrada para gatilhos de comandos de atuação e processamento em tempo real de eventos complexos.
+
+Além desse desafio, enfrentamos também problemas de interoperabilidade entre o emulador e a plataforma.
+Usualmente, os conceitos presentes no projeto de cada uma das ferramentas divergem, e essa camada de integração deve ser capaz de traduzir essa semântica para ambas as ferramentas.
+Outro problema relacionado a interoperabilidade é a forma de transmissão desses dados, mais especificamente os protocolos de comunicação a serem utilizados.
+Por exemplo, o emulador pode suportar apenas comunicação via protocolo AMQP e a plataforma prover uma API Restful e conexões via MQTT.
+Mais uma vez, é papel da camada de integração tornar esse comunicação transparente para ambos os lados.
+
+Tendo isso em vista, a arquitetura de integração adotada utiliza-se de um componente extra intermediando as duas ferramentas, emulador e plataforma, como pode ser visto na
+FIGURA GERAL AQUITETURA.
+Apesar de um componente extra adicionar complexidade e consequentemente aumentar o tempo gasto na transação desses dados, ele se faz necessário para solucionar os problemas
+de interoperabilidade mencionados anteriormente.
+Entretanto, ele deve ser o mais simples possível para que o acrescimento no tempo de envio e recebimento dos dados não aumente consideravelmente.
+Portanto, utilizar ferramentas (emulador e plataforma) que se assemelhem conceitualmente e que compartilhem pilhas de protocolos de comunicação similares é o ideal,
+facilitando o implementação de um ambiente integrado em conformidade com os requisitos apresentados inicialmente.
+
+Na FIGURA GERAL ARQUITETURA, podemos ver os componentes presentes na arquitetura de integração do sistema aqui apresentada.
+Como elucidado anteriormente, o componente de integração não pode possuir muitas responsabilidades, já que uma complexidade alta pode acarretar em um aumento expressivo no
+tempo de transmissão dos dados, sendo esse um requisito importante para o sistema.
+Já as ferramentas envolvidas, além de suas próprias funcionalidades, esperamos que as mesmas possuam módulo de comunicação para suportar o fluxo de dados.
+
+O componente de integração tem a responsabilidade de solucionar os pontos mencionados anteriormente:
+
+\begin{itemize}
+    \item Tradução semântica entre o emulador e a plataforma
+
+    \item Interoperação entre protocolos de rede
+
+    \item Interferência mínima no tempo de envio e recebimento de dados
+\end{itemize}
+
+Como pode ser visto, o componente de integração tem como único objetivo atender requisitos não funcionais.
+Ele deve tornar a comunicação do emulador e da plataforma transparente para ambos e adicionando a menor complexidade possível ao sistema.
+
+Em resumo, devemos escolher ferramentas (emulador e plataforma) mais semelhantes possível, focando principalmente no modelo conceitual e nos protocolos de rede utilizados para
+comunicação; e implementar o componente de integração o mais simples possível, apenas com o objetivo de viabilizar a comunicação das ferramentas.
+
+\subsection{InterSCSimulator}
+
+\section{Exemplos de Implementação}
 \section{Problemas e Dificuldades}
