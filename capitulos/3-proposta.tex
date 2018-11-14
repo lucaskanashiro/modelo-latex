@@ -115,10 +115,77 @@ O componente de integração tem a responsabilidade de solucionar os pontos menc
 Como pode ser visto, o componente de integração tem como único objetivo atender requisitos não funcionais.
 Ele deve tornar a comunicação do emulador e da plataforma transparente para ambos e adicionando a menor complexidade possível ao sistema.
 
-Em resumo, devemos escolher ferramentas (emulador e plataforma) mais semelhantes possível, focando principalmente no modelo conceitual e nos protocolos de rede utilizados para
-comunicação; e implementar o componente de integração o mais simples possível, apenas com o objetivo de viabilizar a comunicação das ferramentas.
+Em resumo, devemos escolher ferramentas (emulador e plataforma) mais semelhantes possível, com o que diz respeito principalmente ao modelo conceitual e os protocolos de
+rede utilizados para comunicação; e implementar o componente de integração o mais simples possível, apenas com o objetivo de viabilizar a comunicação entre as ferramentas.
 
 \subsection{InterSCSimulator}
+
+O InterSCSimulator é um simulador e emulador de código aberto baseado em agentes para Cidades Inteligentes que oferece uma interface simples para definição de
+cenários de larga escala \cite{santana_17}.
+Pelo fato da ferramenta ser configurável para execuação em modo de simulação ou de emulação, já atende um dos \textbf{requisitos de emulação}.
+Como apresentado nos capítulos anteriores, o diferencial da emulação é o fato de termos uma execução com uma noção de tempo real (um segundo de emulação é igual a
+aproximadamente um segundo real) e permitir a interferência em tempo de execução por terceiros, sendo exatamente o que necessitamos para a construção desse
+ambiente integrado de experimentação.
+
+Para atingir a escalabilidade mencionada, o InterSCSimulator foi implementado usando a linguagem \textit{Erlang}.
+Essa é uma linguagem funcional que visa facilitar a implementação de aplicações de larga escala, paralelas e distribuídas.
+Algumas características herdadas do modelo de atores, que é implementado pelo \textit{Erlang}, são: paralelismo, execução distribuída, tolerância a falhas e
+protocolo de comunicação \cite{santana_17}.
+
+O InterSCSimulator foi implementado por Eduardo Zambom Santana, doutorando de nosso grupo de pesquisa, baseado no simulador de âmbito geral \textit{Sim-Diasca}.
+A Figura \ref{fig:simulator_architecture} apresenta a sua arquitetura, onde, em azul, estão os diferentes tipos de agentes que podem existir no ambiente
+emulado/simulado e, em vermelho, a definição dos cenários de Cidades Inteligentes, tudo isso sendo executado no topo do simulador \textit{Sim-Diasca}.
+
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[width=0.5\textwidth]{figures/Arquitetura.pdf}
+%	\caption{Arquitetura do InterSCSimulator}
+%	\label{fig:simulator_architecture}
+%\end{figure}
+
+Fazendo um paralelo com os \textbf{requisito de emulação} listados neste capítulo, cada \textit{Recurso} da cidade pode ser modelado como um agente da emulação/simulação.
+Ou seja, um carro, uma vaga de estacionamento ou um ponto de parada de ônibus serão representados como agentes (caixas azuis na Figura \ref{fig:simulator_architecture})
+na arquitetura do InterSCSimulator.
+Na definição desses agentes especificamos o seu comportamento a cada passo da emulação/simulação.
+Com isso, podemos especificar quais as \textit{Capacidades} de cada agente e adotar modelos aderentes com a realidade das cidades modernas, nos levando então a atender
+o restante dos \textbf{requisitos de emulação} apresentados.
+O interessante dessa arquitetura baseada em agentes é o fato da implementação dos mesmos terem um grau de independência muito grande, onde é preciso apenas a definição
+das mensagens que serão trocadas em tempo de execução.
+
+Além disso, no contexto deste trabalho, foi adicionado um novo elemento a arquitetura da ferramenta para troca de dados com sistemas externos,
+sendo esse um dos \textbf{requisitos de integração} para obtermos um ambiente integrado de experimentação.
+Esse novo elemento nada mais é do que um novo agente onde o seu papel é receber e enviar mensagens de sensores e atuadores, seja no contexto de outros agentes ou de
+outros sistemas.
+
+A Figura AGENTE INTERSCSIMULATOR, ilustra os comportamentos que podem ser definidos em um agente no contexto do InterSCSimulator.
+Na especificação dos agentes definimos as condições e caminhos específicos de cada um dos agentes, nos dando liberdade para implementar diferentes modelos e suas capacidades.
+
+Na Figura \ref{fig:simulator_components}, são apresentados os componentes do simulador.
+Inicialmente são passadas entradas para a emulação/simulação, arquivos XML, que em conjunto formam o cenário a ser emulado/simulado, esse cenário é executado e a
+saída é criada com todos os eventos ocorridos na emulação/simulação.
+A partir dessa saída existe a possibilidade de geração de uma visualização em um mapa ou através de gráficos.
+
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[width=0.7\textwidth]{figures/Components.pdf}
+%	\caption{Componentes do InterSCSimulator}
+%	\label{fig:simulator_components}
+%\end{figure}
+
+Como entrada, o InterSCSimulator recebe três arquivos XML. O \textit{config.xml} contém parâmetros da emulação/simulação, sendo eles o tempo total, o formato do
+arquivo de saída e o caminho para o diretório contendo os outros arquivos de entrada e para geração do arquivo de saída.
+O grafo representando a infraestrutura rodoviária da cidade é descrito no arquivo \textit{map.xml}, nesse grafo as vias são correspondentes as arestas e as esquinas entre
+duas ou mais vias aos nós.
+E por fim, as viagens a serem executadas são especificadas no arquivo \textit{trips.xml}, cada viagem contendo o seu tempo de início, modo de transporte, origem e destino.
+Todas as ações realizadas pelos agentes são salvos no arquivo \textit{output.xml}, podendo haver quatro ações possíveis: 1) início de viagem, 2) saída de uma via,
+3) entrada em uma via, e 4) chegada ao destino final.
+O tempo, a localização e o modo de transporte utilizado pelo agente são registrados quando essas ações são salvas.
+
+No trabalho desenvolvido por Eduardo Zambom Santana foi desenvolvido um emulador e simulador de larga escala, que já foi capaz de simular mais de 4 milhões de
+agentes se movendo pela cidade de São Paulo~\cite{santana_17}.
+Os modos de transportes suportados até então são carro, ônibus, metrô e a pé.
+Neste trabalho além de melhorias feitas nos modelos existentes, novos agentes forma adicionados a simulação, além de agora ser possível a publicação e recebimento de
+eventos em tempo de exeucação de maneira assícrona.
 
 \section{Exemplos de Implementação}
 \section{Problemas e Dificuldades}
