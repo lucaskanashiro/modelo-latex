@@ -188,4 +188,152 @@ Neste trabalho além de melhorias feitas nos modelos existentes, novos agentes f
 eventos em tempo de exeucação de maneira assícrona.
 
 \section{Exemplos de Implementação}
+
+Com o intuito de validar a arquitetura proposta foram implementados dois cenários de Cidades Inteligentes no ambiente integrado de experimentação.
+Priorizamos implementar cenários de experimentação onde pudéssemos explorar todos os requisitos apresentados neste capítulo.
+
+No primeiro cenário realizamos experimentos no contexto de um estacionamento inteligente (conhecido com \textit{Smart Parking}), onde carros circulam pela cidade e ao
+final do seu percurso procuram por uma vaga de estacionamento disponível mais próxima do seu destino, utilizando-se da plataforma para isso.
+Nesse cenário, incluímos um novo agente à emulação e implementamos um mecanismo para publicação dos eventos ocorridos e requisição a serviços da plataforma em tempo real
+e de forma assíncrona.
+
+O segundo cenário de experimentação envolve a melhoria do fluxo de carros através da utilização de Placas de Mensagens Variadas (PMVs) espalhadas pela cidade.
+Nesse cenário a plataforma identifica trechos de maior trânsito e atua na cidade atualizando as mensagens apresentadas pelas PMVs em tempo real, notificando os
+motoristas da lentidão no trecho, que por sua vez podem recalcular a sua rota evitando congestionamentos.
+Para viabilizar esse experimento nos utilizamos das melhorias implementados no primeiro cenário, modificamos o modelo de trânsito para melhor se adequar a realidade e
+implementamos o mecanismo de recebimento de comandos de atuação em tempo de execução.
+
+Cada um desses cenários serão apresentados nas seções a seguir, de maneira a exemplificar a implementação da arquitetura proposta através da utilização do emulador
+InterSCSimulator a a plataforma InterSCity para Cidades Inteligentes.
+
+\section{Estacionamento Inteligente}
+
+Como foi apresentado, neste cenário de experimentação, emulamos um motorista realizando o seu percurso de carro e ao final procurando uma vaga disponível mais próxima ao
+seu destino, provavelmente utilizando um aplicativo móvel que se comunica com a plataforma InterSCity.
+Trazendo os conceitos de recursos da cidade e capacidades para esse cenário, temos os carros e as vagas de estacionamento sendo recursos, onde os carros são capazes de
+fornecer a sua geolocalização (por exemplo via GPS) e as vagas de fornecer informação quanto a sua disponibilidade (por exemplo através de sensores infravermelho e uma
+redes de sensores).
+
+Esse cenário foi definido com o intuito de realizar experimentos envolvendo o serviço de descoberta de recursos da plataforma InterSCity.
+Portanto, o aplicativo enviaria a posição do carro naquele momento, o seu destino final e o raio de busca, e a plataforma traria uma lista de vagas de estacionamento
+disponíveis mais próximas.
+Já no InterSCSimulator, foi necessário realizar algumas melhorias para que os \textbf{requisitos de emulação} fossem atendidos.
+Um novo agente para gerenciar as vagas de estacionamento da cidade, chamado \textit{Parking Controller}, foi implementado.
+Esse agente possui a responsabilidade de gerenciar e armazenar dados referentes as vagas de estacionamento, e fazer a interface de comunicação com o componente de
+integração que será apresentado mais adiante.
+Além disso, modificamos o modelo de viagem do agente \textit{Carro}.
+Anteriormente, o \textit{Carro} saia de uma origem e percorriar o seu trajeto até o destino, agora ao chegar próximo do seu destino ele requisita uma vaga disponível mais
+próxima e se dirige até a mesma.
+Com essas melhorias pudemos emular um cenário que se aproxima da realidade.
+
+Para ilustrar o modelo descrito, a seguir será apresentado o ciclo de emulação de um agente \textit{Carro} neste cenário:
+
+\begin{enumerate}
+    \item O agente \textit{Carro} é criado
+
+    \item O caminho mais curto entre a origem e o destino é calculado
+
+    \item O agente parte da sua origem no tempo determinado
+
+    \item Ao chegar no nó anterior ao seu destino, uma vaga de estacionamento disponível é requisitada ao agente \textit{Parking Controller}
+
+    \item Ao receber a vaga de estacionamento, o seu trajeto é recalculado em direção a mesma
+
+    \item O agente se direciona e estaciona na vaga de estacionamento descoberta 
+\end{enumerate}
+
+Um fluxo alternativo a essa execução seria o carro modificar o seu percurso em direção da vaga de estacionamento (disponível até então), e ao chegar nela outro
+carro a ter ocupado antes, sendo esse um caso comum nas grandes cidades.
+Nesse caso, outra vaga de estacionamento é requisitada aumentando o seu raio de busca com o intuito de sempre encontrar vagas disponíveis.
+
+Quando o agente \textit{Carro} por fim estaciona em uma vaga disponível, o agente \textit{Parking Controller} é notificado e atualiza a sua estrutura de dados indicando
+que a vaga foi ocupada pelo carro.
+Além do mais, esse agente é responsável por atualizar o estado da vaga de estacionamento na plataforma.
+
+Agora pensando nos \textbf{requisitos de integração}, o emulador precisa requisitar a plataforma em busca de vagas disponíveis mais próximas, e atualizar o estado
+das vagas de estacionamento.
+A plataforma InterSCity provê um \textit{API Restful} para comunicação com seus serviços (como o de descoberta de recursos), e o estado dos seus recursos podem ser
+atualizados através da própria API ou via protocolo AMQP (\textit{Advanced Message Queuing Protocol}).
+O AMQP é um protocolo de troca de mensagens assíncronas que visa a escalabilidade e a interoperabilidade \cite{Vin06}.
+Esse levantamento é importante para a tomada de decisão de quais as responsabilidades e como será implementado o componente de integração.
+Tendo em vista que a complexidade do componente de integração deve ser a menor possível, e a não existência de um meio de publicação de eventos em tempo de execução
+no InterSCSimulator, decidimos utilizar o RabbitMQ (implementação do protocolo AMQP) na implementação desse novo meio de comunicação.
+Com isso, o emulador poderia atualizar o estado das vagas diretamente na plataforma de forma assíncrona, sem necessidade de auxílio do componente de integração.
+As requisições HTTP feitas ao serviço de descoberta da plataforma seriam feitas pelo componente de integração, principalmente pelo fato de requisições HTTP serem
+síncronas, o que poderia travar a emulação na espera por uma resposta.
+
+Para facilitar o entendimento da integração realizada, dividiremos a explicação em duas partes: a primeira visando a requisição de vagas disponíveis mais próximas
+do carro ao serviço de descoberta da plataforma InterSCity; e a segunda apresentado o fluxo de atualização do estado de uma vaga de estacionamento (ocupada
+ou disponível) baseada na emulação.
+
+A Figura \ref{fig:descoberta} apresenta a integração realizada para utilização do serviço de descoberta provido pela plataforma InterSCity.
+O componente de integração foi chamado de \textit{Parking Spot Discoverer}, e foi implementado como um agente Erlang que consegue se comunicar com os agentes da
+simulação via troca de mensagens.
+O uso do componente de integração se fez necessário para que a emulação exerça a carga que aplicações exerceriam utilizando o protocolo HTTP para acessar
+a \textit{API Restful}.
+Como dito, requisições HTTP são síncronas, e a realização das mesmas dentro da emulação atrasaria consideravelmente a sua finalização, já que bloquearia a
+execução dos agentes enquanto aguardariam a resposta da plataforma.
+Antes de chegarmos a tal solução implementamos uma versão onde o próprio emulador realizava requisições HTTP para a plataforma em tempo de execução, entretanto,
+essa solução gerou um enorme gargalo.
+Descrevemos abaixo o fluxo de atividades apresentado na Figura \ref{fig:descoberta}.
+
+\begin{enumerate}
+    \item Ao chegar um nó antes do seu destino, o \textit{Car} solicita a vaga de estacionamento para o agente \textit{Parking Controller}, passando a sua
+	localização como parâmetro.
+
+	\item O agente \textit{Parking Controller} então envia a localização para o \textit{Parking Spot Discoverer} que solicita a vaga disponível mais próxima,
+	em um raio de 500 metros.
+
+	\item O \textit{Parking Spot Discoverer} faz uma requisição HTTP para o serviço de descoberta da plataforma que retorna a vaga em questão.
+	Caso não seja encontrada uma vaga disponível (não ocupada) em um raio de 500 metros, esse raio é multiplicado por dois até que se encontre uma vaga
+	disponível.
+
+	\item O identificador da vaga é retornado para o agente \textit{Parking Controller} e ele marca a vaga como utilizada em uma estrutura de dados mantida no emulador.
+
+    \item O identificador da vaga é recebido pelo agente \textit{Car} e a rota é recalculada para chegar até ela.
+\end{enumerate}
+
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[width=\textwidth]{figures/integration_get_data.png}
+%	\caption{Integração para descoberta de vagas livres próximo do destino da
+%	viagem}
+%	\label{fig:descoberta}
+%\end{figure}
+
+A Figura \ref{fig:atualizacao} apresenta a integração realizada com o intuito de atualizar o estado das vagas de estacionamento na plataforma baseado nos
+acontecimentos da emulação.
+Como foi adicionado a funcionalidade de publicação dos eventos da emulação via RabbitMQ para os interessados, não foi necesário a utilização do
+componente de integração, já que a plataforma também utiliza o mesmo protocolo para divulgação dos seus dados entre microsserviços.
+O fluxo apresentado na Figura \ref{fig:atualizacao} contém os seguintes passos.
+
+\begin{enumerate}
+    \item O agente \textit{Car} estaciona na vaga de estacionamento e notifica o \textit{Parking Controller}.
+
+	\item O \textit{Parking Controller} informa, via \textit{RabbitMQ}, que a vaga está ocupada usando o seu identificador.
+
+	\item O \textit{RabbitMQ} repassa esse dado para os microsserviços \textit{Resource Catalog} e \textit{Data Collector}.
+\end{enumerate}
+
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[width=\textwidth]{figures/integration_publish_data.png}
+%	\caption{Integração para publicar dados}
+%	\label{fig:atualizacao}
+%\end{figure}
+
+Vale ressaltar que as atividades 2 e 3 apresentadas na Figura \ref{fig:atualizacao} também são executadas quando a vaga é liberada.
+Após dez minutos que o agente está estacionado na vaga, o agente \textit{Parking Controller} libera a vaga na estrutura de dados mantida dentro do simulador e informa o
+ocorrido para a plataforma.
+Com isso, a plataforma atualiza os dados da vaga tanto quando ela é ocupada quando liberada.
+
+Após a implementação da arquitetura descrita, fomos capazes de executar experimentos de larga escala no contexto de estacionamento inteligente.
+Os resultados obtidos serão apresentados no próximo capítulo.
+
+Todavia, não exercitamos todos os requisitos apresentados para a construção de um ambiente emulado e integrado para experimentação de plataformas de Cidades Inteligentes.
+Por isso, implementamos um segundo cenário de Cidades Inteligentes onde, por exemplo, a atuação na cidade se fez necessária.
+
+
+\section{Melhoria do Fluxo de Carros através de PMVs}
+
 \section{Problemas e Dificuldades}
