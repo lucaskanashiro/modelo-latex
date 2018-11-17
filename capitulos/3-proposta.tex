@@ -422,6 +422,95 @@ Todavia, não exercitamos todos os requisitos apresentados para a construção d
 Por isso, implementamos um segundo cenário de Cidades Inteligentes onde, por exemplo, a atuação na cidade se fez necessária.
 
 
-\section{Melhoria do Fluxo de Carros através de PMVs}
+\section{Tráfego de Carros Inteligente}
+
+Com o objetivo de exercitar o envio de comandos de atuação da plataforma para o ambiente emulado, que não foi explorado no cenário de estacionamento inteligente apresentado
+anteriormente, definimos um novo cenário.
+Neste cenário, visamos identificar trechos em vias da cidade com tráfego de carros anômalo (devido ao fechamento de ruas, acidentes, desastres naturais e etc.) e notificar
+previamente os motoristas para evitarem passar naquele trecho através de Placas de Mensagens Variadas (PMVs).
+Consideramos aqui uma anomalia uma variação considerável na velocidade média dos carros que trafegam naquele trecho de via naquele horário.
+Essas PMVs são posicionadas em pontos estratégicos da cidade e apresentam alertas aos motoristas em tempo real sobre possíveis anomalias no trânsito, e com isso motoristas
+podem mudar o seu percurso evitando maiores congestionamentos na cidade.
+
+Essencialmente, esse cenário funciona da seguinte forma:
+
+\begin{enumerate}
+    \item A plataforma coleta dados históricos de carros para definir limiares (\textit{thresholds}) de velocidade média para cada trecho de via da cidade em cada horário.
+        Para isso, o ambiente emulado envia dados de posicionamento georreferenciado dos carros a cada ciclo de execução, emulando por exemplo um dispositivo que contem um
+        sistema de GPRS (\textit{General Packet Radio Service}) + GPS (\textit{Global Positioning System}).
+        Com uma série de pontos de onde o carro passou em cada instante, se torna possível calcular a velocidade média do mesmo, logo obtemos a velocidade média de carros
+        que passaram naquele trecho naquele dado momento durante todo o dia.
+        Tendo esses limiares, a plataforma se torna capaz de identificar anomalias na velocidade média dos carros em tempo real, verificando se a variação naquele instante
+        extrapola ou não o que foi identificado com os dados históricos.
+
+    \item Ao identifiar uma anomalia de trânsito em algum trecho, a plataforma identifica as PMVs mais próximas do incidente e atualiza a sua mensagem informando os motoristas
+        do ocorrido.
+
+    \item Caso o motorista passe por uma PMV contendo essa mensagem, ele verifica se o trecho mencionado faz parte do seu percurso. Sendo verdade, o mesmo recalcula a sua
+        rota evitando maiores congestionamentos na região.
+\end{enumerate}
+
+Nesse cenário de experimentação, o novo serviço de processamento de dados (históricos e de tempo real), que está em desenvolvimento, e o envio de comandos de atuação da plataforma
+InterSCity puderam também ser testados.
+Além disso, foi possível finalizar a validação da arquitetura proposta para a criação de um ambiente para experimentação em plataformas de Cidades Inteligentes,
+implementando a atuação em tempo real no ambiente emulado.
+
+Para realizar experimentos envolvendo essas funcionalidades da plataforma InterSCity, foi necessário implementar o conceito de PMVs, eventos de fechamentos de via e de
+processamento de comandos de atuação em tempo de execuação no InterSCSimulator.
+Além do mais foi, utilizada a publicação de eventos (dados de sensores) implementado para o cenário anterior, já que para o funcionamento do serviço de processamento de dados
+em tempo real da plataforma precisamos enviar a cada ciclo de execução da emulação o posicionamento de todos os carros presentes.
+Sendo essas melhorias necessárias para atender os \textbf{requisitos fundamentais} para esse cenário.
+
+O modo de publicação de dados em tempo de execução no InterSCSimulator foi refatorado para melhor atender ambos os cenários implementados.
+Como visto no cenário anterior, a publicação de eventos da emulação se dava através do agente \textit{Parking Controller} (como pode ser visto na Figura \ref{FIG}), já que
+até então o único tipo de evento publicado pelo emulador era a atualização da disponibilidade de uma vaga de estacionamento.
+No intuito de permitir que outros agentes da emulação também pudessem publicar os seus eventos, um novo agente chamado \textit{Publisher} foi criado, removendo essa responsabilidade
+anteriormente atribuída ao agente \textit{Parking Controller}.
+Desse modo, o agente do tipo carro também se tornou capaz de publicar a sua posição, onde agora a cada ciclo de execuação é enviada uma mensagem a um agente \textit{Publisher}
+contendo sua localização.
+
+Visando tornar factível a emulação de eventos de fechamento de vias na cidade, adicionamos o conceito de eventos de trânsito ao InterSCSimulator.
+Um novo arquivo de entrada para o emulador e um novo agente foram adicionados.
+O novo arquivo de entrada (chamado por padrão \textit{events.xml}), contem uma lista de eventos de fechamento de via que serão agendados na emulação.
+Como pode ser visto no exemplo abaixo, cada evento é representado da seguinte forma)
+(i) o tipo do evento de trânsito;
+(ii) a via a ser fechada (uma aresta no grafo da cidade);
+(iii) o momento de início do evento;
+(iv) a duração do evento;
+(v) a porcentagem da capacidade do fluxo de carros que ainda estará em funcionamento, usada no caso de um fechamento parcial do trecho.
+O novo agente chamado \textit{Events Manager} é responsável por agendar todos esses eventos no início da simulação e alterar o grafo da cidade no momento programado.
+Quando o trecho da via é fechado, a aresta do grafo da cidade é removida momentaneamnte até o evento ser encerrado, impedindo assim a possibilidade de passagem de qualquer
+carro.
+Agora quando o evento apenas reduz a capacidade de fluxo de carros da via, modificamos a sua capacidade para atender o que foi programado até o evento ser encerrado,
+onde essa capacidade é um atributo dado àquela aresta do grafo.
+
+%SNIPPET DO ARQUIVO events.xml
+
+Para a representação das PMVs no InterSCSimulator, foi criado um agente chamado \textit{PMV Manager} onde o seu papel era atualizar as mensagens de PMVs.
+As PMVs em si foram implementadas como atributos de vértices do grafo da cidade (sendo os vértices o encontro de duas ou mais vias), onde nesse atributo é guardada uma lista
+de trechos de vias (arestas) onde foram encontradas alguma anomalia no trânsito.
+Os agentes do tipo carro ao passar por um vértice que continha esse atributo, verificavam se alguma das arestas ali presentes faziam parte do seu trajeto ou não.
+Caso positivo, o seu percurso era recalculado, caso contrário o mesmo se mantinha inalterado.
+
+E a última implementação no InterSCSimulator necessária para atender os requisitos apresentados seguindo a arquitetura proposta foi o recebimento de comandos de atuação e
+processamento dos mesmos em tempo de execuação.
+Sendo essa uma funcionalidade fundamental para a atualização das PMVs em tempo de execução pela plataforma.
+Diante disso, mais um novo agente foi criado para ficar a espera desses comandos enviados pela plataforma, sendo ele chamado de \textit{Listener}.
+Como um comando de atuação pode ser enviado a qualquer momento, foi necessário esse novo agente, cuja única responsabilidade é receber esse comando e armazená-lo em uma
+estrutura de dados, para que outros agentes não ficassem bloqueados (bloqueando tambéma a emulação) a espera de tal acontecimento.
+Ou seja, esse agente fica em um laço (\textit{loop}) infinito a espera de uma mensagem que é enviada via AMQP (mesmo protocolo utilizado para publicação dos dados).
+A utilização do RabbitMQ foi escolhida devido a possibilidade da plataforma InterSCity enviar comandos de atuação através do mesmo, e como foi uma funcionalidade nova
+decidimos utilizar a mesma tecnologia, reduzindo assim o problema de interoperabilidade discutido neste capítulo.
+Quando um comando é recebido, no caso uma aresta de trecho anômalo a ser atualizada em uma PMV, ele armazena essa mensagem em uma estrutura de dados que será acessada no
+próximo ciclo de execução pelo \textit{PMV Manager}, que por sua vez atualizará a atributo da referida PMV (vértice no grafo).
+
+O interessante desse segundo cenário, foi a não necessidade de um componente de integração, já que ambas as ferramentas se comunicam através do mesmo protocolo (inclusive a
+mesma ferramenta) e conseguem representar os mesmos conceitos de maneira equivalente.
+Esse é o cenário ideal para criação de um ambiente emulado de experimentação para uma plataforma de Cidades Inteligentes, já que não foi essencial a implementação desse
+componente extra, que como discutido traria mais complexidade para o sistema, podendo aumentar o tempo de resposta entra as ferramentas.
+Claro que tudo isso foi possível porque neste mesmo trabalho fizemos todo o trabalho de implementação dos \textbf{requisitos fundamentais} apresenatados, portanto,
+tivemos a oportunidade de tomar as decisões técnicas que facilitaram a integração entra as duas ferramentas.
+
+No capítulo a seguir serão apresentados alguns resultados experimentais baseados na implementação desse cenário de tráfego de carros inteligentes.
 
 \section{Problemas e Dificuldades}
