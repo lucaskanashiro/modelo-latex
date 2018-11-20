@@ -514,3 +514,55 @@ tivemos a oportunidade de tomar as decisões técnicas que facilitaram a integra
 No capítulo a seguir serão apresentados alguns resultados experimentais baseados na implementação desse cenário de tráfego de carros inteligentes.
 
 \section{Problemas e Dificuldades}
+
+Durante a implementação dos dois cenários de Cidades Inteligentes apresentados, algumas adversidades foram encontradas e solucionadas.
+A fim de contribuir com trabalhos futuros que sigam a solução aqui proposta, uma discussão sobre os principais problemas e dificuldades encontradas será feita
+nesta seção.
+O intuito aqui é enfatizar os principais obstáculos a serem enfrentados durante a implementação de novos cenários no ambiente integrado usando o emulador InterSCSimulator e
+a plataforma InterSCity ou até mesmo envolvendo outras ferramentas.
+
+Como vem sendo discutido no decorrer deste trabalho, a integração de ferramentas não é algo trivial.
+Apesar de tanto o emulador quanto a plataforma utilizada serem voltados para o contexto de Cidades Inteligentes, na maioria das vezes, elas não foram concebidas inicialmente
+para serem integradas com ferramentas de outra natureza.
+Através dos próprios requisitos apresentados podemos antever o maior desafio a ser enfrentado: a interoperabilidade.
+Interoperabilidade essa tanto a nível de comunicação e quanto semanticamente.
+
+Como constatado na implementação dos dois cenários apresentados, tentamos ao máximo reduzir a responsabilidade do componente de integração, que ao ser atribuído muitas
+tarefas pode se tornar um problema.
+Tanto que não foi necessária a implementação desse componente no segundo cenário apresentado, tendo em vista que as ferramentas já atendiam os requisitos de integração.
+Isso pode ser atribuído ao fato de ambas as ferramentas (InteSCSimulator e InterSCity) serem mantidas pelo nosso grupo de pesquisa, onde tivemos a liberdade de evoluir o
+que foi preciso nas próprias ferramentas para facilitar a integração.
+Em um contexto onde não existe essa flexibilidade o desafio se tornario bem mais complexo.
+
+Mesmo assim, enfrentamos problemas principalmente com a escalabilidade da solução.
+Em experimentos anteriores e isolados, foi demonstrado que ambas as ferramentas eram escaláveis, se comportando bem diante de uma grande carga de trabalho.
+Entretanto, a integração traz alguns elementos extras que por menor que sejam interferem em cenários de larga escala.
+Em experimentos na escala de uma cidade como São Paulo, qualquer mínimo detalhe é potencializado.
+Semanticamente não tivemos muitos problemas, já que ambas as ferramentas foram implementadas seguindo conceitos similares, devido a própria sinergia do grupo de
+pesquisa.
+Todavia, a comunicação entre as ferramentas foi a raíz da maior parte dos problemas enfrentados.
+
+Por exemplo, inicialmente, tentamos realizar qualquer interação com a plataforma através de requisições HTTP, usando a sua API \textit{Restful}.
+Contudo, percebemos que o componente de integração necessitaria de uma complexidade muito maior para tratar todas essas requisições paralelamente sem se tornar um
+gargalo para o sistema.
+Por isso, decidimos explorar bastante o protocolo AMQP através da implementação do RabbitMQ.
+Essa se apresentou uma solução mais simples, já que o \textit{broker} do RabbitMQ trata todas essas questões de escalabilidade de maneira bem eficiente, sendo essa
+uma solução adotada pelo mercado.
+Além do mais, pelo fato da comunicação via AMQP ser assíncrona e pela própria natureza dos cenários implementados, diferente de requisições HTTP, ela se apresentou uma
+solução mais adequada, não bloqueando agentes da emulação a espera de respostas.
+Logo, sempre que possível, transferir responsabilidades para ferramentas de terceiros comprovadamente capazes de atender os requisitos ao invés de implementar a sua
+própria solução é desejável.
+
+Nesse processo de melhoria da escalabilidade da solução integrada, várias mudanças foram feitas em ambas as ferramentas.
+Foram encontrados problemas de escalabilidade antes não evidenciados por outros experimentos isolados, demonstrado que a solução de ambiente para experimentação para
+plataformas de Cidades Inteligentes atingiu seus objetivos, apontando melhorias nos sistemas que só seriam evidenciadas ao enfrentar cargas de trabalho à nível de uma
+cidade como São Paulo.
+
+A nível da plataforma InterSCity, implementações envolvendo técnicas para armazenamento em cache de dados mais utilizados foram feitas.
+Ademais, melhorias envolvendo a automatização da implantação do plataforma foram realizadas.
+Já no InterSCSimulator, encontramos alguns problemas na implementação dos modelos apresentados que causaram problemas de escalabilidade.
+Ou seja, dependendo do cenário e de como foi implementado, apenas reduzir a complexidade do componente de integração (até mesmo a não existência) ainda não é a solução.
+Portanto, poder modificar as próprias ferramentas é algo interessante, haja vista que a forma que os modelos, métodos e funcionalidades foram implementados podem não
+ter sido testados em ambientes de estresse, tornando-se gargalos durante experimentos de larga escala.
+
+Isso evidencia a importância da utilização de ferramentas livres para a construção de ambientes de experimentação para plataformas de Cidades Inteligentes.
