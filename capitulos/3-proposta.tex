@@ -1,30 +1,30 @@
 \chapter{Proposta de Solução}
 \label{cap:proposta}
 
-A solucao proposta para permitir a realizacao de experimentos de plataformas de Cidades Inteligentes em ambientes emulados abrangendo diferentes cenarios em diferentes escalas sera
-apresentada neste capitulo.
-A discussao sobre os requisitos de uma possivel solucao para esse problema se dara de maneira generica, contudo, ao abordarmos a arquitetura, entraremos em alguns detalhes referentes ao
+A solução proposta para permitir a realização de experimentos de plataformas de Cidades Inteligentes em ambientes emulados abrangendo diferentes cenários em diferentes escalas será
+apresentada neste capítulo.
+A discussão sobre os requisitos de uma possível solução para esse problema se dará de maneira genérica, contudo, ao abordarmos a arquitetura, entraremos em alguns detalhes referentes ao
 simulador e emulador de Cidades Inteligentes InterSCSimulator e a plataforma InterSCity, as ferramentas utilizadas neste trabalho.
-Alem disso, serao apresentados alguns exemplos de implementacao de cenarios de Cidades Inteligentes seguindo a arquitetura proposta, trazendo em seguida os principais problemas e
+Além disso, serão apresentados alguns exemplos de implementação de cenários de Cidades Inteligentes seguindo a arquitetura proposta, trazendo em seguida os principais problemas e
 dificuldades encontradas nesse processo.
 
 \section{Requisitos da Solução}
 
-Para a realizacao de experimentos em ambientes emulados de Cidades Inteligentes temos requisitos em diferentes niveis, desde a capacidade do emulador de representar o contexto
-de uma cidade ate formas de comunicacao que permita a interacao entre o emulador e a plataforma de Cidades Inteligentes.
-Portanto, dividimos os requisitos em requisitos de \textbf{fundamentais} e de \textbf{integracao}.
+Para a realização de experimentos em ambientes emulados de Cidades Inteligentes temos requisitos em diferentes níveis, desde a capacidade do emulador de representar o contexto
+de uma cidade até formas de comunicação que permita a interação entre o emulador e a plataforma de Cidades Inteligentes.
+Portanto, dividimos os requisitos em \textbf{fundamentais} e de \textbf{integração}.
 
-Para que uma ferramenta possa refletir o contexto de Cidades Inteligentes, onde o sensoriamento de diversos aspectos das cidades ja e uma realidade, e a atuacao (modificacao do estado
+Para que uma ferramenta possa refletir o contexto de Cidades Inteligentes, onde o sensoriamento de diversos aspectos das cidades já é uma realidade, e a atuação (modificação do estado
 das cidades) segue uma crescente, consideramos que a mesma deva de alguma forma ter os conceitos abaixo representados:
 
 \begin{itemize}
-    \item \textit{Modelos aderentes a realidade de uma cidade}: a ferramenta deve implementar modelos que representem ao maximo a realidade de uma cidade, e nao apenas casos hipoteticos.
-        Por exemplo, modelos de fluxo de automoveis nas vias devem incluir possiveis engarrafamentos.
+    \item \textit{Modelos aderentes a realidade de uma cidade}: a ferramenta deve implementar modelos que representem ao máximo a realidade de uma cidade, e não apenas casos hipotéticos.
+        Por exemplo, modelos de fluxo de automóveis nas vias devem incluir possíveis engarrafamentos.
 
-    \item \textit{Execução em tempo real}: a dinamica da cidade deve ser emulada, ou seja, em tempo real. Essa dinamica representada nao deve ser executada nem mais rapida nem mais lenta do que
+    \item \textit{Execução em tempo real}: a dinâmica da cidade deve ser emulada, ou seja, em tempo real. Essa dinâmica representada não deve ser executada nem mais rápida nem mais lenta do que
         aconteceria em um ambiente real de uma cidade.
-        Esse e um requisito importante pois o desencadeamento de acoes nas cidades sao muitas vezes devido ao processamento de acoes acontecidas anteriormente, e as plataformas
-        devem ter tempo habil para realizar tais acoes, como foi explicado nos capitulos anteriores.
+        Esse é um requisito importante, pois o desencadeamento de ações nas cidades são muitas vezes devido ao processamento de ações acontecidas anteriormente, e as plataformas
+        devem ter tempo hábil para realizar tais ações, como foi explicado nos capítulos anteriores.
 
     \item \textit{Geração de grande massa de dados}: para realizarmos experimentos realistas devemos ser capazes de gerar uma massa de dados na mesma escala de uma grande cidade por
         exemplo.
@@ -35,15 +35,15 @@ das cidades) segue uma crescente, consideramos que a mesma deva de alguma forma 
         Com isso, se torna possível a envio de dados de sensores e comandos de atuação durante a emulação.
 \end{itemize}
 
-Consideramos os pontos apresentados acima como \textbf{requisitos fundamentais}, sendo esses o minimo necessario para conseguirmos de fato representar um ambiente real de uma cidade.
-Caso a ferramenta atenda os requisitos apresentados, se torna possivel a emulacao de cenários realistas no contexto de Cidades Inteligentes, podendo substituir \textit{testbeds}
+Consideramos os pontos apresentados acima como \textbf{requisitos fundamentais}, sendo esses o mínimo necessário para conseguirmos de fato representar um ambiente real de uma cidade.
+Caso a ferramenta atenda os requisitos apresentados, se torna possível a emulação de cenários realistas no contexto de Cidades Inteligentes, podendo substituir \textit{testbeds}
 reais, em uma escala maior, após a sua integração com a plataforma alvo.
-Todavia, apenas essa emulacao nao viabiliza ainda a realizacao de experimentos com plataformas, ainda precisamos atender alguns \textbf{requisitos de integracao} entre o emulador
-e a plataforma em questao.
+Todavia, apenas essa emulação não viabiliza ainda a realização de experimentos com plataformas, ainda precisamos atender alguns \textbf{requisitos de integração} entre o emulador
+e a plataforma em questão.
 
-Para termos um ambiente integrado precisamos definir um meio de comunicacao de duas vias, envio e recebimento de dados, em tempo real entre o emulador e a plataforma de Cidades Inteligentes.
+Para termos um ambiente integrado precisamos definir um meio de comunicação de duas vias, envio e recebimento de dados, em tempo real entre o emulador e a plataforma de Cidades Inteligentes.
 Além disso, deve haver uma integração semântica que viabilize as ferramentas se comunicarem de maneira eficaz.
-Abaixo sao apresentados os \textbf{requisitos de integracao} necessarios para obtermos um ambiente integrado de experimentacao para essas plataformas:
+Abaixo são apresentados os \textbf{requisitos de integração} necessários para obtermos um ambiente integrado de experimentação para essas plataformas:
 
 \begin{itemize}
     \item \textit{Integração semântica}: para que seja possível a comunicação em tempo de execução entre o emulador e a plataforma, ambos precisam entrar em um consenso semântico.
@@ -51,35 +51,35 @@ Abaixo sao apresentados os \textbf{requisitos de integracao} necessarios para ob
         possível a integração.
 
         \begin{itemize}
-            \item \textit{Recursos da cidade}: esse recursos da cidade, sendo eles qualquer coisa no contexto da cidade (automoveis, aparelhos publicos, vias e etc.), serao objetos tanto de
-                sensoriamento e/ou atuacao por parte das plataformas de Cidades Inteligentes.
+            \item \textit{Recursos da cidade}: esse recursos da cidade, sendo eles qualquer coisa no contexto da cidade (automóveis, aparelhos públicos, vias e etc.), serão objetos tanto de
+                sensoriamento e/ou atuação por parte das plataformas de Cidades Inteligentes.
 
-            \item \textit{Capacidades inerentes a cada recurso da cidade}: cada \textit{recurso da cidade} tem as suas respectivas capacidades, sendo elas de sensoriamento ou atuacao.
+            \item \textit{Capacidades inerentes a cada recurso da cidade}: cada \textit{recurso da cidade} tem as suas respectivas capacidades, sendo elas de sensoriamento ou atuação.
                 Essas capacidades usualmente estão atreladas a dispositivos de IoT (\textit{Internet Of Things}) presentes nos recursos da cidade.
-                Por exemplo, vagas de estacionamento podem ser monitoradas quanto a sua ocupacao, e semaforos de transito podem ter o seu estado modificado atraves de atuacao.
+                Por exemplo, vagas de estacionamento podem ser monitoradas quanto a sua ocupação, e semáforos de trânsito podem ter o seu estado modificado através de atuação.
         \end{itemize}
 
     \item \textit{Envio de dados de sensoriamento em tempo real}: para que as funcionalidades relativas a coleta e armazenamento de dados, e processamento dos mesmos possam ser
-        exercitadas pelas plataformas, precisamos enviar dados de todos os recursos presentes no cenario de experimentacao com tais capacidades em tempo real.
-        Quanto maior for a escala do cenario de experimentacao mais dificil se torna essa tarefa, pois se faz necessario enviar milhoes de dados de sensores simultaneamente atraves
+        exercitadas pela plataforma, precisamos enviar dados de todos os recursos presentes no cenário de experimentação com tais capacidades em tempo real.
+        Quanto maior for a escala do cenário de experimentação mais difícil se torna essa tarefa, pois se faz necessário enviar milhões de dados de sensores simultaneamente através
         do mesmo canal.
-        Apesar de a demanda de tempo real poder se tornar um problema, ela se faz necessaria para que possamos chegar mais proximo de um cenario realista, onde recursos sensoriados
-        da cidade poderao nao aguardar outros enviarem seus dados para enviar, apenas enviarao no tempo estipulado.
+        Apesar de a demanda de tempo real poder se tornar um problema, ela se faz necessária para que possamos chegar mais próximo de um cenário realista, onde recursos sensoriados
+        da cidade poderão não aguardar outros enviarem seus dados para enviar, apenas enviarão no tempo estipulado.
 
-    \item \textit{Recebimento de dados de atucao em tempo real}: as plataformas, em dados cenarios de experimentacao, precisarao enviar comandos de atuacao para a cidade (neste caso,
+    \item \textit{Recebimento de dados de atução em tempo real}: as plataformas, em dados cenários de experimentação, precisarão enviar comandos de atuação para a cidade (neste caso,
         para o ambiente emulado) em tempo real.
-        Diferente dos dados de sensoriamento, o fluxo de dados de atuacao e bem menor.
-        Contudo, esse tipo de dado tem a sua propria peculiaridade, pois o emulador deve ser capaz de consumir essa dado em tempo de execucao e alterar o estado do ambiente emulado
+        Diferente dos dados de sensoriamento, o fluxo de dados de atuação é bem menor.
+        Contudo, esse tipo de dado tem a sua própria peculiaridade, pois o emulador deve ser capaz de consumir esse dado em tempo de execução e alterar o estado do ambiente emulado
         imediatamente.
         Isso porque ao modificar de alguma forma o estado do ambiente emulado influenciamos diretamente os dados de sensores naquele dado momento em diante, e os mesmos continuam
         sendo enviados para a plataforma em paralelo.
 \end{itemize}
 
-Portanto, acreditamos que ao termos um ambiente que atenda tanto os \textbf{requisitos fundamentais} quanto os de \textbf{integracao}, se torna possivel realizarmos experimentos
+Portanto, acreditamos que ao termos um ambiente que atenda tanto os \textbf{requisitos fundamentais} quanto os de \textbf{integração}, se torna possível realizarmos experimentos
 com plataformas de Cidades Inteligentes sem a necessidade de \textit{testbeds} reais.
-Isso nos possibilita testar cenarios em escalas reais de uma cidade, alem de nos permitir emular cenarios que ainda nao sao passiveis de reproducao atraves de \textit{testbeds},
-emulando tecnologias ainda nao existentes e cenarios futuristas.
-Por exemplo, termos a possibilidade de emular um ambiente onde todos os carros da cidade sao autonomos se comunicando atraves de tecnologia \textit{5G}.
+Isso nos possibilita testar cenários em escalas reais de uma cidade, além de nos permitir emular cenários que ainda não são passíveis de reprodução através de \textit{testbeds},
+emulando tecnologias ainda não existentes e cenários futuristas.
+Por exemplo, termos a possibilidade de emular um ambiente onde todos os carros da cidade são autônomos se comunicando através de tecnologia \textit{5G}.
 
 \section{Arquitetura}
 
@@ -94,7 +94,7 @@ sequência, além de discutir como os \textbf{requisitos fundamentais e de integ
 A integração entre emulador e plataforma de Cidades Inteligentes envolve principalmete a troca de dados em tempo de execução como foi apresentado neste capítulo.
 Essa interação para envio e recebimento de dados a primeira vista simples, se torna complexa quando adicionamos a necessidade de resposta de ambas as partes em tempo real.
 Por parte do emulador, a rápida reação ao receber um dado de atuação é essencial.
-O recebimento desse dado acarretará um atualização no estado da emulação, que por sua vez terá impacto direto no pronto envio de dados de sensores que, por muitas vezes,
+O recebimento desse dado acarretará uma atualização no estado da emulação, que por sua vez terá impacto direto no pronto envio de dados de sensores que, por muitas vezes,
 se dá de maneira temporizada.
 Já para a plataforma, é necessária uma tomada de decisão ágil ao receber diferentes dados de sensores.
 Os dados de sensores podem ser, por exemplo, utilizados como entrada para gatilhos de comandos de atuação e processamento em tempo real de eventos complexos.
@@ -136,7 +136,7 @@ rede utilizados para comunicação; e implementar o componente de integração o
 
 Para a validação da construção desse ambiente emulado de experimentação para plataformas de Cidades Inteligentes, usamos o emulador InterSCSimulator e a plataforma InterSCity,
 sendo essas ferramentas desenvolvidas pelo nosso grupo de pesquisa. Ambas serão apresentadas a seguir, correlacionando os requisitos e a aquitetura de integração aqui
-apresentadas.
+apresentada.
 
 \subsection{InterSCSimulator}
 
@@ -175,7 +175,7 @@ Com isso, podemos especificar quais as \textit{Capacidades} de cada agente e ado
 O interessante dessa arquitetura baseada em agentes é o fato da implementação dos mesmos terem um grau de independência muito grande, onde é preciso apenas a definição
 das mensagens que serão trocadas em tempo de execução.
 
-Além disso, no contexto deste trabalho, foi adicionado um novo elemento a arquitetura da ferramenta para troca de dados com sistemas externos,
+Além disso, no contexto deste trabalho, foi adicionado um novo elemento a arquitetura da ferramenta para troca de dados com sistemas externos em tempo de execução,
 sendo esse um dos \textbf{requisitos fundamentais e de integração} para obtermos um ambiente realista de experimentação.
 Esse novo elemento nada mais é do que um novo agente onde o seu papel é receber e enviar mensagens de sensores e atuadores, seja no contexto de outros agentes ou de
 outros sistemas.
@@ -215,7 +215,7 @@ O tempo, a localização e o modo de transporte utilizado pelo agente são regis
 No trabalho desenvolvido por Eduardo Zambom Santana foi desenvolvido um emulador e simulador de larga escala, que já foi capaz de simular mais de 4 milhões de
 agentes se movendo pela cidade de São Paulo~\cite{santana_17}.
 Os modos de transportes suportados até então são carro, ônibus, metrô e a pé.
-Neste trabalho além de melhorias feitas nos modelos existentes, novos agentes forma adicionados a simulação, além de agora ser possível a publicação e recebimento de
+Neste trabalho além de melhorias feitas nos modelos existentes, novos agentes foram adicionados a simulação, além de agora ser possível a publicação e recebimento de
 eventos em tempo de execução de maneira assícrona.
 
 \subsection{Plataforma InterSCity}
@@ -280,7 +280,7 @@ para Cidades Inteligentes.
 Com o intuito de validar a arquitetura proposta foram implementados dois cenários de Cidades Inteligentes no ambiente integrado de experimentação.
 Priorizamos implementar cenários de experimentação onde pudéssemos explorar todos os requisitos apresentados neste capítulo.
 
-No primeiro cenário realizamos experimentos no contexto de um estacionamento inteligente (conhecido com \textit{Smart Parking}), onde carros circulam pela cidade e ao
+No primeiro cenário realizamos experimentos no contexto de estacionamento inteligente (conhecido com \textit{Smart Parking}), onde carros circulam pela cidade e ao
 final do seu percurso procuram por uma vaga de estacionamento disponível mais próxima do seu destino, utilizando-se da plataforma para isso.
 Nesse cenário, incluímos um novo agente à emulação e implementamos um mecanismo para publicação dos eventos ocorridos e requisição a serviços da plataforma em tempo real
 e de forma assíncrona.
@@ -305,7 +305,7 @@ redes de sensores).
 Esse cenário foi definido com o intuito de realizar experimentos envolvendo o serviço de descoberta de recursos da plataforma InterSCity.
 Portanto, o aplicativo enviaria a posição do carro naquele momento, o seu destino final e o raio de busca, e a plataforma traria uma lista de vagas de estacionamento
 disponíveis mais próximas.
-Já no InterSCSimulator, foi necessário realizar algumas melhorias para que os \textbf{requisitos de emulação} fossem atendidos.
+Já no InterSCSimulator, foi necessário realizar algumas melhorias para que os \textit{requisitos fundamentais} fossem atendidos.
 Um novo agente para gerenciar as vagas de estacionamento da cidade, chamado \textit{Parking Controller}, foi implementado.
 Esse agente possui a responsabilidade de gerenciar e armazenar dados referentes as vagas de estacionamento, e fazer a interface de comunicação com o componente de
 integração que será apresentado mais adiante.
@@ -314,7 +314,7 @@ Anteriormente, o \textit{Carro} saia de uma origem e percorriar o seu trajeto at
 próxima e se dirige até a mesma.
 Com essas melhorias pudemos emular um cenário que se aproxima da realidade.
 
-Para ilustrar o modelo descrito, a seguir será apresentado o ciclo de emulação de um agente \textit{Carro} neste cenário:
+Para ilustrar o modelo descrito, a seguir será apresentado o ciclo de execução de um agente \textit{Carro} neste cenário:
 
 \begin{enumerate}
     \item O agente \textit{Carro} é criado
@@ -342,7 +342,6 @@ Agora pensando nos \textbf{requisitos de integração}, o emulador precisa requi
 das vagas de estacionamento.
 A plataforma InterSCity provê um \textit{API Restful} para comunicação com seus serviços (como o de descoberta de recursos), e o estado dos seus recursos podem ser
 atualizados através da própria API ou via protocolo AMQP (\textit{Advanced Message Queuing Protocol}).
-O AMQP é um protocolo de troca de mensagens assíncronas que visa a escalabilidade e a interoperabilidade \cite{Vin06}.
 Esse levantamento é importante para a tomada de decisão de quais as responsabilidades e como será implementado o componente de integração.
 Tendo em vista que a complexidade do componente de integração deve ser a menor possível, e a não existência de um meio de publicação de eventos em tempo de execução
 no InterSCSimulator, decidimos utilizar o RabbitMQ (implementação do protocolo AMQP) na implementação desse novo meio de comunicação.
@@ -457,7 +456,7 @@ implementando a atuação em tempo real no ambiente emulado.
 
 Para realizar experimentos envolvendo essas funcionalidades da plataforma InterSCity, foi necessário implementar o conceito de PMVs, eventos de fechamentos de via e de
 processamento de comandos de atuação em tempo de execuação no InterSCSimulator.
-Além do mais foi, utilizada a publicação de eventos (dados de sensores) implementado para o cenário anterior, já que para o funcionamento do serviço de processamento de dados
+Além do mais, foi utilizada a publicação de eventos (dados de sensores) implementado para o cenário anterior, já que para o funcionamento do serviço de processamento de dados
 em tempo real da plataforma precisamos enviar a cada ciclo de execução da emulação o posicionamento de todos os carros presentes.
 Sendo essas melhorias necessárias para atender os \textbf{requisitos fundamentais} para esse cenário.
 
@@ -472,7 +471,7 @@ contendo sua localização.
 Visando tornar factível a emulação de eventos de fechamento de vias na cidade, adicionamos o conceito de eventos de trânsito ao InterSCSimulator.
 Um novo arquivo de entrada para o emulador e um novo agente foram adicionados.
 O novo arquivo de entrada (chamado por padrão \textit{events.xml}), contem uma lista de eventos de fechamento de via que serão agendados na emulação.
-Como pode ser visto no exemplo abaixo, cada evento é representado da seguinte forma)
+Como pode ser visto no exemplo abaixo (SNIPPET), cada evento é representado da seguinte forma:
 (i) o tipo do evento de trânsito;
 (ii) a via a ser fechada (uma aresta no grafo da cidade);
 (iii) o momento de início do evento;
@@ -508,7 +507,7 @@ O interessante desse segundo cenário, foi a não necessidade de um componente d
 mesma ferramenta) e conseguem representar os mesmos conceitos de maneira equivalente.
 Esse é o cenário ideal para criação de um ambiente emulado de experimentação para uma plataforma de Cidades Inteligentes, já que não foi essencial a implementação desse
 componente extra, que como discutido traria mais complexidade para o sistema, podendo aumentar o tempo de resposta entra as ferramentas.
-Claro que tudo isso foi possível porque neste mesmo trabalho fizemos todo o trabalho de implementação dos \textbf{requisitos fundamentais} apresenatados, portanto,
+Claro que tudo isso foi possível porque neste mesmo trabalho fizemos todo a implementação dos \textbf{requisitos fundamentais} apresenatados, portanto,
 tivemos a oportunidade de tomar as decisões técnicas que facilitaram a integração entra as duas ferramentas.
 
 No capítulo a seguir serão apresentados alguns resultados experimentais baseados na implementação desse cenário de tráfego de carros inteligentes.
