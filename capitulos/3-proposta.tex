@@ -106,14 +106,22 @@ Por exemplo, o emulador pode suportar apenas comunicação via protocolo AMQP e 
 Mais uma vez, é papel da camada de integração tornar esse comunicação transparente para ambos os lados.
 
 Tendo isso em vista, a arquitetura de integração adotada utiliza-se de um componente extra intermediando as duas ferramentas, emulador e plataforma, como pode ser visto na
-FIGURA GERAL AQUITETURA.
+Figura \ref{fig:general_architecture}.
 Apesar de um componente extra adicionar complexidade e consequentemente aumentar o tempo gasto na transação desses dados, ele se faz necessário para solucionar os problemas
 de interoperabilidade mencionados anteriormente.
 Entretanto, ele deve ser o mais simples possível para que o acréscimo no tempo de envio e recebimento dos dados não aumente consideravelmente.
 Portanto, utilizar ferramentas (emulador e plataforma) que se assemelhem conceitualmente e que compartilhem pilhas de protocolos de comunicação similares é o ideal,
 facilitando o implementação de um ambiente integrado em conformidade com os requisitos apresentados inicialmente.
 
-Na FIGURA GERAL ARQUITETURA, podemos ver os componentes presentes na arquitetura de integração do sistema aqui apresentada.
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.4\textwidth]{figuras/integration-general-architecture.png}
+	\caption{Arquitetura Proposta para Ambiente Integrado de Exerimentação de Plataformas de Cidades Inteligentes}
+	\label{fig:general_architecture}
+\end{figure}
+
+
+Na Figura \ref{fig:general_architecture}, podemos ver os componentes presentes na arquitetura de integração do sistema aqui apresentada.
 Como elucidado anteriormente, o componente de integração não pode possuir muitas responsabilidades, já que uma complexidade alta pode acarretar em um aumento expressivo no
 tempo de transmissão dos dados, sendo esse um requisito importante para o sistema.
 Já as ferramentas envolvidas, além de suas próprias funcionalidades, esperamos que as mesmas possuam um módulo de comunicação para suportar o fluxo de dados em tempo de execução.
@@ -160,12 +168,12 @@ O InterSCSimulator foi implementado por Eduardo Zambom Santana, doutorando de no
 A Figura \ref{fig:simulator_architecture} apresenta a sua arquitetura, onde, em azul, estão os diferentes tipos de agentes que podem existir no ambiente
 emulado/simulado e, em vermelho, a definição dos cenários de Cidades Inteligentes, tudo isso sendo executado no topo do simulador \textit{Sim-Diasca}.
 
-%\begin{figure}[ht]
-%	\centering
-%	\includegraphics[width=0.5\textwidth]{figures/Arquitetura.pdf}
-%	\caption{Arquitetura do InterSCSimulator}
-%	\label{fig:simulator_architecture}
-%\end{figure}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.5\textwidth]{figuras/Arquitetura.pdf}
+	\caption{Arquitetura do InterSCSimulator}
+	\label{fig:simulator_architecture}
+\end{figure}
 
 Fazendo um paralelo com um dos \textbf{requisito de integração} listados neste capítulo, cada \textit{Recurso} da cidade pode ser modelado como um agente da emulação/simulação.
 Ou seja, um carro, uma vaga de estacionamento ou um ponto de parada de ônibus serão representados como agentes (caixas azuis na Figura \ref{fig:simulator_architecture})
@@ -196,12 +204,12 @@ Inicialmente são passadas entradas para a emulação/simulação (arquivos XML)
 saída é criada com todos os eventos ocorridos na emulação/simulação.
 A partir dessa saída existe a possibilidade de geração de uma visualização em um mapa ou através de gráficos.
 
-%\begin{figure}[ht]
-%	\centering
-%	\includegraphics[width=0.7\textwidth]{figures/Components.pdf}
-%	\caption{Componentes do InterSCSimulator}
-%	\label{fig:simulator_components}
-%\end{figure}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figuras/Components.pdf}
+	\caption{Componentes do InterSCSimulator}
+	\label{fig:simulator_components}
+\end{figure}
 
 Como entrada, o InterSCSimulator recebe três arquivos XML. O \textit{config.xml} contém parâmetros da emulação/simulação, sendo eles o tempo total, o formato do
 arquivo de saída e o caminho para o diretório contendo os outros arquivos de entrada e para geração do arquivo de saída.
@@ -249,15 +257,15 @@ Atualmente, ela é composta de 6 microsserviços:
 \textit{Data Collector}, responsável por coletar os dados dos sensores conectados;
 \textit{Actuator Controller}, oferece uma interface para atuação junto aos dispositivos de \textit{IoT} com tais capacidades;
 \textit{Resource Catalog}, possui dados estáticos dos recursos da cidade cadastrados;
-\textit{Resource discovery}, provê um serviço de descoberta de recursos;
+\textit{Resource Discovery}, provê um serviço de descoberta de recursos;
 e \textit{Resource Viewer}, disponibiliza uma visualização simples dos recursos da cidade. 
 
-%\begin{figure}[ht]
-%	\centering
-%	\includegraphics[width=0.5\textwidth]{figures/platform_architecture.png}
-%	\caption{Arquitetura da plataforma InterSCity}
-%	\label{fig:platform_architecture}
-%\end{figure}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.5\textwidth]{figuras/platform_architecture.png}
+	\caption{Arquitetura da plataforma InterSCity}
+	\label{fig:platform_architecture}
+\end{figure}
 
 A comunicação entre esses microsserviços pode se dar de maneira síncrona ou assíncrona dependendo da situação.
 A comunicação síncrona é feita via API \textit{Restful}, ou seja, requisições HTTP; e a assíncrona se dá via RabbitMQ, uma implementação do protocolo AMQP.
@@ -380,13 +388,13 @@ Descrevemos abaixo o fluxo de atividades apresentado na Figura \ref{fig:descober
     \item O identificador da vaga é recebido pelo agente \textit{Car} e a rota é recalculada para chegar até ela.
 \end{enumerate}
 
-%\begin{figure}[ht]
-%	\centering
-%	\includegraphics[width=\textwidth]{figures/integration_get_data.png}
-%	\caption{Integração para descoberta de vagas livres próximo do destino da
-%	viagem}
-%	\label{fig:descoberta}
-%\end{figure}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{figuras/integration_get_data_smart_parking.png}
+	\caption{Integração para descoberta de vagas livres próximo do destino da
+	viagem}
+	\label{fig:descoberta}
+\end{figure}
 
 A Figura \ref{fig:atualizacao} apresenta a integração realizada com o intuito de atualizar o estado das vagas de estacionamento na plataforma baseado nos
 acontecimentos da emulação.
@@ -402,12 +410,12 @@ O fluxo apresentado na Figura \ref{fig:atualizacao} contém os seguintes passos.
 	\item O \textit{RabbitMQ} repassa esse dado para os microsserviços \textit{Resource Catalog} e \textit{Data Collector}.
 \end{enumerate}
 
-%\begin{figure}[ht]
-%	\centering
-%	\includegraphics[width=\textwidth]{figures/integration_publish_data.png}
-%	\caption{Integração para publicar dados}
-%	\label{fig:atualizacao}
-%\end{figure}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{figuras/integration_publish_data_smart_parking.png}
+	\caption{Integração para publicar dados}
+	\label{fig:atualizacao}
+\end{figure}
 
 Vale ressaltar que as atividades 2 e 3 apresentadas na Figura \ref{fig:atualizacao} também são executadas quando a vaga é liberada.
 Após dez minutos que o agente está estacionado na vaga, o agente \textit{Parking Controller} libera a vaga na estrutura de dados mantida dentro do simulador e informa o
@@ -461,7 +469,7 @@ em tempo real da plataforma precisamos enviar a cada ciclo de execução da emul
 Sendo essas melhorias necessárias para atender os \textbf{requisitos fundamentais} para esse cenário.
 
 O modo de publicação de dados em tempo de execução no InterSCSimulator foi refatorado para melhor atender ambos os cenários implementados.
-Como visto no cenário anterior, a publicação de eventos da emulação se dava através do agente \textit{Parking Controller} (como pode ser visto na Figura \ref{FIG}), já que
+Como visto no cenário anterior, a publicação de eventos da emulação se dava através do agente \textit{Parking Controller} (como pode ser visto na Figura \ref{fig:atualizacao}), já que
 até então o único tipo de evento publicado pelo emulador era a atualização da disponibilidade de uma vaga de estacionamento.
 No intuito de permitir que outros agentes da emulação também pudessem publicar os seus eventos, um novo agente chamado \textit{Publisher} foi criado, removendo essa responsabilidade
 anteriormente atribuída ao agente \textit{Parking Controller}.
@@ -471,7 +479,7 @@ contendo sua localização.
 Visando tornar factível a emulação de eventos de fechamento de vias na cidade, adicionamos o conceito de eventos de trânsito ao InterSCSimulator.
 Um novo arquivo de entrada para o emulador e um novo agente foram adicionados.
 O novo arquivo de entrada (chamado por padrão \textit{events.xml}), contem uma lista de eventos de fechamento de via que serão agendados na emulação.
-Como pode ser visto no exemplo abaixo (SNIPPET), cada evento é representado da seguinte forma:
+Como pode ser visto na Listagem \ref{code:events} abaixo, cada evento é representado da seguinte forma:
 (i) o tipo do evento de trânsito;
 (ii) a via a ser fechada (uma aresta no grafo da cidade);
 (iii) o momento de início do evento;
@@ -483,7 +491,27 @@ carro.
 Agora quando o evento apenas reduz a capacidade de fluxo de carros da via, modificamos a sua capacidade para atender o que foi programado até o evento ser encerrado,
 onde essa capacidade é um atributo dado àquela aresta do grafo.
 
-%SNIPPET DO ARQUIVO events.xml
+\lstset{
+    language=xml,
+    tabsize=3,
+    frame=lines,
+    caption=Arquivo de entrada contendo os eventos de fechamento de vias,
+    label=code:events,
+    frame=shadowbox,
+    rulesepcolor=\color{gray},
+    xleftmargin=20pt,
+    framexleftmargin=15pt,
+    keywordstyle=\color{blue}\bf,
+    commentstyle=\color{OliveGreen},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=5pt,
+    breaklines=true,
+    showstringspaces=false,
+    basicstyle=\footnotesize,
+    emph={uuid,node},emphstyle={\color{magenta}}}
+    \lstinputlisting{files/events.csv}
 
 Para a representação das PMVs no InterSCSimulator, foi criado um agente chamado \textit{PMV Manager} onde o seu papel era atualizar as mensagens de PMVs.
 As PMVs em si foram implementadas como atributos de vértices do grafo da cidade (sendo os vértices o encontro de duas ou mais vias), onde nesse atributo é guardada uma lista
@@ -503,7 +531,54 @@ decidimos utilizar a mesma tecnologia, reduzindo assim o problema de interoperab
 Quando um comando é recebido, no caso uma aresta de trecho anômalo a ser atualizada em uma PMV, ele armazena essa mensagem em uma estrutura de dados que será acessada no
 próximo ciclo de execução pelo \textit{PMV Manager}, que por sua vez atualizará a atributo da referida PMV (vértice no grafo).
 
-O interessante desse segundo cenário, foi a não necessidade de um componente de integração, já que ambas as ferramentas se comunicam através do mesmo protocolo (inclusive a
+Após a apresentação das funcionalidades e melhorias implementadas, as duas vias de fluxo de comunicação entre o emulador e a plataforma serão apresentados a seguir.
+Na Figura \ref{fig:smart_traffic_publish_data}, o passo-a-passo para a publicação dos dados de posicionamento de cada um dos carros a cada ciclo de execução é exposto.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{figuras/integration-publish-car-position.png}
+	\caption{Integração para publicar dados de posicionameto de carros}
+	\label{fig:smart_traffic_publish_data}
+\end{figure}
+
+\begin{enumerate}
+    \item O agente do tipo carro a cada ciclo de execução envia uma mensagem para o agente \textit{Publisher} contendo a sua posição naquele dado momento.
+
+    \item O agente \textit{Publisher} se conecta ao \textit{broker} do RabbitMQ e publica uma mensagem contendo: o identificador do carro, o seu posicionamento, e o \textit{timestamp}.
+
+    \item Os microsserviços \textit{Resource Catalog} e \textit{Data Collector} são notificados e recebem tais dados. O \textit{Resource Catalog} atualiza o último dado monitorado
+        daquele carro, e o \textit{Data Collector} atualiza a sua base de dados contendo todas as medições.
+
+    \item O microsserviço \textit{Data Processor} acessa dados armazenados por esses outros serviços com o intuito de definir limiares para velocidade média de vias (dados históricos),
+        ou para identificar anomalias no trânsito (fluxo de dados em tempo real).
+\end{enumerate}
+
+Já na Figura \ref{fig:smart_traffic_actuation}, é apresentado o fluxo para atualização da lista de trechos anômalos de vias em PMVs, representando aqui um comando de atuação no
+ambiente emulado.
+Lembrando que o gatilho para a execução desse processo é o serviço de processamento de dados identificar alguma anomalia no trânsito.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{figuras/integration-actuate-pmv.png}
+	\caption{Integração para atuação em Placas de Mensagens Variadas}
+	\label{fig:smart_traffic_actuation}
+\end{figure}
+
+\begin{enumerate}
+    \item O \textit{Data Processor} ao identificar uma anomalia no trânsito em determinado ponto da cidade, ele requisita para o \textit{Resource Discovery} os PMVs mais próximos
+        daquele ponto, para que os mesmos possam ser atualizados.
+
+    \item Ao serem identificados os PMVs, o \textit{Data Processor} envia os identificadores dos PMVs e do trecho anômalo para o \textit{Actuator Controller}.
+
+    \item O \textit{Actuator Controller} formata essas mensagens e publica as mesmas em um dos canais do RabbitMQ.
+
+    \item O agente \textit{Listener}, cujo único papel é esperar por esse tipo de mensagem, recebe a mesma e a armazena em uma estrutura de dados compatilhada pelos agentes do emulador.
+
+    \item O agente \textit{PMV Manager} verifica a presença dessa nova mensagem na estrutura de dados compatilhada, e atualiza o atributo que representa a PMV no vértice do grafo
+        viário da cidade, adicionado mais esse trecho para a lista presente ou criando-a caso não existe nenhum outro trecho.
+\end{enumerate}
+
+Um ponto interessante desse segundo cenário, foi a não necessidade de um componente de integração, já que ambas as ferramentas se comunicam através do mesmo protocolo (inclusive a
 mesma ferramenta) e conseguem representar os mesmos conceitos de maneira equivalente.
 Esse é o cenário ideal para criação de um ambiente emulado de experimentação para uma plataforma de Cidades Inteligentes, já que não foi essencial a implementação desse
 componente extra, que como discutido traria mais complexidade para o sistema, podendo aumentar o tempo de resposta entra as ferramentas.
@@ -512,7 +587,7 @@ tivemos a oportunidade de tomar as decisões técnicas que facilitaram a integra
 
 No capítulo a seguir serão apresentados alguns resultados experimentais baseados na implementação desse cenário de tráfego de carros inteligentes.
 
-\section{Problemas e Dificuldades}
+\section{Discussão}
 
 Durante a implementação dos dois cenários de Cidades Inteligentes apresentados, algumas adversidades foram encontradas e solucionadas.
 A fim de contribuir com trabalhos futuros que sigam a solução aqui proposta, uma discussão sobre os principais problemas e dificuldades encontradas será feita
