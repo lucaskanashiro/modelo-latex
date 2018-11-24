@@ -227,6 +227,7 @@ Neste trabalho além de melhorias feitas nos modelos existentes, novos agentes f
 eventos em tempo de execução de maneira assícrona.
 
 \subsection{Plataforma InterSCity}
+\label{sec:interscity}
 
 A plataforma InterSCity é um projeto de código aberto, baseado em microsserviços que visa permitir a pesquisa colaborativa, desenvolvimento e experimentos em Cidades
 Inteligentes~\cite{arthur_17}.
@@ -302,7 +303,8 @@ implementamos o mecanismo de recebimento de comandos de atuação em tempo de ex
 Cada um desses cenários serão apresentados nas seções a seguir, de maneira a exemplificar a implementação da arquitetura proposta através da utilização do emulador
 InterSCSimulator a a plataforma InterSCity para Cidades Inteligentes.
 
-\section{Estacionamento Inteligente}
+\subsection{Estacionamento Inteligente}
+\label{sec:smart_parking}
 
 Como foi apresentado, neste cenário de experimentação, emulamos um motorista realizando o seu percurso de carro e ao final procurando uma vaga disponível mais próxima ao
 seu destino, provavelmente utilizando um aplicativo móvel que se comunica com a plataforma InterSCity.
@@ -341,6 +343,7 @@ Para ilustrar o modelo descrito, a seguir será apresentado o ciclo de execuçã
 Um fluxo alternativo a essa execução seria o carro modificar o seu percurso em direção da vaga de estacionamento (disponível até então), e ao chegar nela outro
 carro a ter ocupado antes, sendo esse um caso comum nas grandes cidades.
 Nesse caso, outra vaga de estacionamento é requisitada aumentando o seu raio de busca com o intuito de sempre encontrar vagas disponíveis.
+Caso o agente do tipo carro necessitar realizar mais de três buscas de vagas disponíveis, o mesmo encerra a sua execução.
 
 Quando o agente \textit{Carro} por fim estaciona em uma vaga disponível, o agente \textit{Parking Controller} é notificado e atualiza a sua estrutura de dados indicando
 que a vaga foi ocupada pelo carro.
@@ -429,7 +432,7 @@ Todavia, não exercitamos todos os requisitos apresentados para a construção d
 Por isso, implementamos um segundo cenário de Cidades Inteligentes onde, por exemplo, a atuação na cidade se fez necessária.
 
 
-\section{Tráfego de Carros Inteligente}
+\subsection{Tráfego de Carros Inteligente}
 
 Com o objetivo de exercitar o envio de comandos de atuação da plataforma para o ambiente emulado, que não foi explorado no cenário de estacionamento inteligente apresentado
 anteriormente, definimos um novo cenário.

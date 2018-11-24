@@ -1,10 +1,204 @@
 \chapter{Estudos de Caso}
 \label{cap:estudos-de-caso}
 
-Explicar o porque de cada cenário
-Detalhar implementação e experimentos realizados:
+%Explicar o porque de cada cenário
+%Detalhar implementação e experimentos realizados:
+
+Foram realizados dois experimentos como estudo de caso, utilizando as duas implementação apresentadas no capítulo anterior, sendo elas os cenários de estacionamento e tráfego de carros inteligente.
+Através desses dois experimentos pudemos validar a proposta de solução apresentada para construção de um ambiente emulado de experimentação para plataformas de Cidades Inteligentes.
+Foi possível exercitar as principais funcionalidades necessárias para a realização de experimentos desse tipo, através da integração do InterSCSimulator e a plataforma InterSCity.
+
+Os cenários emulados em cada experimento e seus respectivos resultados serão apresentados nas seções a seguir.
+E ao final, realizaremos uma análise crítica sobre os resultados obtidos nesse trabalho, apontando possíveis melhorias a serem feitas.
 
 \section{Estacionamento Inteligente}
+
+Como apresentado na Seção \ref{sec:smart_parking}, nesse cenário de Cidades Inteligentes emulamos a utilização de um aplicativo móvel, por parte dos motoristas de carros, para facilitar o encontro de
+vagas de estacionamento disponíveis próximas do seu destino final.
+Esse aplicativo poderia evitar alguns transtornos para os motoristas na árdua missão de estacionar seus carros no centro das grandes metrópoles, por exemplo.
+
+Nesse experimento, tentamos verificar a escalabilidade dos microsserviços envolvidos da plataforma InterSCity, por isso utilizamos dados reais de uma das maiores megalópoles do mundo: São Paulo.
+Dados abertos da cidade de São Paulo foram utilizados para a definição do cenário de emulação do ambiente integrado.
+Utilizamos dados extraídos da pesquida OD (Origem-Destino) realizada pela Companhia de Metrô da cidade de São Paulo e do OpenStreet Maps para a definição de cenário.
+A seguir, esses dados, bem como suas fontes, utilizados na configuração do experimento serão detalhados:
+
+\begin{itemize}
+    \item \textbf{Pesquisa Origem-Destino (OD)}: criamos as viagens de carro emuladas com base na pesquisa OD realizada pela Companhia de Metrô de São Paulo.
+        \footnote{Pesquisa Origem-Destino - http://goo.gl/Te2SX7.}
+        Essa pesquisa descreve as viagens de 200.000 pessoas e extrapola os dados para toda a população da cidade.
+        A pesquisa inclui informações sobre a origem, o destino, o modo de transporte e a hora de partida.
+        Esses dados forma utilizados para definir o comportamento dos agentes do tipo carro na emulação.
+        Para gerar a carga para os experimentos da plataforma, simulamos o tráfego em São Paulo durante o horário de pico, das 5h40 às 8h40.
+        Na pesquisa OD, há 492.976 carros que começam suas viagens durante o intervalo de tempo considerado.
+
+    \item \textbf{OpenStreet Maps}: para criar o grafo viário da cidade de São Paulo usado na emulação, usamos o mapa do OpenStreet Maps.
+        Este mapa contém todas as ruas e junções da cidade, em conjunto com um vasto número de atributos, como comprimento, capacidade e velocidade limite.
+        Tal informação é usada pelo emulador para definir as rotas percorridas pelos carros durante a realização de suas viagens, bem como emular o impacto do tráfego na velocidade dos carros.
+
+    \item \textbf{Vagas de Estacionamento}: criamos as vagas de estacionamento na emulação baseado nos dados obtidos através do OpenStreet Maps e do Zona Azul
+        \footnote{http://www.cetsp.com.br/consultas/zona-azul/mapa-zona-azul/mapa-zona-azul.aspx}
+        (serviço de estacionamento rotativo da cidade de São Paulo).
+\end{itemize}
+
+Nas Figuras \ref{fig:map-spots-distribution} e \ref{fig:map-destinations-distribution}, são apresentadas as distribuições das vagas de estacionamento e destinos de viagens de carros respectivamente,
+utilizadas nesse experimento.
+Os destinos apresentados na Figura \ref{fig:map-destinations-distribution}, são referentes a todas as viagens realizadas no decorrer de toda a emulação.
+É importante notar que a distribuição das vagas de estacionamento baseado nesses dados reais está mais concentrada no centro da cidade do que os destinos das viagens.
+Isso pode levar a situaçãoes onde o agente do tipo carro pode realizar mais de três tentativas de busca de vagas disponíveis e ainda sim não conseguir estacionar.
+Nesse caso, o usuário do aplicativo pararia de utiliza-lo e o agente do tipo carro terminaria sua execução, como apresentado na Seção \ref{sec:smart_parking}.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=8cm]{figuras/mapa_vagas.pdf}
+    \caption{Mapa de calor com a distribuição das vagas de estacionamento utilizadas no experimento.}
+    \label{fig:map-spots-distribution}
+\end{figure}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=8cm]{figuras/mapa_viagens.pdf}
+    \caption{Mapa de calor com a distribuição dos destinos de viagens de carro utilizadas no experimento.}
+    \label{fig:map-destinations-distribution}
+\end{figure}
+
+Tendo ideia do contexto e dos dados a serem utilizados nesse cenário experimental, os passos a seguir foram executados no decorrer deste experimento:
+
+\begin{enumerate}
+    \item Executar uma instância em modo de produção da plataforma InterSCity em um ambiente de núvem. O ambiente de núvem proporciona maior flexibilidade para escalar os microsserviços em tempo
+        de execução.
+
+    \item Habilitar mecanismo de escala automática (\textit{auto-scaling}) para os microsserviços da plataforma baseado na variação de carga de trabalho.
+
+    \item Configuração do emulador em um ambiente isolado da plataforma. Assim, o gasto de recursos computacionais do emulador não interfere no uso da plataforma.
+
+    \item Realizar a emulação do cenário de estacionamento inteligente.
+
+    \item Monitorar a performance e o uso de recursos da plataforma durante toda a emulação.
+
+    \item Analizar os resultados obtidos.
+\end{enumerate}
+
+Então, inicialmente, foi necessário a configuração de ambas as ferramentas em conjunto com seu componente de integração em um ambiente de núvem.
+Os microsserviços da plataforma InterSCity, o emulador InterSCSimulator e ferramentas auxiliares foram implantados na forma de \textit{containers} Docker \footnote{https://www.docker.com/}.
+Utilizamos a infraestrutura provida pelo Google Cloud Platform (GCP) \footnote{https://cloud.google.com/} para a realização do experimento, sendo esse o ambiente ideal para a execução da plataforma
+InteSCity, como visto na Seção \ref{sec:interscity}.
+No contexto do GCP, fizemos bastante uso do Google Kubernetes Engine (GKE), sendo esse um serivço que provê um ambiente gerenciado e pronto para produção para implantação de \textit{containers} de
+aplicações.
+O Kubernetes foi utilizado principalemte para automatizar a reinicialização, a replicação e dimensionamento do número de \textit{containers}.
+Além disso, o kubernetes traz uma vantagem para a reproducibilidade do experimento que é a especificação da infraestrutura como código, garantindo a correta aplicação das regras de implantação.
+Todo o código fonte utilizado para a realização desse experimento está disponível em repositório aberto na web \footnote{https://github.com/LSS-USP/interscity-k8s-experiment}.
+
+Nós dividimos o \textit{cluster} utilizado em cinco diferentes \textit{pools} de máquinas virtuais para que o Kubernetes pudesse gerenciar os \textit{containers} no contexto apropriado.
+Na Figura \ref{fig:node-pools}, são apresentados os \textit{pools} de nós, contendo o número e o tipo de máquinas virtuais utilizadas por cada um no GCP
+\footnote{https://cloud.google.com/compute/docs/machine-types}.
+O \textit{pool} da plataforma possui 25 máquinas do tipo n1-standard-2 (2 CPUs virtuais e 7.5GB memória) e executa os microsserviços da plataforma InterSCity.
+Existem três conjuntos de nós adicionais (representados em azul) compostos por n1-high-2 máquinas (2 CPUs virtuais e 13GB de memória), que executam os serviços de suporte da plataforma InterSCity.
+Ambos MongoDB e PostgreSQL têm 5 nós sendo executados de maneira distribuída, instâncias tolerantes a falha de seus respectivos sistemas de banco de dados.
+O RabbitMQ possui uma máquina dedicada em um \textit{pool} isolado.
+MongoDB é implementado usando a estratégia de conjunto de réplicas (\textit{replica set}), onde operações de leitura são distribuídas entre nós secundários (escravos), e operações de escrita são
+sempre executadas no nó primário (mestre).
+A mesma estratégia é adotada na implantação do PostgreSQL, para otimizar as operações de leitura executadas pelo \textit{Resource Catalog}.
+Finalmente, o InterSCSimulator é executado em sua própria máquina n1-highmem-16 (16 CPUs virtuais e 104 GB de memória), isoladas do resto do serviços.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figuras/node-pools.png}
+    \caption{Configuração do \textit{cluster} para o experimento.}
+	\label{fig:node-pools}
+\end{figure}
+
+
+Para o conjunto de nós da plataforma, o Kubernetes pode programar vários \textit{containers} para a mesma máquina, dependendo da disponibilidade de recursos computacionais.
+A distribuição de \textit{containers} nos 25 nós pode diferir de uma rodada do experimento para a outra, e é uma variável que nós não controlamos durante o experimento.
+Para avaliar o impacto de tais variações na análise, realizamos 15 rodadas deste experimento e verificamos a variabilidade dos resultados.
+
+Como estávamos interessados em avaliar a escalabilidade da plataforma considerando um cenário de cidade inteligente com uma carga de trabalho variável, usamos dimensionamento automático
+(\textit{auto-scaling}) para o \textit{Resource Catalog}, \textit{Resource Discovery}, \textit{Data Collector}, já que eles são projetados para escalar horizontalmente.
+Para este propósito, especificamos um valor alvo de 60\% de uso da CPU para cada um desses serviços, permitindo que o sistema aumente ou diminua o número de \textit{containers} por serviço baseado nisso.
+O sistema balanceia a carga de trabalho para corresponder ao valor alvo de uso da CPU, considerando o uso médio da CPU dos \textit{containers} em execução, que é medido a cada 30 segundos.
+Inicialmente, cada serviço tem quatro \textit{containers}, que é definido como o número mínimo de \textit{containers} em execução.
+Este número pode aumentar a medida que os recursos computacionais ficarem disponíveis no \textit{pool} de nós da plataforma.
+Os \textit{containers} são executados por trás de um serviço de balanceamento de carga.
+
+Embora possamos nos beneficiar das propriedades de elasticidade do GCP, adicionando e removendo automaticamente nós ao \textit{cluster} através da sua funcionalidade de dimensionamento automático,
+isso introduziria outro nível de incerteza em nosso experimento, já que na nossa experiência o tempo levado para criar novas máquinas virtuais podem variar consideravelmente.
+Sabendo disso, criamos todos os nós previamente, antes de iniciar o experimento, mantendo-os em execução ao longo de todo experimento.
+
+Como dito anteriormente, executamos 15 rodadas de experimentos, onde cada uma durou 3h, correspondendo ao horário de pico da manhã da cidade de São Paulo descrito no início desta seção.
+Na Figura \ref{fig:workload}, podemos ver a carga de trabalho média gerada pela emulação durante todo o experimento e o seu desvio padrão (linhas pretas no topo de cada barra).
+Vale notar que nos primeiros 80 minutos de emulação, temos um crescimento constante da carga de trabalho.
+No intervalo aproximado de uma hora, entre 60 e 120 minutos, observamos o período de maior carga do experimento, considerando que o pico máximo de requisições ocorre após 80 minutos, correspondendo a mais
+de 113.000 requisições em 10 minutos.
+No total, mais de um milhão de requisições foram realizadas para a plataforma durante o tempo de experimento.
+Considerando que para responder cada uma dessas requisições requer um conjunto complexo de operações com várias etapas internas, isso se traduz em uma carga computacional muito alta.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figuras/workload.png}
+    \caption{Média da carga de trabalho gerada pelo InterSCSimulator no decorrer do experimento.}
+	\label{fig:workload}
+\end{figure}
+
+A Figura \ref{fig:auto-scaling} mostra a criação e destruição dinâmica de \textit{containers} da plataforma InterSCity devido à aplicação da estratégia de dimensionamento automático em uma única rodada
+do experimento.
+A replicação inicial das instâncias de Kong (balaceador de carga) foi suficiente para suportar toda a carga de trabalho durante todo o experimento, já que ele executa apenas a tarefa de baixa latência
+de encaminhar as requisições de entrada aos microsserviços apropriados.
+Por sua vez, os três microsserviços da plataforma, que são responsáveis por processar as requisições de fato, foram replicados de acordo com o aumento da carga de trabalho.
+Portanto, o número de \textit{containers} para esses serviços variou de 4 a 25.
+É importante mencionar que o mecanismo de elasticidade da plataforma InterSCity também reduziu o número de \textit{containers} à medida que a demanda diminuiu.
+Como pode ser visto na Figura \ref{fig:auto-scaling}, dentre os microsserviços da plataforma, o \textit{Data Collector} foi o microsserviço que consumiu menos tempo de CPU.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figuras/auto-scaling.png}
+    \caption{Dimensionamento automáticos dos microsserviços da plataforma InterSCity.}
+	\label{fig:auto-scaling}
+\end{figure}
+
+
+A Figura \ref{fig:throughput} mostra a taxa de vazão (\textit{throughput}) média da plataforma InterSCity ao longo da duração do experimento.
+A taxa de vazão é definida como a taxa de respostas bem sucedidas recebidas pelo componente de integração.
+O resultado indica que a taxa de vazão corresponde de perto a carga de trabalho gerada, como pode ser visto comparando as Figuras \ref{fig:workload} e \ref{fig:throughput}.
+Apesar das variações no comportamento dos condutores de carros ao longo do experimento, a plataforma foi capaz de lidar com a demanda variável graças a sua escalabilidade e funcionalidade de dimensionamento
+automático, descritos na Seção \ref{sec:interscity}.
+No entanto, devemos mencionar que a taxa de vazão não correspondeu exatamente à carga de trabalho gerada, pois algumas requisições falharam, representando quase 0,6\% de todas as requisições em média.
+As requisições com falha incluem aquelas que tiveram respostas com um código de erro HTTP, bem como aquelas que não foram concluídos devido a recusa de conexão ou \textit{timeout}.
+Todavia, nós consideramos que ser capaz de lidar com mais de 99,5\% das requisições sob alta carga é satisfatório; um usuário típico perceberia uma falha a cada 200 requisições, o que é muito bom para
+este tipo de aplicação de Cidades Inteligentes em tempo real.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figuras/throughput.png}
+    \caption{Taxa de vazão (\textit{throughput}) média da platafora InterSCity.}
+	\label{fig:throughput}
+\end{figure}
+
+
+Outro aspecto fundamental da avaliação de um sistema é analisar o desempenho da plataforma para lidar com requisições de aplicação com uma carga de trabalho variável.
+A este respeito, estamos interessado principalmente em analisar a degradação do desempenho e verificar se a plataforma está sendo dimensionada adequadamente para atender seus clientes dentro de tempos
+de resposta aceitáveis.
+Para tanto, coletamos o tempo de resposta do ponto de vista do cliente, como mostrado Figura \ref{fig:responsetime}.
+Durante a maior parte da duração do experimento, a plataforma foi capaz de responder em menos de um segundo.
+No entanto, diferente da taxa de vazão, o impacto do maior período de demanda no tempo de resposta observado é perceptível, uma vez que, durante um intervalo curto (após 110 minutos de execução),
+o tempo médio de resposta foi maior que 1 segundo.
+O tempo de resposta voltou para 500 milisegundos depois disso.
+Entretanto, podemos ver que mesmo em períodos de alta carga, o tempo de resposta foi mantido abaixo de 2 segundos, o que é um resultado muito bom para este tipo de aplicação.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figuras/response_time_mean.png}
+    \caption{Tempo de resposta médio da platafora InterSCity.}
+	\label{fig:responsetime}
+\end{figure}
+
+
+Devemos ter em mente que a distribuição de \textit{containers} nos nós disponíveis podem impactar o tempo de resposta, pois vários \textit{containers} podem competir por recursos computacionais se estiverem
+sendo executados a mesma máquina.
+Além disso, embora o sistema realize a tarefa de dimensionamento automático a cada 30 segundos, não temos controle sobre o tempo que leva para um \textit{container} ser criado, implantado e ficar pronto
+para receber novas requisições.
+Por outro lado, essa distribuição também pode introduzir um efeito benéfico devido a possível implantação de serviços que constantemente interagem uns com os outros na mesma máquina, reduzindo a latência
+de rede e imprevisibilidade.
+
 \section{Detecção de anomalias de trânsito}
 \section{Análise Crítica}
 
