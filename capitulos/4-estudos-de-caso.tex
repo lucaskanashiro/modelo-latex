@@ -199,7 +199,121 @@ para receber novas requisições.
 Por outro lado, essa distribuição também pode introduzir um efeito benéfico devido a possível implantação de serviços que constantemente interagem uns com os outros na mesma máquina, reduzindo a latência
 de rede e imprevisibilidade.
 
-\section{Detecção de anomalias de trânsito}
+\section{Tráfego de Carros Inteligente}
+
+Neste segundo experimento, emulamos o trânsito de uma cidade, e através de uma aplicação de detecção de anomalias em vias (variação da velocidade média dos carros bem acima do usual),
+atuamos em Placas de Mensagens Variadas (PMV) alertando os motoristas desses trechos problemáticos para que os mesmos fossem evitados.
+Essa aplicação de detecção de anomalias em vias foi implementada utilizando o serviço de processamento de dados da plataforma InterSCity que está em desenvolvimento.
+
+Esse experimento consistiu em três etapas.
+Com discutido na Seção \ref{sec:smart_traffic}, limiares (\textit{thresholds}) de velocidade média para cada trecho de via em cada horário do dia deveriam ser definidos.
+Portanto, a primeira etapa consistiu na emulação do trânsito da cidade sem nenhum evento de fechamento de via, ou seja, o trânsito normal da cidade.
+Com isso, a aplicação de detecção de anomalias era capaz de com os dados de posicionamento de carros enviados a cada ciclo de execução definir esses tais limiares.
+Já a segunda etapa, consistiu em emular o trânsito de carros na cidade com alguns eventos de fechamento de vias (representando ruas alagadas e acidentes de carro por exemplo).
+Nessa etapa, emulamos o comportamento caótico visto nas grandes cidades, onde vias são interditadas e interferem diretamente no tráfego dos carros.
+Na última etapa, emulamos exatamente a segunda etapa, mas adicionamos as PMVs para auxiliar os condutores de carros a contornar essas situações.
+Tendo em vista que os limiares já haviam sido definidos, a aplicação, sem ter conhecimento prévio dessas vias fechadas, detectava automaticamente esses trechos e notificava os motoristas através da
+atualização de mensagens nas PMVs.
+
+Para verificar o bom funcionamento desse cenário no ambiente emulado, dividimos esse experimento em dois.
+Na primeira parte, realizamos um experimento numa escala menor e com dados fictícios, visando meramente a validação do comportamento esperado e interação entre os componentes.
+Na segunda parte, utilizamos dados abertos da cidade de São Paulo, aumentando a escala do experimento e se aproximando de um cenário mais realista.
+O código fonte para a execução do experimento e a análise apresentada aqui nesta seção estão disponível em nosso repositório aberto
+\footnote{https://github.com/LSS-USP/pmv\_experiment/blob/master/Analysis.ipynb}.
+
+\subsection{Validação}
+
+Nesse experimento inicial de validação, as três etapas se deram da seguinte forma com o que diz respeito a número de eventos de fechamento de via e PMVs:
+
+\begin{enumerate}
+    \item Sem eventos de fechamento de via e sem PMVs
+
+    \item Com um evento de fechamento de via e sem PMVs
+
+    \item Com um evento de fechamento de via e uma PMV
+\end{enumerate}
+
+Foram executadas 20 iterações de cada uma das etapas, onde cada iteração forma 10 minutos de emulação.
+Em todas as etapas, utilizamos um grafo com 8 vértices e 16 arestas, como pode ser visto na Figura \ref{fig:mapa_validacao}.
+O grafo é direcionado, onde cada aresta na verdade representa duas, sendo uma entrando e outra saíndo de seus vértices, ou seja, simbolizam vias de mão dupla.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{figuras/mapa_validacao.png}
+	\caption{Mapa viário da cidade utilizado para validação.}
+	\label{fig:mapa_validacao}
+\end{figure}
+
+O grafo da Figura \ref{fig:mapa_validacao} retrata o mapa viário da cidade emulada da seguinte forma:
+
+\begin{itemize}
+    \item Os vértices representam início e/ou fim de uma ou mais ruas.
+
+    \item As arestas representam as ruas da cidade.
+
+    \item Todas as arestas possuem comprimento 1, por isso, a cada ciclo de emulação, caso seja possível, um carro percorre uma aresta.
+\end{itemize}
+
+Além disso, adotamos a seguinte forma para separar vértices e arestas que desempenham papel importante neste experimento:
+
+\begin{itemize}
+    \item A aresta pontilhada amarela representa a via da cidade que será fechada durante a emulação (essa aresta só será afetada nas etapas que posssuem tal evento).
+
+    \item O vértice cinza representa a origem de todas as viagens emuladas.
+
+    \item O vértice amarelo representa o destino das viagens.
+
+    \item O vértice azul representa o local da cidade que contém uma PMV que alertará os motoristas sobre possíveis anomalias nas vias.
+\end{itemize}
+
+Em todas as iterações de todas as etapas, emulamos um total de 100 viagens partingo do vértice 1 até o 7.
+Como o intuito desse experimento era validar o comportamento da implementação do ambiente de experimentação como um todo, antes de apresentar os resultados obtidos, descrevemos o resultado esperado para
+cada uma das etapas a seguir.
+
+Na Figura \ref{fig:mapa_etapa1}, pode-se ver o caminho esperado que os carros percorresem na primeira etapa do experimento, onde não há a presença de eventod de fechamento de vias, nem muito menos PMV.
+As arestas em \textbf{roxo} representam o trajeto do carro, as demais arestas não utilizadas forma removidas do grafo a título de legibilidade.
+Note que ao chegar no vértice 3, ele sempre optará o caminho seguindo pelo vértice 4.
+Isso acontece porque como mencionado anteriormente todas as arestas possuem o mesmo comprimento (ambos são um caminho mais curto até o destino), sendo o critério de desempate o menor índice.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{figuras/mapa_etapa1.png}
+	\caption{Trajeto esperado da etapa 1 do experimento.}
+	\label{fig:mapa_etapa1}
+\end{figure}
+
+Na Figura \ref{fig:mapa_etapa2}, o trajeto esperado para que o carro percorra na etapa 2 do experimento é apresentado. Nessa etapa, temos uma via fechada, sendo ela entre os vétices 4 e 5, e nenhuma
+PMV para auxiliar os motoristas.
+Em \textbf{roxo} podemos ver as arestas que serão percorridas inicialmente;
+em cor \textbf{preta}, as arestas que faziam parte do caminho inicialmente calculado, mas que não foram percorridas devido ao fechamento da via (aresta tracejada);
+e em cor \textbf{verde}, o caminho recalculado após se deparar com o fechamento de via no vértice 4.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{figuras/mapa_etapa2.png}
+	\caption{Trajeto esperado da etapa 2 do experimento.}
+	\label{fig:mapa_etapa2}
+\end{figure}
+
+Por fim, na Figura \ref{fig:mapa_etapa3}, temos a dinâmica esperada para a etapa 3, onde existe o fechamento da via, contudo a PMV se faz presente para notificar os condutores de veículos.
+Mais uma vez, a via representada pela aresta 4 -> 5 é fechada, e a PMV é posicionada no vértice 2 representado em azul.
+Utilizamos aqui a mesma notação anterior.
+A aresta \textbf{roxa} representa o caminho inicialmente calculado e que foi percorrido;
+as arestas \textbf{pretas} faziam parte do caminho inicial, mas nesse caso não forma percorridas devido ao fechamento da via e da PMV;
+e as \textbf{verdes} simbolizam o novo caminho recalculado após o motorista ter sido notificado pela PMV do ocorrido.
+Devido ao modelo implementado, ainda assim era esperado que alguns carros percorresem o fluxo apresentado na Figura \ref{fig:mapa_etapa2}, já que acreditamos que nem todos os motoristas que vissem
+a notificação iriam de fato mudar o seu trajeto.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{figuras/mapa_etapa3.png}
+	\caption{Trajeto esperado da etapa 3 do experimento.}
+	\label{fig:mapa_etapa3}
+\end{figure}
+
+
+\subsection{Cidade de São Paulo}
+
 \section{Análise Crítica}
 
 Melhorias, o que fucionou, o que não funcionou
