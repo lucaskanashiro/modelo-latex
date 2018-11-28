@@ -12,6 +12,7 @@ Os cenários emulados em cada experimento e seus respectivos resultados serão a
 E ao final, realizaremos uma análise crítica sobre os resultados obtidos nesse trabalho, apontando possíveis melhorias a serem feitas.
 
 \section{Estacionamento Inteligente}
+\label{sec:exp_smart_parking}
 
 Como apresentado na Seção \ref{sec:smart_parking}, nesse cenário de Cidades Inteligentes emulamos a utilização de um aplicativo móvel, por parte dos motoristas de carros, para facilitar o encontro de
 vagas de estacionamento disponíveis próximas do seu destino final.
@@ -310,6 +311,51 @@ a notificação iriam de fato mudar o seu trajeto.
 	\caption{Trajeto esperado da etapa 3 do experimento.}
 	\label{fig:mapa_etapa3}
 \end{figure}
+
+As tres etapas desse experimento foram realizadas em dois \textit{laptops} com 8 CPUs virtuais (1.80 GHz) e 8 GB de memoria RAM.
+Diferente do experimento apresentado na Secao \ref{sec:exp_smart_parking}, o foco desse experimento nao e analisar a performance da plataforma, mas sim uma analise funcional. 
+O passo a passo para execucao desse experimento de validacao foi o seguinte:
+
+\begin{enumerate}
+    \item Executar uma instância em modo de produção da plataforma InterSCity em um dos \textit{laptops}.
+
+    \item Executar uma instância em modo de produção da emulador InterSCSimulator no outro \textit{laptop}.
+
+    \item Configurar rede local entre os \textit{laptops}, conectados de maneira cabeada via ethernet.
+
+    \item Realizar a emulação do cenário de trafego de carros inteligente.
+
+    \item Analizar os resultados obtidos ao final da emulacao.
+\end{enumerate}
+
+A Figura \ref{fig:distancia_validacao}, apresenta o desvio padrao (no topo das barras) e a distancia media percorrida pelos carros emulados nas tres etapas deste experimento.
+Segundo nossas hipóteses, esperávamos que o cenário sem evento e sem PMV percorresse 6 arestas, o cenário com evento e sem PMV percorresse 8 arestas e o cenário com evento e PMV percorresse
+entre 6 e 8 arestas (alguns veículos ignoram as notificações).
+Nossas hipóteses foram confirmadas, como pode ser visto no grafico.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.8\textwidth]{figuras/distancia_validacao.png}
+	\caption{Media da distancia percorrida pelos carros no experimento.}
+	\label{fig:distancia_validacao}
+\end{figure}
+
+Uma analise semelhante foi realizada com a duracao das viagens emuladas, como pode ser visto na Figura \ref{fig:duracao_validacao}.
+O desvio padrao (no topo das barras) e a duracao media das viagens emuladas nas tres etapas do experimento sao apresentados no grafico.
+Uma viagem dura sempre 2 ciclos de execucao (criacao e destruicao do ator) mais o tempo utilizado para percorrer as arestas (uma aresta por ciclo de execucao) e o recálculo de um caminho custa um ciclo.
+Por isso, esperávamos que para o cenário sem evento durasse 8 ciclos (2 pelo ciclo de vida + 6 arestas);
+o cenário com evento e sem PMV durasse 11 ciclos (2 pelo ciclo de vida + 8 arestas + 1 pelo recálculo);
+e o cenário com evento e PMV durasse entre 9 ciclos (2 pelo ciclo de vida + 6 arestas + 1 pelo recálculo) para motoristas que seguissem as instrucoes da PMV, e 11 ciclos (2 pelo ciclo de vida + 8 arestas +
+1 pelo recalculo) para os motoristas que ignorassem a PMV.
+Nossas hipóteses mais uma vez foram confirmadas, como pode ser visto na Figura \ref{fig:duracao_validacao}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.8\textwidth]{figuras/duracao_validacao.png}
+	\caption{Media da duracao das viagens emuladas no experimento.}
+	\label{fig:duracao_validacao}
+\end{figure}
+
 
 
 \subsection{Cidade de São Paulo}
