@@ -29,7 +29,7 @@ A seguir, esses dados, bem como suas fontes, utilizados na configuração do exp
         Essa pesquisa descreve as viagens de 200.000 pessoas e extrapola os dados para toda a população da cidade.
         A pesquisa inclui informações sobre a origem, o destino, o modo de transporte e a hora de partida.
         Esses dados forma utilizados para definir o comportamento dos agentes do tipo carro na emulação.
-        Para gerar a carga para os experimentos da plataforma, simulamos o tráfego em São Paulo durante o horário de pico, das 5h40 às 8h40.
+        Para gerar a carga para os experimentos da plataforma, emulamos o tráfego em São Paulo durante o horário de pico, das 5h40 às 8h40.
         Na pesquisa OD, há 492.976 carros que começam suas viagens durante o intervalo de tempo considerado.
 
     \item \textbf{OpenStreet Maps}: para criar o grafo viário da cidade de São Paulo usado na emulação, usamos o mapa do OpenStreet Maps.
@@ -234,7 +234,7 @@ Nesse experimento inicial de validação, as três etapas se deram da seguinte f
     \item Com um evento de fechamento de via e uma PMV
 \end{enumerate}
 
-Foram executadas 20 iterações de cada uma das etapas, onde cada iteração forma 10 minutos de emulação.
+Foram executadas 20 iterações de cada uma das etapas, onde em cada iteração foram 10 minutos de emulação.
 Em todas as etapas, utilizamos um grafo com 8 vértices e 16 arestas, como pode ser visto na Figura \ref{fig:mapa_validacao}.
 O grafo é direcionado, onde cada aresta na verdade representa duas, sendo uma entrando e outra saíndo de seus vértices, ou seja, simbolizam vias de mão dupla.
 
@@ -312,26 +312,26 @@ a notificação iriam de fato mudar o seu trajeto.
 	\label{fig:mapa_etapa3}
 \end{figure}
 
-As tres etapas desse experimento foram realizadas em dois \textit{laptops} com 8 CPUs virtuais (1.80 GHz) e 8 GB de memoria RAM.
-Diferente do experimento apresentado na Secao \ref{sec:exp_smart_parking}, o foco desse experimento nao e analisar a performance da plataforma, mas sim uma analise funcional. 
-O passo a passo para execucao desse experimento de validacao foi o seguinte:
+As três etapas desse experimento foram realizadas em dois \textit{laptops} com 8 CPUs virtuais (1.80 GHz) e 8 GB de memoria RAM.
+Diferente do experimento apresentado na Seção \ref{sec:exp_smart_parking}, o foco desse experimento não é analisar o desempenho da plataforma, mas sim uma análise funcional. 
+O passo a passo para execução desse experimento de validação foi o seguinte:
 
 \begin{enumerate}
-    \item Executar uma instância em modo de produção da plataforma InterSCity em um dos \textit{laptops}.
+    \item Executar uma instância em modo de produção da plataforma InterSCity em um \textit{laptops}.
 
     \item Executar uma instância em modo de produção da emulador InterSCSimulator no outro \textit{laptop}.
 
     \item Configurar rede local entre os \textit{laptops}, conectados de maneira cabeada via ethernet.
 
-    \item Realizar a emulação do cenário de trafego de carros inteligente.
+    \item Realizar a emulação do cenário de tráfego de carros inteligente.
 
-    \item Analizar os resultados obtidos ao final da emulacao.
+    \item Analizar os resultados obtidos ao final da emulação.
 \end{enumerate}
 
-A Figura \ref{fig:distancia_validacao}, apresenta o desvio padrao (no topo das barras) e a distancia media percorrida pelos carros emulados nas tres etapas deste experimento.
-Segundo nossas hipóteses, esperávamos que o cenário sem evento e sem PMV percorresse 6 arestas, o cenário com evento e sem PMV percorresse 8 arestas e o cenário com evento e PMV percorresse
-entre 6 e 8 arestas (alguns veículos ignoram as notificações).
-Nossas hipóteses foram confirmadas, como pode ser visto no grafico.
+A Figura \ref{fig:distancia_validacao}, apresenta o desvio padrão (no topo das barras) e a distância média percorrida pelos carros emulados nas três etapas deste experimento.
+Segundo nossas hipóteses, esperávamos que no cenário sem evento de fechamento de via e sem PMV para notificar os motoristas percorressem 6 arestas, no cenário com evento e sem PMV percorressem 8 arestas
+e no cenário com evento e PMV percorressem entre 6 e 8 arestas (alguns veículos ignoram as notificações).
+Nossas hipóteses foram confirmadas, como pode ser visto no gráfico.
 
 \begin{figure}[ht]
 	\centering
@@ -340,25 +340,151 @@ Nossas hipóteses foram confirmadas, como pode ser visto no grafico.
 	\label{fig:distancia_validacao}
 \end{figure}
 
-Uma analise semelhante foi realizada com a duracao das viagens emuladas, como pode ser visto na Figura \ref{fig:duracao_validacao}.
-O desvio padrao (no topo das barras) e a duracao media das viagens emuladas nas tres etapas do experimento sao apresentados no grafico.
-Uma viagem dura sempre 2 ciclos de execucao (criacao e destruicao do ator) mais o tempo utilizado para percorrer as arestas (uma aresta por ciclo de execucao) e o recálculo de um caminho custa um ciclo.
-Por isso, esperávamos que para o cenário sem evento durasse 8 ciclos (2 pelo ciclo de vida + 6 arestas);
-o cenário com evento e sem PMV durasse 11 ciclos (2 pelo ciclo de vida + 8 arestas + 1 pelo recálculo);
-e o cenário com evento e PMV durasse entre 9 ciclos (2 pelo ciclo de vida + 6 arestas + 1 pelo recálculo) para motoristas que seguissem as instrucoes da PMV, e 11 ciclos (2 pelo ciclo de vida + 8 arestas +
-1 pelo recalculo) para os motoristas que ignorassem a PMV.
+Uma análise semelhante foi realizada com a duração das viagens emuladas, como pode ser visto na Figura \ref{fig:duracao_validacao}.
+O desvio padrão (no topo das barras) e a duração media das viagens emuladas nas três etapas do experimento são apresentados no gráfico.
+Uma viagem dura sempre 2 ciclos de execução (criação e destruição do ator) mais o tempo utilizado para percorrer as arestas (uma aresta por ciclo de execução, já que possuem comprimento unitário)
+e o recálculo de um caminho custa um ciclo.
+Por isso, esperávamos que para o cenário sem evento de fechamento de via durasse 8 ciclos (2 pelo ciclo de vida + 6 arestas);
+o cenário com evento e sem PMV para informar os motoristas durasse 11 ciclos (2 )nsito pelo ciclo de vida + 8 arestas + 1 pelo recálculo da rota);
+e o cenário com evento e PMV durasse entre 9 ciclos (2 pelo ciclo de vida + 6 arestas + 1 pelo recálculo) para motoristas que seguissem as instruções da PMV, e 11 ciclos (2 pelo ciclo de vida + 8 arestas +
+1 pelo recálculo) para os motoristas que ignorassem a PMV.
 Nossas hipóteses mais uma vez foram confirmadas, como pode ser visto na Figura \ref{fig:duracao_validacao}.
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=.8\textwidth]{figuras/duracao_validacao.png}
-	\caption{Media da duracao das viagens emuladas no experimento.}
+	\caption{Média da duração das viagens emuladas no experimento.}
 	\label{fig:duracao_validacao}
 \end{figure}
 
-
+Com isso, pudemos verificar os requisitos fundamentais e de integração, apresentados na Seção \ref{sec:requisitos}, para este cenário de tráfego de carros inteligentes.
+O modelo implementado no emulador correspondeu com o esperado e a comunicação entre as ferramentas foi validada, principalmente com o que diz respeito a atuação no ambiente emulado, sendo esse um
+trabalho pioneiro.
 
 \subsection{Cidade de São Paulo}
+
+Tendo em vista que a implementação dos modelos utilizados para este cenário e a integração estavam funcionando dentro do esperado, realizamos um outro experimento, envolvendo o mesmo cenário de tráfego de
+carros inteligentes, mas dessa vez em uma escala maior e com dados abertos da cidade de São Paulo.
+
+Dividimos esse experimento em três etapas novamente, e elas se deram da seguinte forma quanto ao número de eventos de fechamento de via e PMVs:
+
+\begin{enumerate}
+    \item Sem eventos de fechamento de via e sem PMVs
+
+    \item Com eventos de fechamento de via e sem PMVs
+
+    \item Com eventos de fechamento de via e 7 PMVs
+\end{enumerate}
+
+Foram executadas 20 iterações de cada uma das etapas, onde em cada iteração emulamos 1 hora e 30 minutos.
+Neste experimento, utilizamos dados do OpenStreet Maps e a pesquisa Origem-Destino realizado pela companhia de metrô da cidade de São Paulo em 2007 para definição do cenário a ser emulado.
+A seguir mais detalhes sobre esses dados.
+
+não utilizamos o mapa viário completo da cidade de São Paulo, realizamos um recorte de um trecho da avenida Rebouças com um raio de 5km, próximo ao cruzamento da avenida Paulista.
+E para criação das viagens de carros a serem realizadas, usamos os mesmos dados da pesquisa OD (Origem-Destino) utilizada no experimento de estacionamento inteligente.
+Contudo, como não utilizamos o mapa completo da cidade, filtramos apenas as viagens cuja origem e destino pertencessem am recorte do mapa realizado.
+
+\begin{itemize}
+    \item \textbf{OpenStreet Maps}: para criar o grafo viário da cidade de São Paulo usado na emulação, usamos o mapa do OpenStreet Maps.
+        Este mapa contém todas as ruas e junções da cidade, em conjunto com um vasto número de atributos, como comprimento, capacidade e velocidade limite.
+        Tal informação é usada pelo emulador para definir as rotas percorridas pelos carros durante a realização de suas viagens, bem como emular o impacto do tráfego na velocidade dos carros.
+        Neste experimento, diferente do apresentado na seção anterior, não utilizamos o mapa viário completo da cidade de São Paulo.
+        Realizamos um recorte de um trecho da avenida Rebouças com um raio de 5km, próximo ao cruzamento da avenida Paulista.
+
+    \item \textbf{Pesquisa Origem-Destino (OD)}: criamos as viagens de carro emuladas com base na pesquisa OD realizada pela Companhia de Metrô de São Paulo.
+        \footnote{Pesquisa Origem-Destino - http://goo.gl/Te2SX7.}
+        Essa pesquisa descreve as viagens de 200.000 pessoas e extrapola os dados para toda a população da cidade.
+        A pesquisa inclui informações sobre a origem, o destino, o modo de transporte e a hora de partida.
+        Esses dados forma utilizados para definir o comportamento dos agentes do tipo carro na emulação.
+        Por não termos utilizado o mapa completo da cidade, filtramos apenas as viagens cuja origem e destino pertencessem am recorte do mapa realizado.
+        Emulamos o tráfego em São Paulo durante o horário das 8h às 9h30.
+        Na pesquisa OD, há 2.210 viagens de carro que começam durante o intervalo de tempo considerado e no recorte do mapa feito.
+\end{itemize}
+
+Na etapa 3 deste experimento, onde fizemos uso de 7 PMVs, posicionamos os mesmos nas principais vias presentes no recorte do mapa utilizado, como pode ser visto na Figura \ref{fig:pos_pmvs}.
+Decidimos utilizar tais vias acreditando que por nelas terem um maior fluxo de carros, possivelmente impactariam nas rotas de mais carros.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.7\textwidth]{figuras/pmvs_locations.png}
+	\caption{Posicionamento das PMVs no experimento de tráfego de carros inteligentes.}
+	\label{fig:pos_pmvs}
+\end{figure}
+
+E na Figura \ref{fig:eventos}, pode-se ver os trechos de vias que foram fechadas nas etapas 2 e 3 deste experimento.
+No grafo do mapa viário da cidade gerado a partir do OpenStreet Maps, uma mesma via é formada de várias pequenas arestas (trechos de via).
+Visando enfatizar um evento como um acidente de carro fatal ou um possível alagamento na região, fechamos um conglomerado de arestas nas proximidades das avenidas Rebouças e Paulista.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.7\textwidth]{figuras/events_edges_map.png}
+	\caption{Local dos eventos de fechamento de via no experimento de tráfego de carros inteligentes.}
+	\label{fig:eventos}
+\end{figure}
+
+Sabendo o local dos eventos de fechamento de vias e o posicionamento das PMVs, esperávamos que a notificação prévia dos motoristas sobre o acidente reduzisse a média do tempo de viagem dos motoristas
+com relação a não existência das PMVs.
+Consideramos que, pelo fato das avenidas Rebouças e Paulista serem bem movimentadas, muitas das viagens emuladas neste experimento passassem por aquele trecho. 
+Contudo, a utilização das PMVs não deveria melhorar a média da duração das viagens em relação a etapa onde não acontece nenhum evento de fechamento de via.
+
+As três etapas desse experimento foram realizadas novamente em dois \textit{laptops} com 8 CPUs virtuais (1.80 GHz) e 8 GB de memoria RAM.
+Mais uma vez, diferente do experimento apresentado na Seção \ref{sec:exp_smart_parking}, o foco desse experimento não é analisar o desempenho da plataforma, mas sim uma análise funcional. 
+O passo a passo para execução desse experimento de validação foi o seguinte:
+
+\begin{enumerate}
+    \item Executar uma instância em modo de produção da plataforma InterSCity em um \textit{laptops}.
+
+    \item Executar uma instância em modo de produção da emulador InterSCSimulator no outro \textit{laptop}.
+
+    \item Configurar rede local entre os \textit{laptops}, conectados de maneira cabeada via ethernet.
+
+    \item Realizar a emulação do cenário de tráfego de carros inteligente.
+
+    \item Analizar os resultados obtidos ao final da emulação.
+\end{enumerate}
+
+A Figura \ref{fig:duracao_total}, apresenta o desvio padrão (no topo das barras) e a duração média das viagens de carro emuladas nas três etapas deste experimento.
+No eixo Y, a duração é apresentada em segundos (ciclo de execução da emulação -- 1 ciclo = 1 segundo), e no eixo X os diferentes cenários utilizados em cada uma das 3 etapas.
+Como podemos ver no gráfico apresentado, em geral, a média do tempo de duração das viagens não passou de 6 minutos.
+Isso pode ter ocorrido pelo fato das viagens nessa região serem mais curtas, ou por não terem viagens suficientes para gerar congestionamentos, já que filtramos apenas as viagens que se iniciavam e
+terminavam dentro do recorte do mapa utilizado.
+Outro fator importante que nos chamou a atenção, foi a média da duração das viages da etapa 3, onde existem vias fechadas e o auxilio de PMVs, ser menor do que da etapa 1, onde não existe qualquer
+incidente.
+Após analisar os dados, percebemos que ao recalcular a rota quando deparado de uma PMV, os carros se distribuíam de uma melhor forma pela malha viária do cenário utilizado pelo experimento, com isso,
+evitavam congestionamentos que ocorriam anteriormente.
+Sendo essa uma possível melhoria no emulador, já que o mesmo ao criar o ator calcula e utiliza apenas um dos menores caminhos entre a origem e destino do carro, podendo essa rota coincidir entre
+múltiplos atores com origem e destinos similares, assim, deixando outros caminhos mais curtos inutilizados.
+Todavia, como esperado, a etapa 2, onde temos fechamento de vias mas não temos PMVs, teve a maior média de duração das viagens.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.8\textwidth]{figuras/duracao_total.png}
+	\caption{Média da duração das viagens de carros no experimento.}
+	\label{fig:duracao_total}
+\end{figure}
+
+Para garantirmos uma melhor acurácia na análise dos resultados obtidos, filtramos apenas as viagens que foram influencidas de alguma forma pelo fechamento de vias e/ou PMVs.
+Isso porque percebemos a existência de viagens que não eram modificadas em nenhuma das etapas do experimento, ou seja, a sua duração era sempre a mesma.
+Na Figura \ref{fig:duracao_filtered}, apresentamos o mesmo gráfico discutido anteriormente, só que incluindo apenas as viagens que foram afetadas.
+Agora analisando o gráfico com as viagens afetadas, obtivemos o resultado esperado no início do experimento.
+A etapa 1, onde não há vias fechadas, teve o menor tempo médio de duração de viagens, sendo esse o nosso limite inferior.
+A etapa 2, onde vias foram fechadas, o pior tempo médio de viagem foi obtido, sendo o limite superior.
+E a etapa 3, onde introduzimos as PMVs para auxiliar os motoristas na decisão da melhor rota a seguir, apresentou um tempo médio de viagem ligeiramente menor do que a etapa 2 e maior do que a etapa 1.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=.8\textwidth]{figuras/duracao_filtered.png}
+	\caption{Média da duração das viagens de carros afetadas por fechamento de vias e/ou PMVs no experimento.}
+	\label{fig:duracao_filtered}
+\end{figure}
+
+Contudo, a melhora de aproximadamente 5\% na média do tempo de duração da viagem da etapa 3 com relação a etapa 2 não foi um resultado expressivo.
+Avaliamos que alguns fatores podem ter influenciado nesse resultado, sendo a maioria deles voltado para os dados utilizados para a definicação do cenário de emulação deste experimento.
+O posicionamento das PMVs pode não ter sido o ideal, já que não foi realizada uma análise prévia de onde passariam a maior parte dos carros.
+O conjunto de viagens emulados após recortar o mapa da cidade de São Paulo pode não ter sido representativa, a decisão de reduzir o mapa para facilitar a visualização do impacto do fechamento de vias
+e PMVs pode não ter sido boa.
+Além disso,  os resultados obtidos podem ter sudo influenciados devido a infraestrutura simples utilizada com apenas dois \textit{laptops}.
+
 
 \section{Análise Crítica}
 
