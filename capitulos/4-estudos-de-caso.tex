@@ -5,45 +5,45 @@
 %Detalhar implementação e experimentos realizados:
 
 Foram realizados dois experimentos como estudo de caso, utilizando as duas implementação apresentadas no capítulo anterior, sendo elas os cenários de estacionamento e tráfego de carros inteligente.
-Através desses dois experimentos pudemos validar a proposta de solução apresentada para construção de um ambiente emulado de experimentação para plataformas de Cidades Inteligentes.
+Através desses dois experimentos pudemos validar a proposta de solução apresentada para construção de um ambiente simulado de experimentação para plataformas de Cidades Inteligentes.
 Foi possível exercitar as principais funcionalidades necessárias para a realização de experimentos desse tipo, através da integração do InterSCSimulator e a plataforma InterSCity.
 
-Os cenários emulados em cada experimento e seus respectivos resultados serão apresentados nas seções a seguir.
+Os cenários simulados em cada experimento e seus respectivos resultados serão apresentados nas seções a seguir.
 E ao final, realizaremos uma análise crítica sobre os resultados obtidos nesse trabalho, apontando possíveis melhorias a serem feitas.
 
 \section{Estacionamento Inteligente}
 \label{sec:exp_smart_parking}
 
-Como apresentado na Seção \ref{sec:smart_parking}, nesse cenário de Cidades Inteligentes emulamos a utilização de um aplicativo móvel, por parte dos motoristas de carros, para facilitar o encontro de
+Como apresentado na Seção \ref{sec:smart_parking}, nesse cenário de Cidades Inteligentes simulamos a utilização de um aplicativo móvel, por parte dos motoristas de carros, para facilitar o encontro de
 vagas de estacionamento disponíveis próximas do seu destino final.
 Esse aplicativo poderia evitar alguns transtornos para os motoristas na árdua missão de estacionar seus carros no centro das grandes metrópoles, por exemplo.
 
 Nesse experimento, tentamos verificar a escalabilidade dos microsserviços envolvidos da plataforma InterSCity, por isso utilizamos dados reais de uma das maiores megalópoles do mundo: São Paulo.
-Dados abertos da cidade de São Paulo foram utilizados para a definição do cenário de emulação do ambiente integrado.
+Dados abertos da cidade de São Paulo foram utilizados para a definição do cenário de simulação do ambiente integrado.
 Utilizamos dados extraídos da pesquida OD (Origem-Destino) realizada pela Companhia de Metrô da cidade de São Paulo e do OpenStreet Maps para a definição de cenário.
 A seguir, esses dados, bem como suas fontes, utilizados na configuração do experimento serão detalhados:
 
 \begin{itemize}
-    \item \textbf{Pesquisa Origem-Destino (OD)}: criamos as viagens de carro emuladas com base na pesquisa OD realizada pela Companhia de Metrô de São Paulo.
+    \item \textbf{Pesquisa Origem-Destino (OD)}: criamos as viagens de carro simuladas com base na pesquisa OD realizada pela Companhia de Metrô de São Paulo.
         \footnote{Pesquisa Origem-Destino - http://goo.gl/Te2SX7.}
         Essa pesquisa descreve as viagens de 200.000 pessoas e extrapola os dados para toda a população da cidade.
         A pesquisa inclui informações sobre a origem, o destino, o modo de transporte e a hora de partida.
-        Esses dados forma utilizados para definir o comportamento dos agentes do tipo carro na emulação.
+        Esses dados forma utilizados para definir o comportamento dos agentes do tipo carro na simulação.
         Para gerar a carga para os experimentos da plataforma, emulamos o tráfego em São Paulo durante o horário de pico, das 5h40 às 8h40.
         Na pesquisa OD, há 492.976 carros que começam suas viagens durante o intervalo de tempo considerado.
 
-    \item \textbf{OpenStreet Maps}: para criar o grafo viário da cidade de São Paulo usado na emulação, usamos o mapa do OpenStreet Maps.
+    \item \textbf{OpenStreet Maps}: para criar o grafo viário da cidade de São Paulo usado na simulação, usamos o mapa do OpenStreet Maps.
         Este mapa contém todas as ruas e junções da cidade, em conjunto com um vasto número de atributos, como comprimento, capacidade e velocidade limite.
-        Tal informação é usada pelo emulador para definir as rotas percorridas pelos carros durante a realização de suas viagens, bem como emular o impacto do tráfego na velocidade dos carros.
+        Tal informação é usada pelo simulador para definir as rotas percorridas pelos carros durante a realização de suas viagens, bem como simular o impacto do tráfego na velocidade dos carros.
 
-    \item \textbf{Vagas de Estacionamento}: criamos as vagas de estacionamento na emulação baseado nos dados obtidos através do OpenStreet Maps e do Zona Azul
+    \item \textbf{Vagas de Estacionamento}: criamos as vagas de estacionamento na simulação baseado nos dados obtidos através do OpenStreet Maps e do Zona Azul
         \footnote{http://www.cetsp.com.br/consultas/zona-azul/mapa-zona-azul/mapa-zona-azul.aspx}
         (serviço de estacionamento rotativo da cidade de São Paulo).
 \end{itemize}
 
 Nas Figuras \ref{fig:map-spots-distribution} e \ref{fig:map-destinations-distribution}, são apresentadas as distribuições das vagas de estacionamento e destinos de viagens de carros respectivamente,
 utilizadas nesse experimento.
-Os destinos apresentados na Figura \ref{fig:map-destinations-distribution}, são referentes a todas as viagens realizadas no decorrer de toda a emulação.
+Os destinos apresentados na Figura \ref{fig:map-destinations-distribution}, são referentes a todas as viagens realizadas no decorrer de toda a simulação.
 É importante notar que a distribuição das vagas de estacionamento baseado nesses dados reais está mais concentrada no centro da cidade do que os destinos das viagens.
 Isso pode levar a situaçãoes onde o agente do tipo carro pode realizar mais de três tentativas de busca de vagas disponíveis e ainda sim não conseguir estacionar.
 Nesse caso, o usuário do aplicativo pararia de utiliza-lo e o agente do tipo carro terminaria sua execução, como apresentado na Seção \ref{sec:smart_parking}.
@@ -70,20 +70,20 @@ Tendo ideia do contexto e dos dados a serem utilizados nesse cenário experiment
 
     \item Habilitar mecanismo de escala automática (\textit{auto-scaling}) para os microsserviços da plataforma baseado na variação de carga de trabalho.
 
-    \item Configuração do emulador em um ambiente isolado da plataforma. Assim, o gasto de recursos computacionais do emulador não interfere no uso da plataforma.
+    \item Configuração do simulador em um ambiente isolado da plataforma. Assim, o gasto de recursos computacionais do simulador não interfere no uso da plataforma.
 
-    \item Realizar a emulação do cenário de estacionamento inteligente.
+    \item Realizar a simulação do cenário de estacionamento inteligente.
 
-    \item Monitorar a performance e o uso de recursos da plataforma durante toda a emulação.
+    \item Monitorar a performance e o uso de recursos da plataforma durante toda a simulação.
 
     \item Analizar os resultados obtidos.
 \end{enumerate}
 
 Então, inicialmente, foi necessário a configuração de ambas as ferramentas em conjunto com seu componente de integração em um ambiente de núvem.
-Os microsserviços da plataforma InterSCity, o emulador InterSCSimulator e ferramentas auxiliares foram implantados na forma de \textit{containers} Docker \footnote{https://www.docker.com/}.
+Os microsserviços da plataforma InterSCity, o simulador InterSCSimulator e ferramentas auxiliares foram implantados na forma de \textit{containers} Docker \footnote{https://www.docker.com/}.
 Utilizamos a infraestrutura provida pelo Google Cloud Platform (GCP) \footnote{https://cloud.google.com/} para a realização do experimento, sendo esse o ambiente ideal para a execução da plataforma
 InteSCity, como visto na Seção \ref{sec:interscity}.
-No contexto do GCP, fizemos bastante uso do Google Kubernetes Engine (GKE), sendo esse um serivço que provê um ambiente gerenciado e pronto para produção para implantação de \textit{containers} de
+No contexto do GCP, fizemos bastante uso do Google Kubernetes Engine (GKE), sendo esse um serivço que provê um ambiente gerenciado e pronto de produção para implantação de \textit{containers} de
 aplicações.
 O Kubernetes foi utilizado principalemte para automatizar a reinicialização, a replicação e dimensionamento do número de \textit{containers}.
 Além disso, o kubernetes traz uma vantagem para a reproducibilidade do experimento que é a especificação da infraestrutura como código, garantindo a correta aplicação das regras de implantação.
@@ -122,12 +122,12 @@ Este número pode aumentar a medida que os recursos computacionais ficarem dispo
 Os \textit{containers} são executados por trás de um serviço de balanceamento de carga.
 
 Embora possamos nos beneficiar das propriedades de elasticidade do GCP, adicionando e removendo automaticamente nós ao \textit{cluster} através da sua funcionalidade de dimensionamento automático,
-isso introduziria outro nível de incerteza em nosso experimento, já que na nossa experiência o tempo levado para criar novas máquinas virtuais podem variar consideravelmente.
+isso introduziria outro nível de incerteza em nosso experimento, já que na nossa experiência o tempo levado para criar novas máquinas virtuais pode variar consideravelmente.
 Sabendo disso, criamos todos os nós previamente, antes de iniciar o experimento, mantendo-os em execução ao longo de todo experimento.
 
 Como dito anteriormente, executamos 15 rodadas de experimentos, onde cada uma durou 3h, correspondendo ao horário de pico da manhã da cidade de São Paulo descrito no início desta seção.
-Na Figura \ref{fig:workload}, podemos ver a carga de trabalho média gerada pela emulação durante todo o experimento e o seu desvio padrão (linhas pretas no topo de cada barra).
-Vale notar que nos primeiros 80 minutos de emulação, temos um crescimento constante da carga de trabalho.
+Na Figura \ref{fig:workload}, podemos ver a carga de trabalho média gerada pela simulação durante todo o experimento e o seu desvio padrão (linhas pretas no topo de cada barra).
+Vale notar que nos primeiros 80 minutos de simulação, temos um crescimento constante da carga de trabalho.
 No intervalo aproximado de uma hora, entre 60 e 120 minutos, observamos o período de maior carga do experimento, considerando que o pico máximo de requisições ocorre após 80 minutos, correspondendo a mais
 de 113.000 requisições em 10 minutos.
 No total, mais de um milhão de requisições foram realizadas para a plataforma durante o tempo de experimento.
@@ -202,17 +202,17 @@ de rede e imprevisibilidade.
 
 \section{Tráfego de Carros Inteligente}
 
-Neste segundo experimento, emulamos o trânsito de uma cidade, e através de uma aplicação de detecção de anomalias em vias (variação da velocidade média dos carros bem acima do usual),
+Neste segundo experimento, simulamos o trânsito de uma cidade, e através de uma aplicação de detecção de anomalias em vias (variação da velocidade média dos carros bem acima do usual),
 atuamos em Placas de Mensagens Variadas (PMV) alertando os motoristas desses trechos problemáticos para que os mesmos fossem evitados.
 Essa aplicação de detecção de anomalias em vias foi implementada utilizando o serviço de processamento de dados da plataforma InterSCity que está em desenvolvimento.
 
 Esse experimento consistiu em três etapas.
 Com discutido na Seção \ref{sec:smart_traffic}, limiares (\textit{thresholds}) de velocidade média para cada trecho de via em cada horário do dia deveriam ser definidos.
-Portanto, a primeira etapa consistiu na emulação do trânsito da cidade sem nenhum evento de fechamento de via, ou seja, o trânsito normal da cidade.
+Portanto, a primeira etapa consistiu na simulação do trânsito da cidade sem nenhum evento de fechamento de via, ou seja, o trânsito normal da cidade.
 Com isso, a aplicação de detecção de anomalias era capaz de com os dados de posicionamento de carros enviados a cada ciclo de execução definir esses tais limiares.
-Já a segunda etapa, consistiu em emular o trânsito de carros na cidade com alguns eventos de fechamento de vias (representando ruas alagadas e acidentes de carro por exemplo).
-Nessa etapa, emulamos o comportamento caótico visto nas grandes cidades, onde vias são interditadas e interferem diretamente no tráfego dos carros.
-Na última etapa, emulamos exatamente a segunda etapa, mas adicionamos as PMVs para auxiliar os condutores de carros a contornar essas situações.
+Já a segunda etapa, consistiu em simular o trânsito de carros na cidade com alguns eventos de fechamento de vias (representando ruas alagadas e acidentes de carro por exemplo).
+Nessa etapa, simulamos o comportamento caótico visto nas grandes cidades, onde vias são interditadas e interferem diretamente no tráfego dos carros.
+Na última etapa, simulamos exatamente a segunda etapa, mas adicionamos as PMVs para auxiliar os condutores de carros a contornar essas situações.
 Tendo em vista que os limiares já haviam sido definidos, a aplicação, sem ter conhecimento prévio dessas vias fechadas, detectava automaticamente esses trechos e notificava os motoristas através da
 atualização de mensagens nas PMVs.
 
@@ -234,7 +234,7 @@ Nesse experimento inicial de validação, as três etapas se deram da seguinte f
     \item Com um evento de fechamento de via e uma PMV
 \end{enumerate}
 
-Foram executadas 20 iterações de cada uma das etapas, onde em cada iteração foram 10 minutos de emulação.
+Foram executadas 20 iterações de cada uma das etapas, onde em cada iteração foram 10 minutos de simulação.
 Em todas as etapas, utilizamos um grafo com 8 vértices e 16 arestas, como pode ser visto na Figura \ref{fig:mapa_validacao}.
 O grafo é direcionado, onde cada aresta na verdade representa duas, sendo uma entrando e outra saíndo de seus vértices, ou seja, simbolizam vias de mão dupla.
 
@@ -252,26 +252,26 @@ O grafo da Figura \ref{fig:mapa_validacao} retrata o mapa viário da cidade emul
 
     \item As arestas representam as ruas da cidade.
 
-    \item Todas as arestas possuem comprimento 1, por isso, a cada ciclo de emulação, caso seja possível, um carro percorre uma aresta.
+    \item Todas as arestas possuem comprimento 1, por isso, a cada ciclo de simulação, caso seja possível, um carro percorre uma aresta.
 \end{itemize}
 
 Além disso, adotamos a seguinte forma para separar vértices e arestas que desempenham papel importante neste experimento:
 
 \begin{itemize}
-    \item A aresta pontilhada amarela representa a via da cidade que será fechada durante a emulação (essa aresta só será afetada nas etapas que posssuem tal evento).
+    \item A aresta pontilhada amarela representa a via da cidade que será fechada durante a simulação (essa aresta só será afetada nas etapas que posssuem tal evento).
 
-    \item O vértice cinza representa a origem de todas as viagens emuladas.
+    \item O vértice cinza representa a origem de todas as viagens simuladas.
 
     \item O vértice amarelo representa o destino das viagens.
 
     \item O vértice azul representa o local da cidade que contém uma PMV que alertará os motoristas sobre possíveis anomalias nas vias.
 \end{itemize}
 
-Em todas as iterações de todas as etapas, emulamos um total de 100 viagens partingo do vértice 1 até o 7.
+Em todas as iterações de todas as etapas, simulamos um total de 100 viagens partindo do vértice 1 até o 7.
 Como o intuito desse experimento era validar o comportamento da implementação do ambiente de experimentação como um todo, antes de apresentar os resultados obtidos, descrevemos o resultado esperado para
 cada uma das etapas a seguir.
 
-Na Figura \ref{fig:mapa_etapa1}, pode-se ver o caminho esperado que os carros percorresem na primeira etapa do experimento, onde não há a presença de eventod de fechamento de vias, nem muito menos PMV.
+Na Figura \ref{fig:mapa_etapa1}, pode-se ver o caminho esperado que os carros percorresem na primeira etapa do experimento, onde não há a presença de eventos de fechamento de vias, nem muito menos PMV.
 As arestas em \textbf{roxo} representam o trajeto do carro, as demais arestas não utilizadas forma removidas do grafo a título de legibilidade.
 Note que ao chegar no vértice 3, ele sempre optará o caminho seguindo pelo vértice 4.
 Isso acontece porque como mencionado anteriormente todas as arestas possuem o mesmo comprimento (ambos são um caminho mais curto até o destino), sendo o critério de desempate o menor índice.
@@ -283,8 +283,8 @@ Isso acontece porque como mencionado anteriormente todas as arestas possuem o me
 	\label{fig:mapa_etapa1}
 \end{figure}
 
-Na Figura \ref{fig:mapa_etapa2}, o trajeto esperado para que o carro percorra na etapa 2 do experimento é apresentado. Nessa etapa, temos uma via fechada, sendo ela entre os vétices 4 e 5, e nenhuma
-PMV para auxiliar os motoristas.
+Na Figura \ref{fig:mapa_etapa2}, o trajeto esperado para que o carro percorra na etapa 2 do experimento é apresentado.
+Nessa etapa, temos uma via fechada, sendo ela entre os vétices 4 e 5, e nenhuma PMV para auxiliar os motoristas.
 Em \textbf{roxo} podemos ver as arestas que serão percorridas inicialmente;
 em cor \textbf{preta}, as arestas que faziam parte do caminho inicialmente calculado, mas que não foram percorridas devido ao fechamento da via (aresta tracejada);
 e em cor \textbf{verde}, o caminho recalculado após se deparar com o fechamento de via no vértice 4.
@@ -319,16 +319,16 @@ O passo a passo para execução desse experimento de validação foi o seguinte:
 \begin{enumerate}
     \item Executar uma instância em modo de produção da plataforma InterSCity em um \textit{laptops}.
 
-    \item Executar uma instância em modo de produção da emulador InterSCSimulator no outro \textit{laptop}.
+    \item Executar uma instância em modo de produção da simulador InterSCSimulator no outro \textit{laptop}.
 
     \item Configurar rede local entre os \textit{laptops}, conectados de maneira cabeada via ethernet.
 
-    \item Realizar a emulação do cenário de tráfego de carros inteligente.
+    \item Realizar a simulação do cenário de tráfego de carros inteligente.
 
-    \item Analizar os resultados obtidos ao final da emulação.
+    \item Analizar os resultados obtidos ao final da simulação.
 \end{enumerate}
 
-A Figura \ref{fig:distancia_validacao}, apresenta o desvio padrão (no topo das barras) e a distância média percorrida pelos carros emulados nas três etapas deste experimento.
+A Figura \ref{fig:distancia_validacao}, apresenta o desvio padrão (no topo das barras) e a distância média percorrida pelos carros simulados nas três etapas deste experimento.
 Segundo nossas hipóteses, esperávamos que no cenário sem evento de fechamento de via e sem PMV para notificar os motoristas percorressem 6 arestas, no cenário com evento e sem PMV percorressem 8 arestas
 e no cenário com evento e PMV percorressem entre 6 e 8 arestas (alguns veículos ignoram as notificações).
 Nossas hipóteses foram confirmadas, como pode ser visto no gráfico.
@@ -336,16 +336,16 @@ Nossas hipóteses foram confirmadas, como pode ser visto no gráfico.
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=.8\textwidth]{figuras/distancia_validacao.png}
-	\caption{Media da distancia percorrida pelos carros no experimento.}
+	\caption{Média da distância percorrida pelos carros no experimento.}
 	\label{fig:distancia_validacao}
 \end{figure}
 
-Uma análise semelhante foi realizada com a duração das viagens emuladas, como pode ser visto na Figura \ref{fig:duracao_validacao}.
-O desvio padrão (no topo das barras) e a duração media das viagens emuladas nas três etapas do experimento são apresentados no gráfico.
+Uma análise semelhante foi realizada com a duração das viagens simuladas, como pode ser visto na Figura \ref{fig:duracao_validacao}.
+O desvio padrão (no topo das barras) e a duração média das viagens simuladas nas três etapas do experimento são apresentados no gráfico.
 Uma viagem dura sempre 2 ciclos de execução (criação e destruição do ator) mais o tempo utilizado para percorrer as arestas (uma aresta por ciclo de execução, já que possuem comprimento unitário)
 e o recálculo de um caminho custa um ciclo.
 Por isso, esperávamos que para o cenário sem evento de fechamento de via durasse 8 ciclos (2 pelo ciclo de vida + 6 arestas);
-o cenário com evento e sem PMV para informar os motoristas durasse 11 ciclos (2 )nsito pelo ciclo de vida + 8 arestas + 1 pelo recálculo da rota);
+o cenário com evento e sem PMV para informar os motoristas durasse 11 ciclos (2 pelo ciclo de vida + 8 arestas + 1 pelo recálculo da rota);
 e o cenário com evento e PMV durasse entre 9 ciclos (2 pelo ciclo de vida + 6 arestas + 1 pelo recálculo) para motoristas que seguissem as instruções da PMV, e 11 ciclos (2 pelo ciclo de vida + 8 arestas +
 1 pelo recálculo) para os motoristas que ignorassem a PMV.
 Nossas hipóteses mais uma vez foram confirmadas, como pode ser visto na Figura \ref{fig:duracao_validacao}.
@@ -353,18 +353,18 @@ Nossas hipóteses mais uma vez foram confirmadas, como pode ser visto na Figura 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=.8\textwidth]{figuras/duracao_validacao.png}
-	\caption{Média da duração das viagens emuladas no experimento.}
+	\caption{Média da duração das viagens simuladas no experimento.}
 	\label{fig:duracao_validacao}
 \end{figure}
 
 Com isso, pudemos verificar os requisitos fundamentais e de integração, apresentados na Seção \ref{sec:requisitos}, para este cenário de tráfego de carros inteligentes.
-O modelo implementado no emulador correspondeu com o esperado e a comunicação entre as ferramentas foi validada, principalmente com o que diz respeito a atuação no ambiente emulado, sendo esse um
+O modelo implementado no simulador correspondeu com o esperado e a comunicação entre as ferramentas foi validada, principalmente com o que diz respeito a atuação no ambiente simulado, sendo esse um
 trabalho pioneiro.
 
 \subsection{Cidade de São Paulo}
 
 Tendo em vista que a implementação dos modelos utilizados para este cenário e a integração estavam funcionando dentro do esperado, realizamos um outro experimento, envolvendo o mesmo cenário de tráfego de
-carros inteligentes, mas dessa vez em uma escala maior e com dados abertos da cidade de São Paulo.
+carros inteligente, mas dessa vez em uma escala maior e com dados abertos da cidade de São Paulo.
 
 Dividimos esse experimento em três etapas novamente, e elas se deram da seguinte forma quanto ao número de eventos de fechamento de via e PMVs:
 
@@ -376,26 +376,28 @@ Dividimos esse experimento em três etapas novamente, e elas se deram da seguint
     \item Com eventos de fechamento de via e 7 PMVs
 \end{enumerate}
 
-Foram executadas 20 iterações de cada uma das etapas, onde em cada iteração emulamos 1 hora e 30 minutos.
-Neste experimento, utilizamos dados do OpenStreet Maps e a pesquisa Origem-Destino realizado pela companhia de metrô da cidade de São Paulo em 2007 para definição do cenário a ser emulado.
+Foram executadas 20 iterações de cada uma das etapas, onde em cada iteração simulamos 1 hora e 30 minutos.
+Neste experimento, utilizamos dados do OpenStreet Maps e a pesquisa Origem-Destino realizado pela companhia de metrô da cidade de São Paulo em 2007 para definição do cenário a ser simulado.
 A seguir mais detalhes sobre esses dados.
 
-não utilizamos o mapa viário completo da cidade de São Paulo, realizamos um recorte de um trecho da avenida Rebouças com um raio de 5km, próximo ao cruzamento da avenida Paulista.
+Dessa vez não utilizamos o mapa viário completo da cidade de São Paulo, realizamos um recorte de um trecho da avenida Rebouças com um raio de 5km, próximo ao cruzamento da avenida Paulista.
+O intuito desse recorte era reduzir o escopo do experimento para enfatizar a impacto das PMVs naquela região.
 E para criação das viagens de carros a serem realizadas, usamos os mesmos dados da pesquisa OD (Origem-Destino) utilizada no experimento de estacionamento inteligente.
 Contudo, como não utilizamos o mapa completo da cidade, filtramos apenas as viagens cuja origem e destino pertencessem am recorte do mapa realizado.
+Todos os \textit{scripts} utilizados para filtrar os dados de entrada estão disponíveis em nosso repositório aberto\footnote{https://github.com/LSS-USP/pmv\_experiment}.
 
 \begin{itemize}
-    \item \textbf{OpenStreet Maps}: para criar o grafo viário da cidade de São Paulo usado na emulação, usamos o mapa do OpenStreet Maps.
+    \item \textbf{OpenStreet Maps}: para criar o grafo viário da cidade de São Paulo usado na simulação, usamos o mapa do OpenStreet Maps.
         Este mapa contém todas as ruas e junções da cidade, em conjunto com um vasto número de atributos, como comprimento, capacidade e velocidade limite.
-        Tal informação é usada pelo emulador para definir as rotas percorridas pelos carros durante a realização de suas viagens, bem como emular o impacto do tráfego na velocidade dos carros.
+        Tal informação é usada pelo simulador para definir as rotas percorridas pelos carros durante a realização de suas viagens, bem como simular o impacto do tráfego na velocidade dos carros.
         Neste experimento, diferente do apresentado na seção anterior, não utilizamos o mapa viário completo da cidade de São Paulo.
         Realizamos um recorte de um trecho da avenida Rebouças com um raio de 5km, próximo ao cruzamento da avenida Paulista.
 
-    \item \textbf{Pesquisa Origem-Destino (OD)}: criamos as viagens de carro emuladas com base na pesquisa OD realizada pela Companhia de Metrô de São Paulo.
+    \item \textbf{Pesquisa Origem-Destino (OD)}: criamos as viagens de carro simuladas com base na pesquisa OD realizada pela Companhia de Metrô de São Paulo.
         \footnote{Pesquisa Origem-Destino - http://goo.gl/Te2SX7.}
         Essa pesquisa descreve as viagens de 200.000 pessoas e extrapola os dados para toda a população da cidade.
         A pesquisa inclui informações sobre a origem, o destino, o modo de transporte e a hora de partida.
-        Esses dados forma utilizados para definir o comportamento dos agentes do tipo carro na emulação.
+        Esses dados forma utilizados para definir o comportamento dos agentes do tipo carro na simulação.
         Por não termos utilizado o mapa completo da cidade, filtramos apenas as viagens cuja origem e destino pertencessem am recorte do mapa realizado.
         Emulamos o tráfego em São Paulo durante o horário das 8h às 9h30.
         Na pesquisa OD, há 2.210 viagens de carro que começam durante o intervalo de tempo considerado e no recorte do mapa feito.
@@ -407,7 +409,7 @@ Decidimos utilizar tais vias acreditando que por nelas terem um maior fluxo de c
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=.7\textwidth]{figuras/pmvs_locations.png}
-	\caption{Posicionamento das PMVs no experimento de tráfego de carros inteligentes.}
+	\caption{Posicionamento das PMVs no experimento de tráfego de carros inteligente.}
 	\label{fig:pos_pmvs}
 \end{figure}
 
@@ -418,13 +420,13 @@ Visando enfatizar um evento como um acidente de carro fatal ou um possível alag
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=.7\textwidth]{figuras/events_edges_map.png}
-	\caption{Local dos eventos de fechamento de via no experimento de tráfego de carros inteligentes.}
+	\caption{Local dos eventos de fechamento de via no experimento de tráfego de carros inteligente.}
 	\label{fig:eventos}
 \end{figure}
 
 Sabendo o local dos eventos de fechamento de vias e o posicionamento das PMVs, esperávamos que a notificação prévia dos motoristas sobre o acidente reduzisse a média do tempo de viagem dos motoristas
 com relação a não existência das PMVs.
-Consideramos que, pelo fato das avenidas Rebouças e Paulista serem bem movimentadas, muitas das viagens emuladas neste experimento passassem por aquele trecho. 
+Consideramos que, pelo fato das avenidas Rebouças e Paulista serem bem movimentadas, muitas das viagens simuladas neste experimento passassem por aquele trecho. 
 Contudo, a utilização das PMVs não deveria melhorar a média da duração das viagens em relação a etapa onde não acontece nenhum evento de fechamento de via.
 
 As três etapas desse experimento foram realizadas novamente em dois \textit{laptops} com 8 CPUs virtuais (1.80 GHz) e 8 GB de memoria RAM.
@@ -434,17 +436,17 @@ O passo a passo para execução desse experimento de validação foi o seguinte:
 \begin{enumerate}
     \item Executar uma instância em modo de produção da plataforma InterSCity em um \textit{laptops}.
 
-    \item Executar uma instância em modo de produção da emulador InterSCSimulator no outro \textit{laptop}.
+    \item Executar uma instância em modo de produção da simulador InterSCSimulator no outro \textit{laptop}.
 
     \item Configurar rede local entre os \textit{laptops}, conectados de maneira cabeada via ethernet.
 
-    \item Realizar a emulação do cenário de tráfego de carros inteligente.
+    \item Realizar a simulação do cenário de tráfego de carros inteligente.
 
-    \item Analizar os resultados obtidos ao final da emulação.
+    \item Analizar os resultados obtidos ao final da simulação.
 \end{enumerate}
 
-A Figura \ref{fig:duracao_total}, apresenta o desvio padrão (no topo das barras) e a duração média das viagens de carro emuladas nas três etapas deste experimento.
-No eixo Y, a duração é apresentada em segundos (ciclo de execução da emulação -- 1 ciclo = 1 segundo), e no eixo X os diferentes cenários utilizados em cada uma das 3 etapas.
+A Figura \ref{fig:duracao_total}, apresenta o desvio padrão (no topo das barras) e a duração média das viagens de carro simuladas nas três etapas deste experimento.
+No eixo Y, a duração é apresentada em segundos (ciclo de execução da simulação -- 1 ciclo = 1 segundo), e no eixo X os diferentes cenários utilizados em cada uma das 3 etapas.
 Como podemos ver no gráfico apresentado, em geral, a média do tempo de duração das viagens não passou de 6 minutos.
 Isso pode ter ocorrido pelo fato das viagens nessa região serem mais curtas, ou por não terem viagens suficientes para gerar congestionamentos, já que filtramos apenas as viagens que se iniciavam e
 terminavam dentro do recorte do mapa utilizado.
@@ -479,11 +481,11 @@ E a etapa 3, onde introduzimos as PMVs para auxiliar os motoristas na decisão d
 \end{figure}
 
 Contudo, a melhora de aproximadamente 5\% na média do tempo de duração da viagem da etapa 3 com relação a etapa 2 não foi um resultado expressivo.
-Avaliamos que alguns fatores podem ter influenciado nesse resultado, sendo a maioria deles voltado para os dados utilizados para a definicação do cenário de emulação deste experimento.
+Avaliamos que alguns fatores podem ter influenciado nesse resultado, sendo a maioria deles voltado para os dados utilizados para a definicação do cenário de simulação deste experimento.
 O posicionamento das PMVs pode não ter sido o ideal, já que não foi realizada uma análise prévia de onde passariam a maior parte dos carros.
-O conjunto de viagens emulados após recortar o mapa da cidade de São Paulo pode não ter sido representativa, a decisão de reduzir o mapa para facilitar a visualização do impacto do fechamento de vias
+O conjunto de viagens simulados após recortar o mapa da cidade de São Paulo pode não ter sido representativo, a decisão de reduzir o mapa para facilitar a visualização do impacto do fechamento de vias
 e PMVs pode não ter sido boa.
-Além disso,  os resultados obtidos podem ter sudo influenciados devido a infraestrutura simples utilizada com apenas dois \textit{laptops}.
+Além disso, os resultados obtidos podem ter sudo influenciados devido a infraestrutura simples utilizada com apenas dois \textit{laptops}.
 
 
 \section{Análise Crítica}
@@ -491,7 +493,7 @@ Além disso,  os resultados obtidos podem ter sudo influenciados devido a infrae
 % Melhorias, o que fucionou, o que não funcionou
 
 Após a realização dos dois estudos de caso apresentados neste capítulo, foi possível perceber que as implementações da solução proposta no Capítulo \ref{cap:proposta} são funcionais e nos permitiram realizar
-diferentes experimentos utilizando um ambiente emulado de uma cidade, podendo substituir \textit{testbeds} reais e aumentando a escala dos experimentos.
+diferentes experimentos utilizando um ambiente simulado de uma cidade, podendo substituir \textit{testbeds} reais e aumentando a escala dos experimentos.
 
 Um ponto importante para a realização de experimentos, e ainda mais envolvendo múltiplas ferramentas, é a automatização desse processo.
 Tal automatização facilita a execução de várias rodadas do experimento e a reprodução do trabalho por terceiros.
@@ -502,7 +504,7 @@ Várias melhorias foram realizadas e gargalos solucionados, o que nos demonstrou
 Inteligentes.
 Já no segundo estudo de caso, demonstramos a viabilidade da atuação em um ambiente emulado, sendo esse um trabalho pioneiro na área de Cidades Inteligentes.
  
-Contudo, como o foco principal do trabalho é prover uma solução de ambiente emulado para a realização de experimentos em plataformas de Cidade Inteligentes, acreditamos que algumas das análises
+Contudo, como o foco principal do trabalho é prover uma solução de ambiente simulado para a realização de experimentos em plataformas de Cidade Inteligentes, acreditamos que algumas das análises
 apresentadas nos estudos de caso poderiam ser melhoradas.
 Ademais, especialmente no segundo estudo de caso, algumas decisões iniciais do experimento poderiam ser otimizadas, como o posicionamento das PMVs baseado em uma análise mais profunda da movimentação
 dos carros nas viagens selecionadas para o experimento, o que prejudicou os resultados obtidos.
@@ -510,6 +512,6 @@ A utilização de \textit{laptops} para a execução do segundo experimento tamb
 computacionais.
 
 Em suma, os estudos de caso foram satifatórios, já que foi possível validar a proposta de solução em dois cenários de Cidades Inteligentes distintos, exercitando as principais funcionalidades que
-um ambiente de experimentação emulado deve possuir.
+um ambiente de experimentação simulado deve possuir.
 
 
