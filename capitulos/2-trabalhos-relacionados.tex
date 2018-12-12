@@ -1,13 +1,102 @@
 \chapter{Revisão Bibliográfica e Trabalhos Relacionados}
 \label{cap:trab-relacionados}
 
-\section{Emulação e Integração de Ferramentas para prover Ambiente de
-Experimentação}
+Durante a realização desta pesquisa, não foi encontrada uma solução que provesse um ambiente de experimentação para plataformas de Cidades Inteligentes que permitisse a interação em tempo de execução 
+(viabilizando a execução de comandos de atuação, por exemplo) em larga escala, sendo esses requisitos ainda pouco explorados pela academia.
+Para um melhor entendimento de como esses experimentos estão sendo realizados, serão introduzidos trabalhos relacionados que apresentam ambientes de experimentação nessa área, apontando as suas
+principais limitações.
+Alguns trabalhos apontam a simulação como um método que pode solucionar algumas das limitações desses ambientes, esses também serão discutidos e explicitado o porquê de adotarmos tal solução.
 
-Exemplos de integração de simuladores, como o SUMO (simulador de tráfego) + ns2
-(simulador de rede)
+Além disso, existem pesquisas que já se utilizam da integração com simuladores para a execução de experimentos que se assemelham a contextos reais.
+Nesse sentido, apresentaremos as principais dificuldades na integração de simuladores e sistemas de software em geral.
 
-\section{Avaliação de Plataformas de Cidades Inteligentes}
 
-Apresentar e discutir testbeds existentes
+\section{Ambientes de Experimentação para Plataformas de Cidades Inteligentes}
+
+%Apresentar e discutir testbeds existentes
+
+Apesar dos significativos avanços tecnológicos, dificuldades associadas com a avaliação de plataformas para Cidades Inteligentes sob condições realísticas em ambientes experimentais ainda dificultam
+a sua maturidade e utilização significativa~\cite{sanchez_2014}.
+Por isso, encontrar soluções eficazes para melhorar e facilitar a criação de ambientes de experimentação ainda é um problema não resolvido.
+
+No contexto de Cidades Inteligentes, onde em grande parte interagimos com dispositivos de IoT (\textit{Internet of Things}), temos alguns desafios que dificultam a criação desses ambientes de
+experimentação, sendo os pricipais \textit{escala}, \textit{heterogeneidade de dispositivos}, \textit{acesso concorrente}, \textit{mobilidade} e 
+\textit{reprodutibilidade}~\cite{gluhak_2011}~\cite{sanchez_2014}.
+O primeiro deles é a \textit{escala} desses ambientes, tendo em vista que as cidades e suas populações estão em uma constante crescente, os experimentos envolvendos essas plataformas devem ser capazes
+de refletir isso.
+Na infraestrutura física de uma grande cidade, como São Paulo, teremos milhares de dispositivos de IoT de diferentes naturezas monitorando e atuando na cidade, e os experimentos para que sejam realistas
+precisam representar essa \textit{heterogeneidade de dispositivos}.
+Além disso, em uma Cidade Inteligente teremos diversas aplicações tentando acessar recursos da infraestrutura da cidade simultaneamente, esse \textit{acesso concorrente} deve também estar presente nos
+ambientes de experimentação.
+Todos esses desafios anteriores dificultam ainda mais a \textit{reprodutibilidade} desse ambiente, o que é necessário para reprodução dos experimentos. 
+
+Podemos encontrar diversos trabalhos que tentaram solucionar os desafios citados, sendo grande parte dessas soluções através de \textit{testbeds} reais.
+Nesses \textit{testbeds}, dispositivos de IoT são implantados no ambiente, conectados através de redes de sensores e monitorados.
+Todo esse processo tem um custo alto, tanto de aquisição dos equipamentos necessários quanto de mão de obra para execução.
+Temos \textit{testbeds} implantados em ambientes abertos e também em laboratórios.
+
+Grande parte dos \textit{testbeds} apresentados na literatura foram implantados em cidades da Europa, e cada um deles tem um foco específico.
+Os \textit{testbeds} apresentados em  \cite{olivares_2013} e \cite{cenedese_2014} são voltados para experimentos envolvendo redes de sensores, como os nós interagem e o correto
+funcionamento de todas as camadas de protocolos.
+Ambos tratam a questão da \textit{heterogeneidade de dispositivos} e \textit{mobilidade}, contudo não mencionam questões de \textit{escala} do ambiente,
+\textit{acesso concorrente} e \textit{reprodutibilidade}.
+Encontramos o \textit{FIT IoT-LAB}~\cite{adjih_2015}, que também é um ambiente de testes focado em redes de sensores como os demais, só que os autores o apresenta como um ambiente de larga escala,
+contudo, o mesmo possui 2728 nós de baixo consumo conectados à uma rede sem fio e 117 robôs móveis.
+Levando em consideração que em uma cidade como São Paulo esperamos ter dispositivos na escala de milhões, não acreditamos que essa escala apresentada seja suficiente para a realização de experimentos
+realistas no contexto de uma grande metrópole.
+
+Ambientes de experimentação voltados especialmente para a \textit{heterogeneidade de dispositivos} são apresentados em \cite{latre_2016} e \cite{juraschek_2012} na forma de \textit{testbeds} localizados
+em Antwerp na Bélgica, e Berlim na Alemanha, respectivamente.
+Nesses trabalhos, a heterogeneidade é tratada a nível de protocolos de rede para comunicação e tratamento de dados, considerando que cada dispositivo pode utilizar diferentes protocolos e se comunicar
+através de diferentes formatos de dados.
+Mais uma vez temos o problema de \textit{escala} que não é deixado claro nas apresentações dos \textit{testbeds}.
+
+Em \cite{lanza_2015}, é apresentado uma parte do \textit{testbed} implantado na cidade de Santander na Espanha com uma característica muito interessante que não é encontrada na maioria dos outros
+trabalhos, o seu foco principal é a \textit{mobilidade}.
+Ao perceberem que veículos são a melhor forma de obter dados da cidade reduzindo os gastos, já que circulam por vários pontos da cidade no mesmo dia, implantaram sensores em 140 ônibus, táxis e vans
+para coleta de diversos dados.
+Ao coletarem dados de diferentes naturezas, utilizaram diferentes dispositivos, trabalhando também a questão da \textit{heterogeneidade}.
+Todavia, todos os desafios foram atacados em uma \textit{escala} bem menor do que a esperada para uma grande cidade.
+
+No contexto de Cidades Inteligentes, além da parte técnica, temos também que nos preocupar com o impacto dessa tecnologia na vida das pessoas.
+O \textit{testbed} introduzido por \cite{nati_2013}, tem o objetivo de viabilizar experimentos centrados no usuário, onde ao invés de ter os dispositivos e softwares envolvidos sob prova, temos
+o usuário como alvo do experimento.
+Nesse tipo de ambiente, seria bastante complexo a realização de experimentos em larga \textit{escala}, tendo em vista que necessitaríamos de envolver a população de uma cidade no processo de
+experimentação.
+Por isso, esse \textit{testbed} foi implantado no contexto de um escritório, e não ataca a maioria dos desafios citados nesta seção, como \textit{mobilidade} por exemplo.
+
+Temos também uma série de \textit{testbeds} voltados especificamente para apenas uma das áreas de Cidades Inteligentes.
+Por exemplo, \cite{braem_2016} foca na análise da qualidade do ar, \cite{lee_2015} apresenta um \textit{testbed} meteorológico, \cite{lu_2010} introduz um ambiente de experimentação envolvendo
+\textit{Smart Grid}, e \cite{amrutur_2017} demontra um \textit{testbed} de postes de iluminação pública.
+
+Existem também algumas iniciativas que visam realizar a federação de \textit{testbeds} em diferente localidades.
+Em \cite{mwangama_2013} e \cite{corici_2014}, visando balancear a carga de trabalho de ambientes de experimentação em Berlim na Alemanha e na Cidade do Cabo na África do Sul, ambos foram federados,
+tratando de pontos como autenticação, identificação segura e políticas de armazenamento e de redirecionamento.
+
+Além de todos esses ambientes de experimentação apresentados, temos provavelmente o mais conhecido dentre eles, o desenvolvido pelo projeto \textit{SmartSantander}~\cite{sanchez_2014}.
+Esse \textit{testbed} foi implantado na cidade de Santander na Espanha, e o mesmo visou atacar todos os desafios apresentados nesta seção.
+Além de ser um ambiente de teste, ele provê serviços para a população da cidade através de aplicações de Cidades Inteligentes, como por exemplo uma aplicação de estacionamento inteligente.
+Ademais, a implantação desse \textit{testbed} teve total apoio do governo da cidade e financiamento de diversas fontes.
+Todavia, apesar desse ser um dos ambientes de experimentação mais bem sucedidos que temos na literatura, ainda acreditamos que o mesmo não representa a escala de uma grande metrópole como
+São Paulo, sabendo que Santander possui aproximandamente $ 35 km^2 $ e 175 mil habitantes\footnote{https://pt.wikipedia.org/wiki/Santander\_(Cant\%C3\%A1bria)}.
+
+Uma solução diferente da implantação de \textit{testbeds} como ambiente de experimentação no contexto de plataformas de Cidades Inteligentes foi apresentada em \cite{ali_2015}.
+O \textit{CityBench} é um \textit{benchmark} para motores de processamento de fluxo de dados (\textit{streaming}) presentes nesse tipo de plataforma.
+Esse \textit{becnhmark} foi construído através do fluxo de dados em tempo real de múltiplos sensores implantados na cidade de Aarhus na Dinamarca.
+Essa é uma abordagem interessante, onde seria possível coletar dados em \textit{escalas} maiores, adicionar dados referentes a \textit{mobilidade}, de dispositivos \textit{heterogeneos}, permitindo
+o \textit{acesso concorrente} e a \textit{reprodutibilidade}.
+Contudo, esse tipo de abordagem não permite que a plataforma interaja com o ambiente de experimentação em tempo de execução, não permitindo experimentos envolvendo comandos de atuação por exemplo.
+Além do mais, para a criação desse conjunto de dados para a contrução do \textit{benchmark} é necessário ter acesso a dispositivos reais implantados em \textit{testbeds} reais.
+
+Como pode ser visto, nenhum dos trabalhos apresentados provê um ambiente de experimentação para plataforma de Cidades Inteligentes que permita a interação em tempo de execução, possibilitando
+atuação durante o experimento.
+Além disso, as solução apresentadas não são capazes de realizar experimentos na escala de grande metrópoles do mundo, como a cidade de São Paulo.
+Sendo assim, identificamos o potencial deste trabalho, onde visamos solucionar esses dois problemas apresentados e os desafios propostos para contrução desse ambiente de experimentação através
+de simulação.
+
+\section{Integração de Ferramentas para prover Ambiente de Experimentação}
+
+%Exemplos de integração de simuladores, como o SUMO (simulador de tráfego) + ns2
+%(simulador de rede)
+
 
