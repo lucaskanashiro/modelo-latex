@@ -94,6 +94,46 @@ Além disso, as solução apresentadas não são capazes de realizar experimento
 Sendo assim, identificamos o potencial deste trabalho, onde visamos solucionar esses dois problemas apresentados e os desafios propostos para contrução desse ambiente de experimentação através
 de simulação.
 
+\section{Simulação e Cidades Inteligentes}
+
+Devido a complexidade de construção de ambientes de experimentação para plataformas de Cidades Inteligentes apresentada na seção anterior, propomos a utilização de simulação visando solucionar
+principalmente o problema da escalabilidade.
+Além de tentar adicionar a funcionalidade de atuação no ambiente de experimentação em tempo de execução, não apresentado por nenhum dos outros trabalhos.
+
+A simulação já vem sendo utilizada na área de Cidades Inteligentes há algum tempo, sobretudo na área de \textit{Smart Grid}.
+Em \cite{jsan_2016} um \textit{framework} para simulação de \textit{smart grid} é apresentado visando integrar a modelagem, a contrução e controle da execução, e desacoplar do simulador de rede
+ou de energia desse processo.
+Esse simulador foi implementado usando componentes discretos.
+Já em \cite{schutte_2011}, outro \textit{framework} de simulação para \textit{smart grid} foi introduziso, contudo, o objetivo principal desse trabalho é conseguir integrar modelos de simulação
+heterogeneos automaticamente em tempo de execução.
+
+Além do mais, simulação é um tópico em discussão na área de IoT, já que a validação das novas tecnologias dessa área em diferente cenários é um requisito importante para uma crescente adoção.
+Os simuladores utilizados na área de IoT são divididos em três categorias segundo \cite{baig_2018}:
+(i) simuladores completos, que visam prover um suporte de ponta a ponta para todos os elemtendos de IoT;
+(ii) simuladores com foco em aspectos de processamento de \textit{big data};
+e (iii) simuladores de rede de comunicação.
+A simulação de IoT introduz várias questões de aspectos quantitativos e qualitativos~\cite{angelo_2016}, a quantidade massiva e a heteregeneidade de dispositivos dificultam essa tarefa.
+A simulação distribuída e paralela baseada em agentes é o melhor mecanismo para contornar os problemas mencionados~\cite{angelo_2016}, já que a possibilidade de execução distribuída e paralela permite
+a execução de mais elementos dento da simulação, e a definição de agentes facilita a representação de diferentes dispositivos.
+
+Simuladores de IoT tradicionais não focam na simulação de ambientes de larga escala~\cite{brambilla_2014}.
+A grande maioria deles são simuladotes de rede, que analisam e avaliam o comportamento de objetos inteligentes organizados em uma topologia específica.
+Mas como vem sendo discutido, Cidades Inteligentes, em geral, contemplarão ambientes de larga escala, sendo necessário avaliar as plataformas em tais condições.
+O DEUS é um ambiente de simulação de Cidades Inteligentes de propósito geral baseado em eventos discretos que tenta atender requisitos de mobilidade e escalabilidade principalmente~\cite{picone_2012}.
+Apesar de um modelo de mobilidade interessante ter sido implementado no DEUS, o experimento apresentado não é de larga escala, atingindo o máximo de 2 mil nós~\cite{picone_2012}.
+Por esse motivo não conseguimos concluir se o DEUS é uma solução viável quanto a escala do ambiente simulado.
+
+Sabendo que o contexto de Cidades Inteligentes envolve múltiplas áreas conhecimento, ambientes de simulação realísticos muitas vezes podem envolver mais de um simulador.
+O TraNS é um ambiente de simulação de código aberto que tem como objetivo viabilizar experimentos com VANETs (\textit{Vehicular Ad Hoc Networks})~\cite{piorkowski_2008}.
+Para isso, nesse trabalho, o simulador de mobilidade SUMO e o simulador de rede NS2 foram integrados para construção desse ambiente realista.
+O interessante dessa integração é o fato dos simuladores serem capazes de se comunicarem em tempo de execuação, sendo essa a abordagem que implementamos para permitir a interação entre a plataforma
+e o simulador de Cidades Inteligentes.
+
+A simulação é um mecanismo que vem sendo adotado na área de IoT e Cidades Inteligentes mais especificamente, principalmente tentando solucionar problemas de escala.
+A literatura indica que a simulação baseada em agentes e eventos discretos de maneira paralela e distribuída seja o caminho para obtermos uma solução efetiva.
+Ademais, ficou demonstrado que a simulação pode ser o mecanismo ideal para utilizarmos na contrução do ambiente simulado de experimentação para plataformas de Cidades Inteligentes, permitindo a criação
+de um ambiente de larga escala e a interação em tempo de execução com outros componentes.
+
 \section{Integração de Ferramentas para prover Ambiente de Experimentação}
 
 %Exemplos de integração de simuladores, como o SUMO (simulador de tráfego) + ns2
