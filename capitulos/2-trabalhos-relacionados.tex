@@ -139,4 +139,24 @@ de um ambiente de larga escala e a interação em tempo de execução com outros
 %Exemplos de integração de simuladores, como o SUMO (simulador de tráfego) + ns2
 %(simulador de rede)
 
+A abordagem proposta neste trabalho envolve a integração entre a plataforma e o simulador de Cidades Inteligentes.
+Como discutido neste capítulo, a simulação é um mecanismo que pode nos auxiliar na obtenção de ambientes de experimentação de larga escala e que nos permita interagir e atuar no mesmo em tempo de execução.
+Entretanto, integração de sistemas de software não é uma tarefa trivial.
+A integração de sistemas possui três dimensões: dados, controle e apresentação~\cite{wasserman_1990}.
+Neste trabalho, realizamos a integração nas dimensões de dados e controle.
+O principal desafio nesse processo de integração é o fato de, em geral, ela ser feita de maneira \textit{ad-hoc}, não havendo uma padronização~\cite{wasserman_1990}.
 
+A integração de sistemas tem sido objeto de pesquisa na área de sistemas de informação, visando integrar principalmente dados de múltiplas fontes heterogêneas distribuídas para apresentá-los de forma
+centralizada e homogênea~\cite{genesereth_1997}.
+Esse interesse surge essencialmente pela necessidade de empresas integrarem seus diversos sistemas para gerar conhecimento baseado em seus dados.
+E segundo a experiência de pessoas envolvidas com a industria, dois dos principais problemas nesse tipo de integração são o desempenho e a escalabilidade da solução, como apresentado em \cite{halevy_2005}.
+
+Apesar de padronização parecer ser a solução para o problema de integração de sistemas, ela não é tão simples devido aos diferentes propósitos e natureza dos sistemas.
+Na área de Cidades Inteligentes, especificamente de VANETs, um trabalho interessante resultou em uma técnica para interconectar simuladores de rede e de trânsito chamada \textit{TraCI}~\cite{wegener_2008}.
+Devido o vasto número de simuladores desse tipo, foi proposto a implementação de uma interface para cada um dos simuladores, encapsulando o funcionamento dos mesmos.
+Ao implementar tais interfaces, elas se comunicam através de um protocolo baseado em cliente-servidor desenvolvido especificamente para comunicação entre simuladores de rede e de trânsito.
+Portanto, essa é uma técnica que independe do simulador a ser utilizado, bastando implementar essa interface que se comunicará através de um protocolo específico.
+Esse trabalho nos serviu de inspiração para a realização desta pesquisa, já que o nossa solução se basea na integração de uma plataforma e um simulador de Cidades Inteligentes.
+Todavia, a definição de uma interface específica e de protocolo de comunicação introduzidos pela \textit{TraCI} só foi possível porque o escopo foi reduzido para VANETs somente.
+Como esta pesquisa visa construir um ambiente de experimentação de âmbito geral no contexto de Cidades Inteligentes, desenvolvemos uma arquitetura mais alto nível com diretrizes para implementação de um
+componente de integração (\textit{middleware}) entre os dois sistemas.
