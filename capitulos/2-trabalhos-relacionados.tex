@@ -33,7 +33,7 @@ Todos esses desafios anteriores dificultam ainda mais a \textit{reprodutibilidad
 Podemos encontrar diversos trabalhos que tentaram solucionar os desafios citados, sendo grande parte dessas soluções através de \textit{testbeds} reais.
 Nesses \textit{testbeds}, dispositivos de IoT são implantados no ambiente, conectados através de redes de sensores e monitorados.
 Todo esse processo tem um custo alto, tanto de aquisição dos equipamentos necessários quanto de mão de obra para execução.
-Temos \textit{testbeds} implantados em ambientes abertos e também em laboratórios.
+Temos \textit{testbeds} implantados tanto em ambientes abertos quanto em laboratórios.
 
 Grande parte dos \textit{testbeds} apresentados na literatura foram implantados em cidades da Europa, e cada um deles tem um foco específico.
 Os \textit{testbeds} apresentados em  \cite{olivares_2013} e \cite{cenedese_2014} são voltados para experimentos envolvendo redes de sensores, como os nós interagem e o correto
@@ -51,7 +51,7 @@ Nesses trabalhos, a heterogeneidade é tratada a nível de protocolos de rede pa
 através de diferentes formatos de dados.
 Mais uma vez temos o problema de \textit{escala} que não é deixado claro nas apresentações dos \textit{testbeds}.
 
-Em \cite{lanza_2015}, é apresentado uma parte do \textit{testbed} implantado na cidade de Santander na Espanha com uma característica muito interessante que não é encontrada na maioria dos outros
+Em \cite{lanza_2015}, é apresentado uma parte do \textit{testbed} implantado na cidade de Santander na Espanha, com uma característica muito interessante que não é encontrada na maioria dos outros
 trabalhos, o seu foco principal é a \textit{mobilidade}.
 Ao perceberem que veículos são a melhor forma de obter dados da cidade reduzindo os gastos, já que circulam por vários pontos da cidade no mesmo dia, implantaram sensores em 140 ônibus, táxis e vans
 para coleta de diversos dados.
@@ -61,7 +61,7 @@ Todavia, todos os desafios foram atacados em uma \textit{escala} bem menor do qu
 No contexto de Cidades Inteligentes, além da parte técnica, temos também que nos preocupar com o impacto dessa tecnologia na vida das pessoas.
 O \textit{testbed} introduzido por \cite{nati_2013}, tem o objetivo de viabilizar experimentos centrados no usuário, onde ao invés de ter os dispositivos e softwares envolvidos sob prova, temos
 o usuário como alvo do experimento.
-Nesse tipo de ambiente, seria bastante complexo a realização de experimentos em larga \textit{escala}, tendo em vista que necessitaríamos de envolver a população de uma cidade no processo de
+Nesse tipo de ambiente, seria bastante complexo a realização de experimentos em larga \textit{escala}, tendo em vista que necessitaríamos envolver a população de uma cidade no processo de
 experimentação.
 Por isso, esse \textit{testbed} foi implantado no contexto de um escritório, e não ataca a maioria dos desafios citados nesta seção, como \textit{mobilidade} por exemplo.
 
@@ -76,7 +76,7 @@ tratando de pontos como autenticação, identificação segura e políticas de a
 Além de todos esses ambientes de experimentação apresentados, temos provavelmente o mais conhecido dentre eles, o desenvolvido pelo projeto \textit{SmartSantander}~\cite{sanchez_2014}.
 Esse \textit{testbed} foi implantado na cidade de Santander na Espanha, e o mesmo visou atacar todos os desafios apresentados nesta seção.
 Além de ser um ambiente de teste, ele provê serviços para a população da cidade através de aplicações de Cidades Inteligentes, como por exemplo uma aplicação de estacionamento inteligente.
-Ademais, a implantação desse \textit{testbed} teve total apoio do governo da cidade e financiamento de diversas fontes.
+A implantação desse \textit{testbed} só foi possível devido ao total apoio do governo da cidade e financiamento de diversas fontes.
 Todavia, apesar desse ser um dos ambientes de experimentação mais bem sucedidos que temos na literatura, ainda acreditamos que o mesmo não representa a escala de uma grande metrópole como
 São Paulo, sabendo que Santander possui aproximandamente $ 35 km^2 $ e 175 mil habitantes\footnote{https://pt.wikipedia.org/wiki/Santander\_(Cant\%C3\%A1bria)}.
 
@@ -114,12 +114,12 @@ Os simuladores utilizados na área de IoT são divididos em três categorias seg
 e (iii) simuladores de rede de comunicação.
 A simulação de IoT introduz várias questões de aspectos quantitativos e qualitativos~\cite{angelo_2016}, a quantidade massiva e a heteregeneidade de dispositivos dificultam essa tarefa.
 A simulação distribuída e paralela baseada em agentes é o melhor mecanismo para contornar os problemas mencionados~\cite{angelo_2016}, já que a possibilidade de execução distribuída e paralela permite
-a execução de mais elementos dento da simulação, e a definição de agentes facilita a representação de diferentes dispositivos.
+a execução de mais elementos dentro da simulação, e a definição de agentes facilita a representação de diferentes dispositivos.
 
 Simuladores de IoT tradicionais não focam na simulação de ambientes de larga escala~\cite{brambilla_2014}.
 A grande maioria deles são simuladotes de rede, que analisam e avaliam o comportamento de objetos inteligentes organizados em uma topologia específica.
 Mas como vem sendo discutido, Cidades Inteligentes, em geral, contemplarão ambientes de larga escala, sendo necessário avaliar as plataformas em tais condições.
-O DEUS é um ambiente de simulação de Cidades Inteligentes de propósito geral baseado em eventos discretos que tenta atender requisitos de mobilidade e escalabilidade principalmente~\cite{picone_2012}.
+O DEUS é um ambiente de simulação de Cidades Inteligentes de propósito geral, baseado em eventos discretos, que tenta atender requisitos de mobilidade e escalabilidade principalmente~\cite{picone_2012}.
 Apesar de um modelo de mobilidade interessante ter sido implementado no DEUS, o experimento apresentado não é de larga escala, atingindo o máximo de 2 mil nós~\cite{picone_2012}.
 Por esse motivo não conseguimos concluir se o DEUS é uma solução viável quanto a escala do ambiente simulado.
 
@@ -151,12 +151,12 @@ centralizada e homogênea~\cite{genesereth_1997}.
 Esse interesse surge essencialmente pela necessidade de empresas integrarem seus diversos sistemas para gerar conhecimento baseado em seus dados.
 E segundo a experiência de pessoas envolvidas com a industria, dois dos principais problemas nesse tipo de integração são o desempenho e a escalabilidade da solução, como apresentado em \cite{halevy_2005}.
 
-Apesar de padronização parecer ser a solução para o problema de integração de sistemas, ela não é tão simples devido aos diferentes propósitos e natureza dos sistemas.
+Apesar de padronização parecer ser a solução para o problema de integração de sistemas, ela não é tão simples devido aos diferentes propósitos e naturezas dos sistemas.
 Na área de Cidades Inteligentes, especificamente de VANETs, um trabalho interessante resultou em uma técnica para interconectar simuladores de rede e de trânsito chamada \textit{TraCI}~\cite{wegener_2008}.
 Devido o vasto número de simuladores desse tipo, foi proposto a implementação de uma interface para cada um dos simuladores, encapsulando o funcionamento dos mesmos.
-Ao implementar tais interfaces, elas se comunicam através de um protocolo baseado em cliente-servidor desenvolvido especificamente para comunicação entre simuladores de rede e de trânsito.
+Ao implementar tais interfaces, elas se comunicam através de um protocolo, baseado em cliente-servidor, desenvolvido especificamente para comunicação entre simuladores de rede e de trânsito.
 Portanto, essa é uma técnica que independe do simulador a ser utilizado, bastando implementar essa interface que se comunicará através de um protocolo específico.
-Esse trabalho nos serviu de inspiração para a realização desta pesquisa, já que o nossa solução se basea na integração de uma plataforma e um simulador de Cidades Inteligentes.
+Esse trabalho nos serviu de inspiração para a realização desta pesquisa, já que a nossa solução se baseia na integração de uma plataforma e um simulador de Cidades Inteligentes.
 Todavia, a definição de uma interface específica e de protocolo de comunicação introduzidos pela \textit{TraCI} só foi possível porque o escopo foi reduzido para VANETs somente.
 Como esta pesquisa visa construir um ambiente de experimentação de âmbito geral no contexto de Cidades Inteligentes, desenvolvemos uma arquitetura mais alto nível com diretrizes para implementação de um
 componente de integração (\textit{middleware}) entre os dois sistemas.

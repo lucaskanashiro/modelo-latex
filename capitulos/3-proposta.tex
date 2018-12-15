@@ -13,14 +13,13 @@ dificuldades encontradas nesse processo.
 
 Para a realização de experimentos em ambientes simulados de Cidades Inteligentes temos requisitos em diferentes níveis, desde a capacidade do simulador de representar o contexto
 de uma cidade até formas de comunicação que permita a interação entre o simulador e a plataforma de Cidades Inteligentes.
-Tais requisitos foram baseados nas necessidades apresentadas no Capítulo \ref{cap:trab-relacionados}.
 Portanto, dividimos os requisitos em \textbf{fundamentais} e de \textbf{integração}.
 
-Para que uma ferramenta possa refletir o contexto de Cidades Inteligentes, onde o sensoriamento de diversos aspectos das cidades já é uma realidade, e a atuação (modificação do estado
-das cidades) segue uma crescente, consideramos que a mesma deva de alguma forma ter os conceitos abaixo representados:
+Para que o simulador possa refletir o contexto de Cidades Inteligentes, onde o sensoriamento de diversos aspectos das cidades já é uma realidade, e a atuação (modificação do estado
+das cidades) segue uma crescente, consideramos que a mesma deva ter de alguma forma representada os conceitos abaixo:
 
 \begin{itemize}
-    \item \textit{Modelos aderentes a realidade de uma cidade}: a ferramenta deve implementar modelos que representem ao máximo a realidade de uma cidade, e não apenas casos hipotéticos.
+    \item \textit{Modelos aderentes a realidade de uma cidade}: o simulador deve implementar modelos que representem ao máximo a realidade de uma cidade, e não apenas casos hipotéticos.
         Por exemplo, modelos de fluxo de automóveis nas vias devem incluir possíveis engarrafamentos.
 
     \item \textit{Execução com noção de tempo real}: a dinâmica da cidade deve ser simulada em tempo real, ou seja, não deve ser executada nem mais rápida nem mais lenta do que aconteceria
@@ -141,7 +140,7 @@ O componente de integração tem a responsabilidade de solucionar os pontos menc
 Como pode ser visto, o componente de integração tem como único objetivo atender requisitos não funcionais.
 Ele deve tornar a comunicação do simulador e da plataforma transparente para ambos e adicionando a menor complexidade possível ao sistema.
 
-Em resumo, devemos escolher ferramentas (simulador e plataforma) mais semelhantes possível, com o que diz respeito principalmente ao modelo conceitual e aos protocolos de
+Em resumo, devemos escolher ferramentas (simulador e plataforma) mais semelhantes possíveis, com o que diz respeito principalmente ao modelo conceitual e aos protocolos de
 rede utilizados para comunicação; e implementar o componente de integração o mais simples possível, apenas com o objetivo de viabilizar a comunicação entre as ferramentas.
 
 Para a validação da construção desse ambiente simulado de experimentação para plataformas de Cidades Inteligentes, usamos o simulador InterSCSimulator e a plataforma InterSCity,
@@ -195,7 +194,7 @@ Com isso, condições e caminhos dependentes do estado da simulação podem ser 
 mais diversos modelos e formas de prover suas capacidades.
 Essa liberdade para implementação de diversos comportamentos dos agentes nos permite usar modelos realistas e viabilizar as capacidades dos recursos no contexto das cidades,
 atendendo mais um \textbf{requisito fundamental} e outro de \textbf{integração}.
-Por exemplo, um carro após a sua partida em direção ao seu destino, calcula a cada ciclo de execução o fluxo de carros na via em que se encontra para o calculo da
+Por exemplo, um carro após a sua partida em direção ao seu destino, calcula a cada ciclo de execução o fluxo de carros na via em que se encontra para o cálculo da
 sua velocidade naquele instante, além de publicar a seu atual posição.
 Nesse caso, podemos utilizar os mais diversos modelos matemáticos para calcular o fluxo de carros ou para determinar a sua velocidade, ao passo que a sua capacidade
 de publicar sua localização georreferenciada também é atendida.
@@ -221,10 +220,10 @@ Todas as ações realizadas pelos agentes são salvos no arquivo \textit{output.
 3) entrada em uma via, e 4) chegada ao destino final.
 O tempo, a localização e o modo de transporte utilizado pelo agente são registrados quando essas ações são salvas.
 
-No trabalho desenvolvido por Eduardo Zambom Santana foi desenvolvido um simulador de larga escala, que já foi capaz de simular mais de 4 milhões de
+No trabalho desenvolvido por Eduardo Zambom Santana foi desenvolvido um simulador de larga escala, que é capaz de simular mais de 4 milhões de
 agentes se movendo pela cidade de São Paulo~\cite{santana_17}.
 Os modos de transportes suportados até então são: carro, ônibus, metrô e a pé.
-Neste trabalho além de melhorias feitas nos modelos existentes, novos agentes foram adicionados a simulação, além de agora ser possível a publicação e recebimento de
+Neste trabalho além de melhorias feitas nos modelos existentes, novos agentes foram adicionados ao simulador, além de agora ser possível a publicação e recebimento de
 eventos em tempo de execução de maneira assícrona.
 
 \subsection{Plataforma InterSCity}
@@ -270,7 +269,7 @@ e \textit{Resource Viewer}, disponibiliza uma visualização simples dos recurso
 \end{figure}
 
 A comunicação entre esses microsserviços pode se dar de maneira síncrona ou assíncrona dependendo da situação.
-A comunicação síncrona é feita via API \textit{Restful}, ou seja, requisições HTTP; e a assíncrona se dá via RabbitMQ, uma implementação do protocolo AMQP.
+A comunicação síncrona é feita via API \textit{Restful}, ou seja, requisições HTTP; e a assíncrona se dá via RabbitMQ\footnote{https://www.rabbitmq.com/}, uma implementação do protocolo AMQP.
 O objetivo do protocolo AMQP é criar um padrão aberto para troca de mensagens assíncronas interoperável e de larga escala~\cite{vinoski_2006}.
 A principal vantagem desse protocolo é permitir que o \textit{broker} de mensagens tome as decisões de roteamento, não necessitando a aplicação ter conhecimento
 desse processo~\cite{vinoski_2006}.
@@ -292,7 +291,7 @@ Priorizamos implementar cenários de experimentação onde pudéssemos explorar 
 
 No primeiro cenário realizamos experimentos no contexto de estacionamento inteligente (conhecido com \textit{Smart Parking}), onde carros circulam pela cidade e ao
 final do seu percurso procuram por uma vaga de estacionamento disponível mais próxima do seu destino, utilizando-se da plataforma para isso.
-Nesse cenário, incluímos um novo agente à emulação e implementamos um mecanismo para publicação dos eventos ocorridos e requisição a serviços da plataforma em tempo real
+Nesse cenário, incluímos um novo agente à simulação e implementamos um mecanismo para publicação dos eventos ocorridos e requisição a serviços da plataforma em tempo real
 e de forma assíncrona.
 
 O segundo cenário de experimentação envolve o tráfego de carros inteligente através da utilização de Placas de Mensagens Variadas (PMVs) espalhadas pela cidade.
@@ -307,7 +306,7 @@ InterSCSimulator a a plataforma InterSCity para Cidades Inteligentes.
 \subsection{Estacionamento Inteligente}
 \label{sec:smart_parking}
 
-Como foi apresentado, neste cenário de experimentação, simulamos um motorista realizando o seu percurso de carro e ao final procurando uma vaga disponível mais próxima ao
+Como foi apresentado, neste cenário de experimentação, simulamos motoristas realizando seus respoectivos percursos de carro e ao final procurando uma vaga disponível mais próxima ao
 seu destino, provavelmente utilizando um aplicativo móvel que se comunica com a plataforma InterSCity.
 Trazendo os conceitos de recursos da cidade e capacidades para esse cenário, temos os carros e as vagas de estacionamento sendo recursos, onde os carros são capazes de
 fornecer a sua geolocalização (por exemplo via GPS) e as vagas de fornecer informação quanto a sua disponibilidade (por exemplo através de sensores infravermelho e uma
@@ -316,7 +315,7 @@ redes de sensores).
 Esse cenário foi definido com o intuito de realizar experimentos envolvendo o serviço de descoberta de recursos da plataforma InterSCity.
 Portanto, o aplicativo enviaria a posição do carro naquele momento, o seu destino final e o raio de busca, e a plataforma traria uma lista de vagas de estacionamento
 disponíveis mais próximas.
-Já no InterSCSimulator, foi necessário realizar algumas melhorias para que os \textit{requisitos fundamentais} fossem atendidos.
+Já no InterSCSimulator, foi necessário realizar algumas melhorias para que os \textbf{requisitos fundamentais} fossem atendidos.
 Um novo agente para gerenciar as vagas de estacionamento da cidade, chamado \textit{Parking Controller}, foi implementado.
 Esse agente possui a responsabilidade de gerenciar e armazenar dados referentes as vagas de estacionamento, e fazer a interface de comunicação com o componente de
 integração que será apresentado mais adiante.
@@ -430,7 +429,7 @@ Após a implementação da arquitetura descrita, fomos capazes de executar exper
 Os resultados obtidos serão apresentados no próximo capítulo.
 
 Todavia, não exercitamos todos os requisitos apresentados para a construção de um ambiente simulado e integrado para experimentação de plataformas de Cidades Inteligentes.
-Por isso, implementamos um segundo cenário de Cidades Inteligentes onde, por exemplo, a atuação na cidade se fez necessária.
+Por isso, implementamos um segundo cenário de Cidades Inteligentes onde, por exemplo, a atuação no ambiente simulado se fez necessária.
 
 
 \subsection{Tráfego de Carros Inteligente}
@@ -474,7 +473,7 @@ em tempo real da plataforma precisamos enviar a cada ciclo de execução da simu
 Sendo essas melhorias necessárias para atender os \textbf{requisitos fundamentais} para esse cenário.
 
 O modo de publicação de dados em tempo de execução no InterSCSimulator foi refatorado para melhor atender ambos os cenários implementados.
-Como visto no cenário anterior, a publicação de eventos da emulação se dava através do agente \textit{Parking Controller} (como pode ser visto na Figura \ref{fig:atualizacao}), já que
+Como visto no cenário anterior, a publicação de eventos da simulação se dava através do agente \textit{Parking Controller} (como pode ser visto na Figura \ref{fig:atualizacao}), já que
 até então o único tipo de evento publicado pelo simulador era a atualização da disponibilidade de uma vaga de estacionamento.
 No intuito de permitir que outros agentes da simulação também pudessem publicar os seus eventos, um novo agente chamado \textit{Publisher} foi criado, removendo essa responsabilidade
 anteriormente atribuída ao agente \textit{Parking Controller}.
@@ -537,7 +536,7 @@ Quando um comando é recebido, no caso uma aresta de trecho anômalo a ser atual
 próximo ciclo de execução pelo \textit{PMV Manager}, que por sua vez atualizará a atributo da referida PMV (vértice no grafo).
 
 Após a apresentação das funcionalidades e melhorias implementadas, as duas vias de fluxo de comunicação entre o simulador e a plataforma serão apresentados a seguir.
-Na Figura \ref{fig:smart_traffic_publish_data}, o passo-a-passo para a publicação dos dados de posicionamento de cada um dos carros a cada ciclo de execução é exposto.
+Na Figura \ref{fig:smart_traffic_publish_data}, o passo a passo para a publicação dos dados de posicionamento de cada um dos carros a cada ciclo de execução é exposto.
 
 \begin{figure}[ht]
 	\centering
@@ -587,7 +586,7 @@ Um ponto interessante desse segundo cenário, foi a não necessidade de um compo
 mesma ferramenta) e conseguem representar os mesmos conceitos de maneira equivalente.
 Esse é o cenário ideal para criação de um ambiente simulado de experimentação para uma plataforma de Cidades Inteligentes, já que não foi essencial a implementação desse
 componente extra, que como discutido traria mais complexidade para o sistema, podendo aumentar o tempo de resposta entra as ferramentas.
-Claro que tudo isso foi possível porque neste mesmo trabalho fizemos todo a implementação dos \textbf{requisitos fundamentais} apresentados, portanto,
+Claro que tudo isso foi possível porque neste mesmo trabalho fizemos toda a implementação dos \textbf{requisitos fundamentais} apresentados, portanto,
 tivemos a oportunidade de tomar as decisões técnicas que facilitaram a integração entra as duas ferramentas.
 
 No capítulo a seguir, serão apresentados alguns resultados experimentais baseados na implementação desse cenário de tráfego de carros inteligente.
@@ -628,7 +627,7 @@ Por isso, decidimos explorar bastante o protocolo AMQP através da implementaç�
 Essa se apresentou uma solução mais simples, já que o \textit{broker} do RabbitMQ trata todas essas questões de escalabilidade de maneira bem eficiente, sendo essa
 uma solução adotada pelo mercado.
 Além do mais, pelo fato da comunicação via AMQP ser assíncrona e pela própria natureza dos cenários implementados, diferente de requisições HTTP, ela se apresentou uma
-solução mais adequada, não bloqueando agentes da emulação a espera de respostas.
+solução mais adequada, não bloqueando agentes da simulação a espera de respostas.
 Logo, sempre que possível, transferir responsabilidades para ferramentas de terceiros comprovadamente capazes de atender os requisitos ao invés de implementar a sua
 própria solução é desejável.
 
