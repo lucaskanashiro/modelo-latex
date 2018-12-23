@@ -1,39 +1,92 @@
-# makefile para a compilacao do documento
+# Authors: Nelson Lago and Jesus P. Mena-Chalco
+# This file is distributed under the MIT Licence
 
-BASE_NAME := tese
+THESIS_NAME := dissertacao
+POSTER_NAME := poster-exemplo
+PRESENTATION_NAME := apresentacao-exemplo
+ARTICLE_NAME := artigo-exemplo
+ALL_TARGETS := $(THESIS_NAME) $(POSTER_NAME) $(PRESENTATION_NAME) $(ARTICLE_NAME)
+
+thesis: $(THESIS_NAME)
+
+poster: $(POSTER_NAME)
+
+presentation: $(PRESENTATION_NAME)
+
+article: $(ARTICLE_NAME)
+
+tese: thesis
+
+apresentacao: presentation
+
+artigo: article
+
+all: $(ALL_TARGETS)
+
+.PHONY: all clean tmpclean distclean tese thesis poster presentation apresentacao article artigo $(ALL_TARGETS)
 
 LATEX := pdflatex
 #LATEX := lualatex
 #LATEX := xelatex
 
+BIBTEX := biber
+#BIBTEX := bibtex
+
+MAKEINDEX := makeindex
+#MAKEINDEX := texindy
+
 # Ativando esta opcao, nao e preciso chamar "$(MAKEINDEX) $(BASENAME).idx"
 # mais abaixo. Ela nao esta habilitada por padrao porque pode acarretar
 # problemas de seguranca
-#OPTS := --shell-escape
-OPTS := -synctex=1 -halt-on-error -file-line-error -interaction nonstopmode -recorder
+#LATEXOPTS := --shell-escape
+LATEXOPTS := -synctex=1 -halt-on-error -file-line-error -interaction nonstopmode -recorder
 
-#BIBTEX := bibtex
-BIBTEX := biber
+# Opcoes para makeindex
+MAKEINDEXOPTS := -s mkidxhead.ist -l -c
 
+# Opcoes para xindy
 # "-C utf8" ou "-M lang/latin/utf8.xdy" sao truques para contornar este
 # bug, que existe em outras distribuicoes tambem:
 # https://bugs.launchpad.net/ubuntu/+source/xindy/+bug/1735439
 # Se "-C utf8" nao funcionar, tente "-M lang/latin/utf8.xdy"
-#MAKEINDEX := texindy -C utf8 -M hyperxindy.xdy
-#MAKEINDEX := texindy -M lang/latin/utf8.xdy -M hyperxindy.xdy
-MAKEINDEX := makeindex -s mkidxhead.ist -L
+#MAKEINDEXOPTS := -C utf8 -M hyperxindy.xdy
+#MAKEINDEXOPTS := -M lang/latin/utf8.xdy -M hyperxindy.xdy
 
-STYLEFILES    := imeusp.sty plainnat-ime.bbx plainnat-ime.cbx
-OTHERTEXFILES := $(wildcard *.tex) $(STYLEFILES)
+OTHERTEXFILES := $(wildcard *.tex) $(wildcard *.sty) $(wildcard extras/*) $(wildcard conteudo/*)
 BIBFILES      := $(wildcard *.bib)
 IMGFILES      := $(wildcard figuras/*)
 # Voce pode acrescentar outras dependencias aqui
 MISCFILES     :=
 
+# Arquivos de nomes "$(ALL_TARGETS).$(TMP_EXTENSIONS)" sao apagados
+# por "make clean" (juntamente com arquivos "$(ALL_TARGETS).*"
+# citados nos arquivos .fls).
+TMP_EXTENSIONS := bbl blg ilg ind log fls synctex.gz fdb_latexmk
 
 ###############################################################################
 ######## Nada que precise ser modificado pelo usuario daqui para baixo ########
 ###############################################################################
+
+# Tres maneiras de detectar se estamos rodando em windows. Dependendo
+# do ambiente usado para executar make no windows, pode nao ser necessario
+# acrescentar a extensao.
+ifdef COMSPEC
+  LATEX := $(addsuffix .exe,$(LATEX))
+  BIBTEX := $(addsuffix .exe,$(BIBTEX))
+  MAKEINDEX := $(addsuffix .exe,$(MAKEINDEX))
+else
+  ifdef SystemRoot
+    LATEX := $(addsuffix .exe,$(LATEX))
+    BIBTEX := $(addsuffix .exe,$(BIBTEX))
+    MAKEINDEX := $(addsuffix .exe,$(MAKEINDEX))
+  else
+    ifdef SYSTEMROOT
+      LATEX := $(addsuffix .exe,$(LATEX))
+      BIBTEX := $(addsuffix .exe,$(BIBTEX))
+      MAKEINDEX := $(addsuffix .exe,$(MAKEINDEX))
+    endif
+  endif
+endif
 
 # LaTeX e os demais comandos sao executados mais de uma vez e, a cada
 # execucao, enviam muitas mensagens para a tela. Vamos tentar reduzir
@@ -64,150 +117,180 @@ FILTER_MSGS := grep -Eav '(^$$)|(^ *\(.*(sty|ldf|def|cfg|dfu|fd|bbx|cbx|lbx|tex)
 #    modificacoes nos arquivos gerados.
 
 # Copia os arquivos gerados pelo LaTeX para "*-current", se for o caso,
-# para podermos usar esses arquivos como dependencias para o make.
-define REFRESH :=
-grep ^OUTPUT *.fls | cut -f 2 -d" "| while read filename; do \
+# para podermos usar esses arquivos como dependencias para o make. Usamos
+# touch aqui porque cp pode nao registrar corretamente o timestamp do
+# arquivo copiado.
+define REFRESH_TEMP_FILES
+$(FIND_TEX_TEMP_FILES) | while read filename; do \
   if ! test -f "$$filename"-current || ! diff -q "$$filename" "$$filename"-current > /dev/null; then \
-    cp -f "$$filename" "$$filename"-current; \
+    cp -f "$$filename" "$$filename"-current 2>/dev/null; touch "$$filename-current"; \
   fi; \
 done
 endef
 
-# Na primeira iteracao do LaTeX, o arquivo .fls sequer existe, mas
-# nas iteracoes seguintes esta variavel lista os arquivos gerados
-# pelo proprio LaTeX (exceto .log e .pdf, que nao sao dependencias
-# e sao modificados toda vez, pois incluem a data de compilacao).
-TEX_TEMP_FILES := $(shell grep ^OUTPUT $(BASE_NAME).fls 2>/dev/null | cut -f2 -d" " | grep -Ev '\.(log|pdf)$$' | sed -e 's/$$/-current/')
+# Obtem a lista dos arquivos temporarios gerados pelo proprio
+# LaTeX (exceto .log e .pdf, que nao sao dependencias e sao
+# modificados toda vez, pois incluem a data de compilacao).
+FIND_TEX_TEMP_FILES = grep "^OUTPUT $*" $*.fls 2>/dev/null | tr -d '\r' | cut -f2 -d" " | grep -Ev '\.(log|pdf)$$'
+TEX_TEMP_FILES = $(shell $(FIND_TEX_TEMP_FILES))
+CURRENT_TEX_TEMP_FILES = $(addsuffix -current,$(TEX_TEMP_FILES))
 
 # LaTeX indica no arquivo de log se e preciso executa-lo novamente;
 # por seguranca, vamos checar isso tambem
-CHECK_RERUN := grep -Eaq 'Rerun to get .* right|Please rerun .*[tT]e[xX]|Table widths have changed. Rerun LaTeX' *.log
+CHECK_RERUN_MESSAGE = grep -Eaq 'Rerun to get .* right|Please rerun .*[tT]e[xX]|Table widths have changed. Rerun LaTeX|Warning: [Rr]erun [Ll]a[Tt]e[Xx]' $*.log
 
-define RUN_LATEX =
-msgs="`$(LATEX) $(OPTS) $*`"; \
+# Se a compilacao eh rapida, os arquivos "-current" criados mais
+# acima podem acabar tendo o mesmo timestamp que o pdf. Para
+# resolver isso, usamos o "touch"
+define RUN_LATEX
+touch timestamp; \
+TEXFOT=; \
+if texfot --version >/dev/null 2>&1; then \
+        TEXFOT=texfot; \
+fi; \
+msgs="`$$TEXFOT $(LATEX) $(LATEXOPTS) $*`"; \
 stat=$$?; \
 echo "$$msgs"| $(FILTER_MSGS) > latex-out.log 2>&1; \
 if test $$stat -ne 0; then \
 	$(SHOW_REPORT); \
 	echo; \
-	echo "    **** Erro durante a execucao do LaTeX ****"; \
-	touch $*.aux-current; \
+	echo "    **** Erro durante a execucao do LaTeX (processando $*) ****"; \
 	exit 1; \
-fi
+fi; \
+touch -r timestamp $*.pdf; \
+rm -f timestamp
 endef
 
-all: $(BASE_NAME).pdf
+# "make tese-exemplo" -> "make tese-exemplo.pdf"
+$(ALL_TARGETS): % : %.pdf
 
 # O arquivo pdf final depende dos arquivos de bibliografia/indice, alem
 # dos demais arquivos que compoem o documento e dos arquivos temporarios
 # gerados pelo LaTeX na iteracao anterior que foram modificados
-%.pdf: %.bbl %.ind $(TEX_TEMP_FILES) %.tex $(BIBFILES) $(IMGFILES) $(OTHERTEXFILES) $(MISCFILES)
+.SECONDEXPANSION:
+
+$(addsuffix .pdf,$(ALL_TARGETS)) : %.pdf : %.bbl %.ind $$(CURRENT_TEX_TEMP_FILES) %.tex $(BIBFILES) $(IMGFILES) $(OTHERTEXFILES) $(MISCFILES)
 	@if test $(MAKELEVEL) -ge 8; then \
 		$(SHOW_REPORT); \
 		$(SHOW_LOOP_ERROR); \
-		touch $*.aux-current; \
 		exit 1; \
 	fi
-	@echo "       Executando $(LATEX) $(OPTS) $* (iteração $(MAKELEVEL))..."
+	@echo "       Executando $(LATEX) $(LATEXOPTS) $* (iteracao $(MAKELEVEL))..."
 	@$(RUN_LATEX)
-	@$(REFRESH)
+	@$(REFRESH_TEMP_FILES)
 	@echo
-	@if $(CHECK_RERUN); then touch $*.aux-current; fi
-	@if make -sq; then \
+	@if $(CHECK_RERUN_MESSAGE); then touch $*.aux-current; fi
+	@make -sq $@; result=$$?; \
+	if [ $$result -eq 0 ]; then \
 		$(SHOW_REPORT); \
 		$(SHOW_SUCCESS_MSG); \
+	elif [ $$result -eq 1 ]; then \
+		make -s $@; \
 	else \
-		make -s; \
+		echo "    **** Erro durante a execucao do LaTeX (processando $*) ****"; \
+		exit 1; \
 	fi
 
 # bitex/biber e makeindex/xindy dependem de arquivos gerados pelo LaTeX
-%.idx-current %.bcf-current: %.tex $(BIBFILES) $(IMGFILES) $(OTHERTEXFILES) $(MISCFILES)
-	@echo "       Executando $(LATEX) $(OPTS) $* (iteração auxiliar $(MAKELEVEL))..."
+# e, indiretamente, dos proprios arquivos que compoem o documento.
+# No entanto, nao vamos declarar essas dependencias aqui. Precisamos
+# declarar esta regra apenas para que make saiba como gerar os arquivos
+# {idx,bcf}-current no inicio da execucao, quando nenhum arquivo ainda
+# foi gerado. Nas iteracoes seguintes, esses arquivos ja existem e, se
+# for o caso, sao atualizados pela regra que gera o arquivo pdf. Colocar
+# a dependencia aqui nao causa erros, mas em alguns casos faz make
+# executar iteracoes desnecessarias.
+%.idx-current %.bcf-current:
+	@echo "       Executando $(LATEX) $(LATEXOPTS) $* (iteracao auxiliar $(MAKELEVEL))..."
 	@$(RUN_LATEX)
-	@$(REFRESH)
+	@$(REFRESH_TEMP_FILES)
 	@echo
 
 %.ind: %.idx-current
-	@echo "       Executando $(MAKEINDEX) $*.idx..."
-	@if ! $(MAKEINDEX) $*.idx > makeindex-out.log 2>&1; then \
+	@echo "       Executando $(MAKEINDEX) $(MAKEINDEXOPTS) $*.idx..."
+	@if ! $(MAKEINDEX) $(MAKEINDEXOPTS) $*.idx > makeindex-out.log 2>&1; then \
 		$(SHOW_REPORT); \
 		echo; \
-		echo "    **** Erro durante a execucao do makeindex/xindy ****"; \
+		echo "    **** Erro durante a execucao do makeindex/xindy (processando $*) ****"; \
 		exit 1; \
 	fi
 	@echo
 
-%.bbl: %.bcf-current
+%.bbl: %.bcf-current $(BIBFILES)
 	@echo "       Executando $(BIBTEX) $*..."
 	@if ! $(BIBTEX) $* > bibtex-out.log 2>&1; then \
 		$(SHOW_REPORT); \
 		echo; \
-		echo "    **** Erro durante a execucao do bibtex/biber ****"; \
+		echo "    **** Erro durante a execucao do bibtex/biber (processando $*) ****"; \
 		exit 1; \
 	fi
 	@echo
 
-clean: $(BASE_NAME)-clean
+clean: tmpclean
+	@echo; \
+	echo '       Os arquivos PDF gerados *nao* foram apagados; para remove-los, use "make distclean"'; \
+	echo;
 
-%-clean:
-	-rm -f missfont.log $*.ps $*.pdf $*.dvi \
+tmpclean: $(addsuffix -tmpclean,$(ALL_TARGETS))
+
+distclean: tmpclean $(addsuffix -distclean,$(ALL_TARGETS))
+
+%-distclean:
+	@echo '       removendo arquivos gerados ($*: pdf, ps, dvi)'
+	-@rm -f $*.ps $*.pdf $*.dvi
+
+%-tmpclean:
+	@ echo '       removendo arquivos temporarios ($*: aux, bbl, idx...)'
+	-@rm -f timestamp missfont.log \
+		mkidxhead.ist mkidxhead.ist-current hyperxindy.xdy hyperxindy.xdy-current \
 		latex-out.log makeindex-out.log bibtex-out.log \
-		hyperxindy.xdy-current mkidxhead.ist-current \
-		$*.bbl $*.aux $*.log $*.toc $*.cb $*.out $*.blg \
-		$*.brf $*.ilg $*.ind $*.lof $*.lot $*.idx $*.bcf \
-		$*.fls $*.run.xml $*.synctex.gz $*.fdb_latexmk \
-		$*.bbl-current $*.aux-current $*.log-current \
-		$*.toc-current $*.cb-current $*.out-current \
-		$*.blg-current $*.brf-current $*.ilg-current \
-		$*.ind-current $*.lof-current $*.lot-current \
-		$*.idx-current $*.bcf-current $*.fls-current \
-		$*.run.xml-current $*.synctex.gz-current \
-		$*.fdb_latexmk-current $*.ps-current \
-		$*.pdf-current $*.dvi-current
+		$(TEX_TEMP_FILES) $(CURRENT_TEX_TEMP_FILES) \
+		$(foreach ext,$(TMP_EXTENSIONS),$*.$(ext)) \
+		$(foreach ext,$(TMP_EXTENSIONS),$*.$(ext)-current) \
+		$*.ps-current $*.pdf-current $*.dvi-current
 
-define SHOW_REPORT =
+define SHOW_REPORT
 	if test -f bibtex-out.log; then \
 		echo; \
 		echo "***********************************************************************"; \
-		echo "       Mensagens geradas por bibtex/biber na última iteração:"; \
+		echo "       Mensagens geradas por bibtex/biber (processando $*) na ultima iteracao:"; \
 		echo; \
 		cat bibtex-out.log; \
 	fi; \
 	if test -f makeindex-out.log; then \
 		echo; \
 		echo "***********************************************************************"; \
-		echo "       Mensagens geradas por makeindex/xindy na última iteração:"; \
+		echo "       Mensagens geradas por makeindex/xindy (processando $*) na ultima iteracao:"; \
 		echo; \
 		cat makeindex-out.log; \
 	fi; \
 	if test -f latex-out.log; then \
 		echo; \
 		echo "***********************************************************************"; \
-		echo "       Mensagens geradas por LaTeX na última iteração:"; \
+		echo "       Mensagens geradas por LaTeX (processando $*) na ultima iteracao:"; \
 		echo; \
 		cat latex-out.log; \
 	fi
 endef
 
-define SHOW_SUCCESS_MSG =
+define SHOW_SUCCESS_MSG
 	echo; \
 	echo; \
-	echo "   A compilação parece ter terminado com sucesso!"; \
+	echo "   A compilacao do arquivo $* parece ter terminado com sucesso!"; \
 	echo
 endef
 
-define SHOW_LOOP_ERROR =
+define SHOW_LOOP_ERROR
 	echo; \
 	echo "***********************************************************************" >&2; \
 	echo "***********************************************************************" >&2; \
-	echo "   LaTeX entrou em um laço infinito; leia a documentação da package" >&2; \
-	echo "   labelschanged (http://ctan.org/pkg/labelschanged )" >&2; \
+	echo "   LaTeX entrou em um laco infinito processando $*;" >&2; \
+	echo "   leia a documentacao da package labelschanged" >&2; \
+	echo "   (http://ctan.org/pkg/labelschanged )" >&2; \
 	echo "***********************************************************************" >&2; \
 	echo "***********************************************************************" >&2; \
 	echo
 endef
-
-.PHONY: all clean
 
 # Nao apaga arquivos intermediarios gerados durante a compilacao
 .SECONDARY:

@@ -336,7 +336,7 @@ Nossas hipóteses foram confirmadas, como pode ser visto no gráfico.
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=.8\textwidth]{figuras/distancia_validacao.png}
+	\includegraphics[width=\textwidth]{figuras/distancia_validacao.png}
 	\caption{Média da distância percorrida pelos carros no experimento.}
 	\label{fig:distancia_validacao}
 \end{figure}
@@ -353,7 +353,7 @@ Nossas hipóteses mais uma vez foram confirmadas, como pode ser visto na Figura 
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=.8\textwidth]{figuras/duracao_validacao.png}
+	\includegraphics[width=\textwidth]{figuras/duracao_validacao.png}
 	\caption{Média da duração das viagens simuladas no experimento.}
 	\label{fig:duracao_validacao}
 \end{figure}
@@ -448,21 +448,21 @@ O passo a passo para execução desse experimento de validação foi o seguinte:
 \end{enumerate}
 
 A Figura \ref{fig:duracao_total}, apresenta o desvio padrão (no topo das barras) e a duração média das viagens de carro simuladas nas três etapas deste experimento.
-No eixo Y, a duração é apresentada em segundos (ciclo de execução da simulação -- 1 ciclo = 1 segundo), e no eixo X os diferentes cenários utilizados em cada uma das 3 etapas.
+No eixo Y, a duração é apresentada em segundos (ciclo de execução da simulação: 1 ciclo = 1 segundo), e no eixo X os diferentes cenários utilizados em cada uma das 3 etapas.
 Como podemos ver no gráfico apresentado, em geral, a média do tempo de duração das viagens não passou de 6 minutos.
 Isso pode ter ocorrido pelo fato das viagens nessa região serem mais curtas, ou por não terem viagens suficientes para gerar congestionamentos, já que filtramos apenas as viagens que se iniciavam e
 terminavam dentro do recorte do mapa utilizado.
-Outro fator importante que nos chamou a atenção, foi a média da duração das viages da etapa 3, onde existem vias fechadas e o auxilio de PMVs, ser menor do que da etapa 1, onde não existe qualquer
+Outro fator importante que nos chamou a atenção, foi a média da duração das viagens da etapa 3, onde existem vias fechadas e o auxilio de PMVs, ser menor do que da etapa 1, onde não existe qualquer
 incidente.
 Após analisar os dados, percebemos que ao recalcular a rota quando deparado de uma PMV, os carros se distribuíam de uma melhor forma pela malha viária do cenário utilizado pelo experimento, com isso,
 evitavam congestionamentos que ocorriam anteriormente.
-Sendo isso um alvo de possível melhoria no simulador, já que o mesmo ao criar o ator, calcula e utiliza apenas um dos menores caminhos entre a origem e destino do carro, podendo essa rota coincidir entre
+Sendo isso um alvo de possível melhoria no simulador, já que ao criar o ator, apenas um dos menores caminhos entre a origem e destino do carro é calculado e utilizado, podendo essa rota coincidir entre
 múltiplos atores com origem e destinos similares, assim, deixando outros caminhos mais curtos inutilizados.
 Todavia, como esperado, a etapa 2, onde temos fechamento de vias mas não temos PMVs, teve a maior média de duração das viagens.
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=.8\textwidth]{figuras/duracao_total.png}
+	\includegraphics[width=\textwidth]{figuras/duracao_total.png}
 	\caption{Média da duração das viagens de carros no experimento.}
 	\label{fig:duracao_total}
 \end{figure}
@@ -477,7 +477,7 @@ E a etapa 3, onde introduzimos as PMVs para auxiliar os motoristas na decisão d
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=.8\textwidth]{figuras/duracao_filtered.png}
+	\includegraphics[width=\textwidth]{figuras/duracao_filtered.png}
 	\caption{Média da duração das viagens de carros afetadas por fechamento de vias e/ou PMVs no experimento.}
 	\label{fig:duracao_filtered}
 \end{figure}
@@ -487,7 +487,8 @@ Avaliamos que alguns fatores podem ter influenciado nesse resultado, sendo a mai
 O posicionamento das PMVs pode não ter sido o ideal, já que não foi realizada uma análise prévia de onde passariam a maior parte dos carros.
 O conjunto de viagens simulados após recortar o mapa da cidade de São Paulo pode não ter sido representativo, a decisão de reduzir o mapa para facilitar a visualização do impacto do fechamento de vias
 e PMVs pode não ter sido boa ideia.
-Além disso, os resultados obtidos podem ter sido influenciados devido a infraestrutura simples utilizada com apenas dois \textit{laptops}.
+Além disso, os resultados obtidos podem ter sido influenciados devido a infraestrutura simples utilizada com apenas dois \textit{laptops}, já que em cenários realistas muitos recursos computationais são
+necessários, como memória e largura de bando da rede.
 
 
 \section{Análise Crítica}
