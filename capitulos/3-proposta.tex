@@ -21,10 +21,10 @@ das cidades) segue uma crescente, consideramos que a mesma deva ter de alguma fo
     \item \textit{Modelos aderentes a realidade de uma cidade}: o simulador deve implementar modelos que representem ao máximo a realidade de uma cidade, e não apenas casos hipotéticos.
         Por exemplo, modelos de fluxo de automóveis nas vias devem incluir possíveis engarrafamentos.
 
-    \item \textit{Execução com noção de tempo real}: a dinâmica da cidade deve ser simulada em tempo real, ou seja, não deve ser executada nem mais rápida nem mais lenta do que aconteceria
+    \item \textit{Tempo de execução igual ao tempo real}: a dinâmica da cidade deve ser simulada em tempo real, ou seja, não deve ser executada nem mais rápida nem mais lenta do que aconteceria
         em um ambiente real de uma cidade (um segundo simulado é aproximadamente igual a um segundo real).
-        Esse é um requisito importante, pois o desencadeamento de ações nas cidades são muitas vezes devido ao processamento de ações acontecidas anteriormente, e as plataformas
-        devem ter tempo hábil para realizar tais ações, como foi explicado nos capítulos anteriores.
+        Esse é um requisito importante, pois o desencadeamento de eventos nas cidades são muitas vezes devido ao processamento de eventos acontecidos anteriormente, e as plataformas
+        devem ter tempo hábil para realizar tais ações.
 
     \item \textit{Geração de grande massa de dados}: para realizarmos experimentos realistas devemos ser capazes de gerar uma massa de dados na mesma escala de uma grande cidade por
         exemplo.
@@ -35,29 +35,32 @@ das cidades) segue uma crescente, consideramos que a mesma deva ter de alguma fo
         Com isso, se torna possível a envio de dados de sensores e comandos de atuação durante a emulação.
 \end{itemize}
 
-Consideramos os pontos apresentados acima como \textbf{requisitos fundamentais}, sendo esses o mínimo necessário para conseguirmos de fato representar um ambiente real de uma cidade.
+Consideramos os pontos apresentados acima como \textbf{requisitos fundamentais}, sendo esses o mínimo necessário para conseguirmos de fato representar um ambiente real de uma cidade (sendo o último ponto
+necessário ser atendido por ambas as ferramentas).
 Caso a ferramenta atenda os requisitos apresentados, se torna possível a simulação de cenários realistas no contexto de Cidades Inteligentes, podendo substituir \textit{testbeds}
 reais, em uma escala maior, após a sua integração com a plataforma alvo.
 Todavia, apenas essa simulação não viabiliza ainda a realização de experimentos com plataformas, ainda precisamos atender alguns \textbf{requisitos de integração} entre o simulador
 e a plataforma em questão.
 
 Para termos um ambiente integrado precisamos definir um meio de comunicação de duas vias, envio e recebimento de dados, em tempo real entre o simulador e a plataforma de Cidades Inteligentes.
-Além disso, deve haver uma integração semântica que viabilize as ferramentas se comunicarem de maneira eficaz.
+Além disso, deve haver uma integração semântica e de protocolos de rede que viabilize as ferramentas se comunicarem de maneira eficaz.
 Abaixo são apresentados os \textbf{requisitos de integração} necessários para obtermos um ambiente integrado de experimentação para essas plataformas:
 
 \begin{itemize}
     \item \textit{Integração semântica}: para que seja possível a comunicação em tempo de execução entre o simulador e a plataforma, ambos precisam entrar em um consenso semântico.
-        Abaixo são apresentados os dois principais conceitos envolvidos e que acreditamos que seja necessário serem representados de alguma forma em ambas as ferramentas para que seja
+        Abaixo são apresentados os dois principais conceitos envolvidos e que acreditamos que seja necessário serem representados de alguma forma nas duas ferramentas para que seja
         possível a integração.
 
         \begin{itemize}
             \item \textit{Recursos da cidade}: esse recursos da cidade, sendo eles qualquer coisa no contexto da cidade (automóveis, aparelhos públicos, vias e etc.), serão objetos tanto de
                 sensoriamento e/ou atuação por parte das plataformas de Cidades Inteligentes.
 
-            \item \textit{Capacidades inerentes a cada recurso da cidade}: cada \textit{recurso da cidade} tem as suas respectivas capacidades, sendo elas de sensoriamento ou atuação.
+            \item \textit{Capacidades inerentes a cada recurso da cidade}: cada \textit{recurso da cidade} tem as suas respectivas capacidades, sendo elas de sensoriamento ou de atuação.
                 Essas capacidades usualmente estão atreladas a dispositivos heterogêneos de IoT (\textit{Internet Of Things}) presentes nos recursos da cidade.
                 Por exemplo, vagas de estacionamento podem ser monitoradas quanto a sua ocupação, e semáforos de trânsito podem ter o seu estado modificado através de atuação.
         \end{itemize}
+
+    \item \textit{Interoperabilidade de protocolos de comunicação}: as duas ferramentas não precisam ter conhecimento da implementação da outra para conseguir trocar mensagens.
 
     \item \textit{Envio de dados de sensoriamento em tempo real}: para que as funcionalidades relativas a coleta e armazenamento de dados, e processamento dos mesmos possam ser
         exercitadas pela plataforma, precisamos enviar dados de todos os recursos presentes no cenário de experimentação com tais capacidades em tempo real.
@@ -76,10 +79,13 @@ Abaixo são apresentados os \textbf{requisitos de integração} necessários par
 \end{itemize}
 
 Portanto, acreditamos que ao termos um ambiente que atenda tanto os \textbf{requisitos fundamentais} quanto os de \textbf{integração}, se torna possível realizarmos experimentos
-com plataformas de Cidades Inteligentes sem a necessidade de \textit{testbeds} reais.
-Isso nos possibilita testar cenários em escalas reais de uma cidade, além de nos permitir simular cenários que ainda não são passíveis de reprodução através de \textit{testbeds},
-simulando tecnologias ainda não existentes e cenários futuristas.
-Por exemplo, termos a possibilidade de emular um ambiente onde todos os carros da cidade são autônomos se comunicando através de tecnologia \textit{5G}.
+de çarga escala e interativos com plataformas de Cidades Inteligentes sem a necessidade de \textit{testbeds} reais.
+Os requisitos fundamentais auxiliarão principalmente na escolha do simulador a ser utilizado, já que em sua maioria são requisitos associados a capacidade do simulador de representar um ambiente
+de Cidades Inteligentes de maneira realista.
+Já os requisitos de integração serão atendidos pela arquitetura de integração apresentada na seção seguinte.
+Um ambiente que atenda os requisitos expostos nesta seção nos possibilita experimentar cenários em escalas reais de uma cidade, além de nos permitir simular cenários que ainda não são passíveis de
+reprodução através de \textit{testbeds}, simulando tecnologias ainda não existentes e cenários futuristas.
+Por exemplo, termos a possibilidade de simular um ambiente onde todos os carros da cidade são autônomos se comunicando através de tecnologia \textit{5G}.
 
 \section{Arquitetura}
 
@@ -87,25 +93,37 @@ Uma arquitetura de software foi desenhada visando atender principalmente os \tex
 de Cidades Inteligentes, e será apresentada nesta seção.
 A integração entre sistemas como apresentando no decorrer deste trabalho é uma tarefa complexa e demanda um projeto de software bem elaborado para que seja manutenível a longo prazo.
 
+A solução proposta visa integrar uma plataforma a um simulador de Cidades Inteligentes com a finalidade de permitir experimentos de larga escala e interativos.
+A integração é feita em duas dimensões: \textbf{dados} e \textbf{controle}.
+Ou seja, permitimos a troca de dados em tempo real entre as duas ferramentas, assim como a plataforma controlar e interferir em eventos durante a simulação.
+A grosso modo, a troca de dados permite principalmente simular dispositivos IoT enviando dados para a plataforma, e os comandos de atuação da plataforma será o meio de alterar o estado da simulação.
+
+Haja vista que simuladores baseados em agentes e eventos discretos são apontados pela literatura como o caminho para uma solução efetiva, a arquitetura aqui apresentada será baseada em eventos.
+Sendo a arquitetura baseada em eventos (\textit{Event-Driven Architecture}) um padrão arquitetural que é aplicado no projeto e implementação de sistemas que transmitem eventos entre os componentes e
+serviços fracamente acoplados\footnote{https://en.wikipedia.org/wiki/Event-driven\_architecture}.
+Esse tipo de arquitetura é capaz de detectar eventos e reagir de maneira inteligente~\cite{taylor_2009}.
+Toda e qualquer ação que modificar o estado da simulação será considerado um evento, e baseado nesses eventos, a integração envolvendo dados e controle do sistema será realizada.
+
+
 \subsection{Integração Simulador-Plataforma}
 
 A integração entre simulador e plataforma de Cidades Inteligentes envolve principalmete a troca de dados em tempo de execução como foi apresentado neste capítulo.
 Essa interação para envio e recebimento de dados a primeira vista simples, se torna complexa quando adicionamos a necessidade de resposta de ambas as partes em tempo real.
-Por parte do simulador, a rápida reação ao receber um dado de atuação é essencial.
+Por parte do simulador, a rápida reação ao receber um comando de atuação é essencial, sendo esses comandos caracterizados como \textbf{eventos de atuação}.
 O recebimento desse dado acarretará em uma atualização no estado da simulação, que por sua vez terá impacto direto no pronto envio de dados de sensores que, por muitas vezes,
 se dá de maneira temporizada.
-Já para a plataforma, é necessária uma tomada de decisão ágil ao receber diferentes dados de sensores.
+Já para a plataforma, é necessária uma tomada de decisão ágil ao receber diferentes dados de sensores, sendo esses considerados \textbf{eventos de sensoriamento}.
 Os dados de sensores podem ser, por exemplo, utilizados como entrada para gatilhos de comandos de atuação e processamento em tempo real de eventos complexos.
 
 Além desse desafio, enfrentamos também problemas de interoperabilidade entre o simulador e a plataforma.
 Usualmente, os conceitos presentes no projeto de cada uma das ferramentas divergem, e essa camada de integração deve ser capaz de traduzir essa semântica para ambas as ferramentas.
 Outro problema relacionado a interoperabilidade é a forma de transmissão desses dados, mais especificamente os protocolos de comunicação a serem utilizados.
 Por exemplo, o simulador pode suportar apenas comunicação via protocolo AMQP e a plataforma prover uma API Restful e conexões via MQTT.
-Mais uma vez, é papel da camada de integração tornar esse comunicação transparente para ambos os lados.
+Mais uma vez, é papel da camada de integração tornar esse comunicação transparente para ambos os lados, ou seja, a ferramenta não deve se preocupar com qual protocolo é utilizado pela outra e vice-versa.
 
 Tendo isso em vista, a arquitetura de integração adotada utiliza-se de um componente extra intermediando as duas ferramentas, simulador e plataforma, como pode ser visto na
 Figura \ref{fig:general_architecture}.
-Apesar de um componente extra adicionar complexidade e consequentemente aumentar o tempo gasto na transação desses dados, ele se faz necessário para solucionar os problemas
+Apesar de um componente extra adicionar complexidade e consequentemente aumentar o tempo gasto no tratamento desses eventos, ele se faz necessário para solucionar os problemas
 de interoperabilidade mencionados anteriormente.
 Entretanto, ele deve ser o mais simples possível para que o acréscimo no tempo de envio e recebimento dos dados não aumente consideravelmente.
 Portanto, utilizar ferramentas (simulador e plataforma) que se assemelhem conceitualmente e que compartilhem pilhas de protocolos de comunicação similares é o ideal,
@@ -134,8 +152,49 @@ O componente de integração tem a responsabilidade de solucionar os pontos menc
     \item Interferência mínima no tempo de envio e recebimento de dados
 \end{itemize}
 
+A interoperabilidade semântica é um problema recorrente na área de Internet das Coisas, haja vista que a heterogeneidade das "coisas"  faz a interoperabilidade entre eles um desafio~\cite{barnaghi_2012}.
+Na arquitetura do ambiente de experimentação aqui apresentado, esse problema tende a ser um pouco mais simples, já que temos apenas duas fontes de dados que podem divergir, o simulador e a plataforma.
+Isso considerando que uma mesma ferramenta não possui várias representações semânticas.
+A representação formal baseada em formatos interpretados por máquina vem sendo considerada uma técnica promissora para integração semântica~\cite{barnaghi_2012}.
+Todavia, dependendo do nível de compatibilidade das ferramentas, soluções mais simples podem ser adotadas.
+Por exemplo, a realização de simples transformações das mensagens em funções implementadas no componente de integração, realizando o mapeamento direto dos conceitos.
+Esse mapeamento direto para transformação de protocolos de rede utilizados pelas ferramentas também é valida, onde o componente de integração pode receber uma mensagem em um protocolo e em seguida repassar
+a mensagem, após uma possível tradução semântica, através de outro protocolo.
+
+A Figura \ref{fig:sequencia_eventos_sensores}, apresenta a sequência de atividades a serem realizadas no momento em que um evento de sensoriamento é gerado pelo simulador.
+Sendo o ciclo de simulação um atributo que descreve o estado da simulação, e sabendo que um ciclo de simulação corresponde a um segundo, eventos desse tipo pode ser gerados de forma temporizada por exemplo.
+Nessa situação, podemos enviar dados de sensores no momento $ N $ e quando o estado da simulação mudar e estivermos no ciclo de simulação $ N + 10 $ gerarmos outro evento de sensoriamento.
+O diagrama de sequência apresentado descreve as atividades a serem realizadas quando um evento do tipo sensoriamento for gerado pelo simulador de Cidades Inteligentes.
+Inicialmente, após a geração de um evento de sensoriamento, uma mensagem contendo informações sobre o mesmo deve ser enviada para o componente de integração.
+Ao receber essa mensagem, o componente de integração deve realizar a tradução semântica e de protocolo de rede caso sejam necessárias, e enviar a mensagem com o evento traduzido para a plataforma.
+Em um cenário ideal o simulador e a plataforma já possuem compatibilidade semântica e na pilha de protocolos de comunicação, não sendo necessário o componente de integração.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{figuras/sequencia_eventos_sensores.png}
+	\caption{Diagrama de sequência para uma evento de sensoriamento}
+	\label{fig:sequencia_eventos_sensores}
+\end{figure}
+
+Já na Figura \ref{fig:sequencia_eventos_atuacao}, outro diagrama de sequência é apresentado, mas agora demonstrando as atividades a serem executadas quando um evento de atuação é gerado pela plataforma.
+Como já foi mencionado anteriormente, a partir de uma mudança no estado do ambiente simulado de uma cidade pode surgir a necessidade de atuação.
+Essa atuação é uma ação que irá interferir no ambiente simulado visando modificar o seu estado de alguma forma.
+Um exemplo simples no contexto de uma cidade seria um pedestre que deseja atravessar a rua chegar em um semáforo, quando isso ocorrer, desejamos mudar o estado do semáforo para vermelho, permitindo
+a passagem do pedestre.
+Nesse exemplo, uma mudança no estado da cidade (chegada do pedestre ao semáforo) foi um gatilho para outra mudança de estado (mudança do semáforo para vermelho). 
+Similar ao diagrama de sequência apresentado na Figura \ref{fig:sequencia_eventos_sensores}, uma mensagem contendo informação sobre o evento de atuação é enviado para o componente de atuação,
+ele traduz semanticamente e o protocolo de rede caso sejam necessários e envia essa mensagem traduzida para o simulador.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{figuras/sequencia_eventos_atuacao.png}
+	\caption{Diagrama de sequência para uma evento de atuação}
+	\label{fig:sequencia_eventos_atuacao}
+\end{figure}
+
 Como pode ser visto, o componente de integração tem como único objetivo atender requisitos não funcionais.
 Ele deve tornar a comunicação do simulador e da plataforma transparente para ambos e adicionando a menor complexidade possível ao sistema.
+Sendo comunicação transparente a não necessidade de conhecimento da outra ferramenta para se comunicar com ela, já que o componente de integração irá tornar essa troca de mensagens de eventos interoperável.
 
 Em resumo, devemos escolher ferramentas (simulador e plataforma) mais semelhantes possíveis, com o que diz respeito principalmente ao modelo conceitual e aos protocolos de
 rede utilizados para comunicação; e implementar o componente de integração o mais simples possível, apenas com o objetivo de viabilizar a comunicação entre as ferramentas.
