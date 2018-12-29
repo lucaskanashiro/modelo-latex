@@ -88,9 +88,70 @@ o \textit{acesso concorrente} e a \textit{reprodutibilidade}.
 Contudo, esse tipo de abordagem não permite que a plataforma interaja com o ambiente de experimentação em tempo de execução, não permitindo experimentos envolvendo comandos de atuação por exemplo.
 Além do mais, para a criação desse conjunto de dados para a contrução do \textit{benchmark} é necessário ter acesso a dispositivos reais implantados em \textit{testbeds} reais.
 
-Como pode ser visto, nenhum dos trabalhos apresentados provê um ambiente de experimentação para plataforma de Cidades Inteligentes que permita a interação em tempo de execução, possibilitando
+
+Na Tabela \ref{tab:trabalhos_relacionados}, uma caracterização dos trabalhos relacionados aqui mencionados é feita.
+Foram levantadas as seguintes características de cada um dos ambientes de experimentação:
+
+\begin{itemize}
+    \item \textit{Uso de dispositivos de IoT}: indica se o ambiente de experimentação faz uso ou não de dispositivos reais de IoT.
+
+    \item \textit{Uso de simulação}: indica se a simulação é uma técnica utilizada pelo ambiente de experimentação.
+
+    \item \textit{Benchmark}: indica se o ambiente é utilizado como \textit{bechmarking} para plataformas de Cidades Inteligentes.
+
+    \item \textit{Implantação em laboratório}: aponta se o ambiente foi implantado em um ambiente controlado de laboratório, fazendo referência a ambiente fechados (\textit{indoor}).
+
+    \item \textit{Implantação em ambiente externo}: aponta se o ambiente foi implantado em uma área aberta, onde os dispositivos e infraestrutura estão expostos a intempéries.
+
+    \item \textit{Larga escala}: sinaliza se o ambiente é considerado de larga escala pelos autores do trabalho, não sendo necessariamente o ponto de vista apresentado neste trabalho, como pode ser
+        visto na discussão feita anteriormente.
+
+    \item \textit{Execução de comandos de atuação}: assinala se o ambiente permite a execução de comandos de atuação em tempo de execução, sendo indicado apenas os trabalhos que apresentaram tal
+        característica em suas publicações. Ou seja, alguns dos trabalhos não indicados ainda podem possuir essa capcidade, contudo, a mesma não foi apresentada de forma clara.
+\end{itemize}
+
+
+\begin{landscape}
+    \vspace*{\fill}
+\begin{table}[htb!]
+    \centering
+    \resizebox{1.5\textwidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|l|}
+\hline
+    \thead{Ambiente de Experimentação}          & \thead{Uso de dispositivos de IoT} & \thead{Uso de simulação} & \thead{Benchmark}    & \thead{Implantação em \\ laboratório} & \thead{Implantação em \\ ambiente externo} & \thead{Larga escala} & \multicolumn{1}{c|}{\thead{Execução de \\ comandos de atuação}} \\ \hline
+\textit{I3ASensorBed}                        & \textbf{x}                          & \textbf{x}                    & \textbf{}             & \textbf{x}                          & \textbf{x}                               & \textbf{}                     &                                                                       \\ \hline
+\textit{Padova Smart City}                   & \textbf{x}                          & \textbf{}                     & \textbf{}             & \textbf{}                           & \textbf{x}                               & \textbf{}                     &                                                                       \\ \hline
+\textit{FIT IoT-LAB}                         & \textbf{x}                          & \textbf{}                     & \textbf{}             & \textbf{}                           & \textbf{x}                               & \textbf{x}                    & \multicolumn{1}{c|}{\textbf{x}}                                       \\ \hline
+\textit{City of Things}                      & \textbf{x}                          & \textbf{x}                    & \textbf{}             & \textbf{}                           & \textbf{x}                               & \textbf{}                     &                                                                       \\ \hline
+\textit{Smart Berlin Testbed}                & \textbf{x}                          & \textbf{}                     & \textbf{}             & \textbf{}                           & \textbf{x}                               & \textbf{}                     &                                                                       \\ \hline
+\textit{SmartSantander}                      & \textbf{x}                          & \textbf{}                     & \textbf{}             & \textbf{}                           & \textbf{x}                               & \textbf{x}                    & \multicolumn{1}{c|}{\textbf{x}}                                       \\ \hline
+\textit{SmartCampus}                         & \textbf{x}                          & \textbf{}                     & \textbf{}             & \textbf{x}                          & \textbf{}                                & \textbf{}                     & \multicolumn{1}{c|}{\textbf{x}}                                       \\ \hline
+\textit{Birmingham Urban Climate Laboratory} & \textbf{x}                          & \textbf{}                     & \textbf{}             & \textbf{}                           & \textbf{x}                               & \textbf{x}                    &                                                                       \\ \hline
+\textit{SmartGridLab}                        & \textbf{x}                          & \textbf{}                     & \textbf{}             & \textbf{x}                          & \textbf{}                                & \textbf{}                     &                                                                       \\ \hline
+\textit{Street Light Poles}                  & \textbf{x}                          & \multicolumn{1}{l|}{}         & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}               & \textbf{x}                               & \multicolumn{1}{l|}{}         &                                                                       \\ \hline
+\textit{OpenMTC}                             & \textbf{x}                          & \multicolumn{1}{l|}{}         & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{}               & \textbf{x}                               & \textbf{x}                    &                                                                       \\ \hline
+\textit{CityBench}                           & \multicolumn{1}{l|}{}               & \multicolumn{1}{l|}{}         & \textbf{x}            & \multicolumn{1}{l|}{}               & \multicolumn{1}{l|}{}                    & \textbf{x}                    &                                                                       \\ \hline
+\end{tabular}
+    }
+    \caption{Caracterização dos trabalhos relacionados}
+    \label{tab:trabalhos_relacionados}
+\end{table}
+\vspace*{\fill}
+\end{landscape}
+
+
+Podemos ver na Tabela \ref{tab:trabalhos_relacionados} que praticamente todos os ambientes de experimentação apresentados fazem uso de dispositivos reais de IoT em ambientes externos, haja vista que seus 
+autores querem reproduzir ao máximo um ambiente real.
+Os poucos trabalhos que fazem uso de simulação, a utilizam como uma técnica auxiliar em contextos específicos, como por exemplo, para simular diversas topologias de rede em um dado cenário.
+Apenas um dos trabalhos, o CityBench, é de fato uma ferramenta de \textit{benchmarking} para plataformas de Cidades Inteligentes.
+Todavia, como discutido anteriormente, o mesmo não permite a interação necessária em ambientes reais.
+Além disso, uma pequena quantidade dos ambientes apresentados permitem a execução de comandos de atuação durante experimentos.
+Todos os trabalhos que permitem tal funcionalidade demandaram grandes investimentos para que isso fosse possível, sendo esse um limitante.
+
+Como pode ser visto, a maioria dos trabalhos apresentados não provê um ambiente de experimentação para plataforma de Cidades Inteligentes que permita a interação em tempo de execução, possibilitando
 atuação durante o experimento.
-Além disso, as solução apresentadas não são capazes de realizar experimentos na escala de grande metrópoles do mundo, como a cidade de São Paulo.
+Além disso, as solução apresentadas não são capazes de realizar experimentos na escala de grande metrópoles do mundo, como a cidade de São Paulo, apesar de alguns autores afirmarem que os ambiente são de
+larga escala.
 Sendo assim, identificamos o potencial deste trabalho, onde visamos solucionar esses dois problemas apresentados e os desafios propostos para contrução desse ambiente de experimentação através
 de simulação.
 
