@@ -10,27 +10,27 @@ Para que plataformas de Cidades Inteligentes atendam as expectativas de governos
 complexidade presentes nas cidades modernas.
 Devem ser flexíveis e capazes de escalar para atender as diferentes demandas no decorrer do dia, além de conseguir lidar com múltiplos aspectos que tornam o contexto de Cidades Inteligentes tão
 peculiar.
-Nas cidades, tudo é conectado, onde um aspecto influencia e é influenciado por diversos outros.
+Nas cidades, tudo é conectado, um aspecto influencia e é influenciado por diversos outros.
 
-Em uma grande metrópole como São Paulo, milhões de recursos (ônibus, carros, hospitais, estacionamentos, escolas, etc.) deverão ser monitorados e gerenciados em tempo real;
-dispositivos de Internet das Coisas (\textit{Internet of Things - IoT}), com o objetivo de obter dados e atuar sobre os recursos da cidade, poderão enviar e receber dados a todo momento concorrentemente;
-cidadãos e agentes do governo poderão requisitar esses serviços em diferentes horas do dia.
-Portanto, uma plataforma de Cidades Inteligentes deve estar habilitada para atender toda essa demanda.
+Em uma grande metrópole como São Paulo, milhões de recursos (ônibus, carros, hospitais, estacionamentos, escolas, etc.) deverão ser monitorados e gerenciados em tempo real.
+Dispositivos de Internet das Coisas (\textit{Internet of Things - IoT}) poderão enviar e receber dados a todo momento, concorrentemente, com o objetivo de obter dados e atuar sobre os recursos da cidade.
+Cidadãos e agentes do governo poderão requisitar esses serviços em diferentes horas do dia.
+Desta forma, uma plataforma de Cidades Inteligentes deve estar habilitada para atender toda essa demanda.
 
-A realização de experimentos na escala de grandes cidades se apresenta como um meio de validar o funcionamento de plataformas de Cidades Inteligentes em condições reais.
-Todavia, a realização de experimentos em tais condições não é uma tarefa fácil.
+A realização de experimentos na escala de grandes cidades se apresenta como um meio de validar o funcionamento de plataformas de Cidades Inteligentes em condições reais, todavia, a realização de
+experimentos em tais condições não é uma tarefa fácil.
 Experimentos que fazem uso apenas de \textit{scripts} para geração de carga de trabalho sintética (usando ferramentas como \textit{ApacheBench}\footnote{https://httpd.apache.org/docs/2.4/programs/ab.html})
 não exercitam as plataformas em condições reais de uma cidade.
-Como foi mencionado anteriormente, praticamente tudo no contexto de uma cidade está conectado.
+Conforme citado anteriormente, praticamente tudo no contexto de uma cidade está conectado.
 %Portanto, um dado que seja enviado para a plataforma provelmente gerará uma reação que não terá próposito nesse caso.
-Portanto, apenas enviar dados para a plataforma sem prover um meio de reação interativo não é o suficiente.
-Por exemplo, ao receber um determinado dado em uma dada circunstância, a plataforma pode ter que atuar de alguma forma na cidade, o que alterará o estado da cidade, modificando o próximo dado a ser enviado 
+Apenas enviar dados para a plataforma sem prover um meio de reação interativo não é o suficiente.
+Por exemplo, ao receber um determinado dado em uma certa circunstância, a plataforma pode ter que atuar de alguma maneira na cidade, o que alterará o seu estado, modificando o próximo dado a ser enviado 
 para a plataforma.
 Portanto, esse tipo de experimento é válido, mas não representa uma situação real do cotidiano de uma cidade.
 
 %Para solucionar essa falta de interação apresentada na solução anterior, podemos fazer uso de \textit{testbeds} na realização dos experimentos.
-Para solucionar essa falta de interação na utilização de \textit{scripts} para geração de carga de trabalho sintética, podemos fazer uso de \textit{testbeds} na realização dos experimentos.
-\textit{Testbeds} são plataformas para execução de testes onde, no contexto de IoT, em geral, são implantações de dispositivos reais.
+Para solucionar a falta de interação na utilização de \textit{scripts} para geração de carga de trabalho sintética, podemos fazer uso de \textit{testbeds} na realização dos experimentos.
+Esses por sua vez, são plataformas para execução de testes onde no contexto de IoT, em geral, são implantações de dispositivos reais.
 O projeto \textit{SmartSantander}~\cite{sanchez_2014} possui um dos \textit{testbeds} mais famosos na área de Cidades Inteligentes.
 Vários sensores e atuadores foram implantados na cidade de Santander na Espanha e, com isso, eles se tornaram capazes de realizar experimentos mais realistas.
 Entretanto, construir \textit{testbeds} como esse, na escala de uma cidade (mesmo sendo uma cidade pequena), não é trivial.
@@ -38,44 +38,45 @@ Existem procedimentos, envolvendo governos e um alto custo associado a compra, i
 Sendo assim, construir \textit{testbeds} reais na escala de grandes metrópoles do mundo não é uma solução factível na maioria das vezes.
 
 Nesse sentido, apresentamos a simulação como uma saída viável para o problema.
-Com ela podemos simular cidades inteiras, implementado modelos realistas e permitindo a interação em tempo real com plataformas de Cidades Inteligentes.
-%Os diversos recursos da cidade e dispositivos de IoT acoplados aos mesmos são simulados, e uma interface de comunicação entre o simulador e a plataforma pode tornar a comunicação transparente.
-Os diversos recursos da cidade e dispositivos de IoT acoplados aos mesmos são simulados, e através de uma interface de comunicação entre o simulador e a plataforma, a interação da plataforma com esses
-recursos e dispositivos se dá de maneira transparente, onde a plataforma não tem conhecimento se o ambiente é simulado ou não.
-Com isso, sendo o simulador capaz de executar na escala de grandes cidades, seremos capazes de realizar experimentos em cenários realistas.
-Além do mais, nos tornamos capazes de realizar experimentos envolvendo tecnologias que ainda não são amplamente adotas ou ainda estão em fase de projeto.
+Podemos simular cidades inteiras, implementando modelos realistas capazes de permitir a interação em tempo real com plataformas de Cidades Inteligentes.
+Os diversos recursos da cidade e dispositivos de IoT acoplados aos mesmos são simulados, e uma interface de comunicação entre o simulador e a plataforma pode tornar a comunicação transparente, ou seja,
+a plataforma não tem conhecimento se o ambiente é simulado ou não.
+%Os diversos recursos da cidade e dispositivos de IoT acoplados aos mesmos, são simulados, através de uma interface de comunicação entre o simulador e a plataforma, a interação da plataforma com esses
+%recursos e dispositivos se dá de maneira transparente,.
+Ressaltamos que caso o simulador possa executar na escala de grandes cidades, poderá realizar experimentos em cenários realistas.
+Acrescentamos o fato de nos tornamos capazes de realizar experimentos envolvendo tecnologias que ainda não são amplamente adotas ou ainda estão em fase de projeto.
 
-Ao fazer uso de um ambiente simulado para realizar experimentos, fazemos com que os mesmos sejam reprodutíveis.
-Ao utilizar \textit{scripts} para geração de carga também somos capaz de reproduzir experimentos (caso o mesmo esteja disponível).
-Contudo, ao usar \textit{testbeds} reais contendo dispositovs de IoT, essa característica não é mais garantida.
+Ao fazer uso de um ambiente simulado para realizar experimentos, possibilitamos que os mesmos sejam reprodutíveis.
+Utilizar \textit{scripts} para geração de carga também oportunizará reproduzir experimentos (caso os mesmos estejam disponíveis).
+Porém, ao usar \textit{testbeds} reais contendo dispositovs de IoT, essa característica não poderá ser garantida, haja vista que, ambientes externos podem apresentar grande variabilidade independentemente da
+execucação de um protocolo (por exemplo, elementos climáticos).
 A utilização de simulação para resolver problemas similares aos apresentados vem sendo adotada em diversos trabalhos~\cite{karnouskos_2009}~\cite{fleischer_1994}~\cite{dupuy_1990}~\cite{boukerche_2001}.
 
 Com o intuito de viabilizar experimentos com plataformas de Cidades Inteligentes, apresentamos nesta dissertação uma proposta de solução para criação de um ambiente simulado de experimentação.
-Para criação desse ambiente fazemos uso de um simulador e uma plataforma de Cidades Inteligentes, onde ambos são integrados de acordo com o cenário desejado.
-Além disso, realizamos a implementação dessa solução utilizando o simulador InterSCSimulator~\cite{santana_17} e a plataforma InterSCity~\cite{arthur_17} atraveś de dois cenários de Cidades Inteligentes
-que serão apresentados adiante.
-E por fim, realizamos dois experimentos, um envolvendo cada cenário, para demonstrar a funcionalidade do ambiente construído e validar a implementação feita.
+Para a construção desse ambiente fizemos uso de um simulador e de uma plataforma de Cidades Inteligentes, onde ambos são integrados de acordo com o cenário desejado.
+Para tanto, realizamos a implementação dessa solução utilizando o simulador InterSCSimulator~\cite{santana_17} e a plataforma InterSCity~\cite{arthur_17} atraveś de dois cenários de Cidades Inteligentes
+apresentados como estudo de caso e descritos posteriormente.
 
 \section{Motivação}
 
-O principal estímulo para a execução deste trabalho é melhorar e facilitar o processo de experimentação de plataformas de Cidades Inteligentes.
-No decorrer de discussões dentro do nosso grupo de pesquisa, percebemos que realizar experimentos em cenários que se assemelham à realidade ainda é um desafio.
-Ademais, experimentos realistas são essenciais para validarmos o bom funcionamento dessas plataformas em ambientes de produção.
+O elemento motivador para a execução deste trabalho foi a busca pela melhoria do processo de experimentação de plataformas de Cidades Inteligentes.
+No decorrer das discussões no nosso grupo de pesquisa, percebemos que realizar experimentos em cenários que se assemelham à realidade ainda constitui-se um desafio.
+Experimentos realistas são essenciais para validarmos o bom funcionamento dessas plataformas em ambientes de produção.
 
-Como dito anteriormente, existem alguns mecanismos que já vêm sendo utilizados na realização de experimentos com plataformas de Cidades Inteligentes, contudo, eles não proporcionam o nível de interação
+Conforme dito anteriormente, existem alguns mecanismos que já vêm sendo utilizados na realização de experimentos com plataformas de Cidades Inteligentes, contudo, não proporcionam o nível de interação
 e a escalabilidade necessária.
-Além disso, a solução apresentada neste trabalho reduz os custos quando comparamos a \textit{testbeds} reais, e ainda nos permite investigar cenários hipotéticos, com tecnologias futuristas ou ainda não
+A solução apresentada neste trabalho reduz os custos quando comparamos a \textit{testbeds} reais, e ainda nos permite investigar cenários hipotéticos, com tecnologias futuristas ou ainda não
 passíveis de implantação.
 
 \section{Objetivo e Contribuições}
 
-O objetivo central deste trabalho é prover um mecanismo para construção de um ambiente de experimentação de larga escala e interativo para plataformas de Cidades Inteligentes através de simulação.
-Para isso, uma proposta de solução foi projetada visando atender os principais requisitos de um ambiente como esse.
-Além disso, realizamos a implementação de dois cenários de Cidades Inteligentes seguindo a arquitetura da solução proposta, usando o simulador InterSCSimulator e a plataforma InterSCity.
-Tais implementações foram usadas para a realização de dois estudos de casos que serão apresentados no decorrer do texto, com o intuito de validar a proposta de solução e implementação feita.
+O objetivo central desta pesquisa é prover um mecanismo para construção de um ambiente de experimentação de larga escala e interativo para plataformas de Cidades Inteligentes através de simulação.
+Para tanto, uma proposta de solução foi projetada visando atender os principais requisitos de um ambiente com essa característica.
+Realizamos também a implementação de dois cenários de Cidades Inteligentes seguindo a arquitetura da solução proposta, usando o simulador InterSCSimulator e a plataforma InterSCity.
+Tais implementações foram usadas para a realização de dois estudos de casos propostos para validar a solução.
 
-Durante a realização desta pesquisa, diversas contribuições foram realizadas tanto para o InterSCSimulator quanto para a InterSCity.
-Novos cenários de simulação foram implementados no InterSCSimulator, além de melhorias feitas nos cenários existentes, e mecanismos de cache foram adicionados à plataforma InterSCity.
+Durante a realização deste estudo, diversas contribuições foram realizadas tanto para o InterSCSimulator quanto para a InterSCity.
+Foi possível adicionar novos cenários ao simulador, melhorias nos cenários existentes, além de mecanismos de cache adicionados à plataforma.
 Ademais, seguindo a ideia de reprodutibilidade e infraestrutura como código\footnote{https://en.wikipedia.org/wiki/Infrastructure\_as\_code} (\textit{Infrastructure As Code} -- IaC), automatizamos e
 disponibilizamos todos os \textit{scripts}, arquivos de configuração e documentação necessária para a reprodução dos experimentos realizados neste trabalho.
 
@@ -83,6 +84,6 @@ disponibilizamos todos os \textit{scripts}, arquivos de configuração e documen
 \section{Organização do Trabalho}
 
 No Capítulo \ref{cap:trab-relacionados} serão apresentados os principais trabalhos relacionados e conceitos envolvidos nesta pesquisa.
-Uma discussão acerca da proposta de solução bem como os exemplos de implementação serão apresentados no Capítulo \ref{cap:proposta}.
-O Capítulo \ref{cap:estudos-de-caso} apresenta os dois estudos de caso realizados, fazendo uso das implementações do capítulo anterior.
-Por fim, as conclusões e trabalhos futuros serão apresentadas no Capítulo \ref{cap:conclusao}.
+Uma discussão acerca da proposta de solução é apontada no Capítulo \ref{cap:proposta}.
+O Capítulo \ref{cap:estudos-de-caso} disserta sobre os dois estudos de caso realizados, incluindo as suas implementanções e ferramentas utilizadas.
+Por fim, as conclusões e possibilidades de trabalhos futuros serão apresentadas no Capítulo \ref{cap:conclusao}.

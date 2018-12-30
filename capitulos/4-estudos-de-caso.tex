@@ -17,19 +17,19 @@ e de forma assíncrona.
 O segundo cenário de experimentação envolve o tráfego de carros inteligente através da utilização de Placas de Mensagens Variadas (PMVs) espalhadas pela cidade.
 Nesse cenário, a plataforma identifica trechos de maior trânsito e atua na cidade atualizando as mensagens apresentadas pelas PMVs em tempo real, notificando os
 motoristas da lentidão no trecho, que por sua vez podem recalcular a sua rota evitando congestionamentos.
-Para viabilizar esse experimento nos utilizamos das melhorias implementados no primeiro cenário, modificamos o modelo de trânsito para melhor se adequar a realidade e
+Para viabilizar esse experimento utilizamos das melhorias implementadas no primeiro cenário, modificamos o modelo de trânsito para melhor se adequar a realidade e
 implementamos o mecanismo de recebimento de comandos de atuação em tempo de execução.
 
-A seguir, a arquitetura do simulador InterSCSimulator e da plataforma InterSCity para Cidades Inteligentes serão apresentadas, haja vista que essas foram as ferramentas utilizadas para o desenvolvimento
+A seguir a arquitetura do simulador InterSCSimulator e da plataforma InterSCity para Cidades Inteligentes serão apresentadas, haja vista que essas foram as ferramentas utilizadas para o desenvolvimento
 dos estudos de caso.
 Além disso, cada um dos cenários de Cidades Inteligentes mencionados serão apresentados detalhadamente, visando exemplificar a implementação da arquitetura proposta e os resultados experimentais obtidos.
-E ao final, realizaremos uma análise crítica sobre os resultados obtidos, apontando possíveis melhorias a serem feitas.
+Ao final, realizaremos uma análise crítica sobre os resultados obtidos, apontando possíveis melhorias a serem feitas.
 
 \section{Ferramentas}
 
-Neste trabalho integramos o simulador InterSCSimulator e a plataforma InterSCity para Cidades Inteligentes para a realização dos estudos de caso, por isso, ambos serão detalhados quanto a sua respectiva 
-arquitetura na sequência.
-Também será feita uma discussão de como os \textbf{requisitos fundamentais e de integração} apresentados no Capítulo \ref{cap:proposta} serão atendidos em cada ferramenta.
+Neste trabalho integramos o simulador InterSCSimulator e a plataforma InterSCity para Cidades Inteligentes a fim de realizar os estudos de caso, para tanto, ambos serão detalhados quanto a sua respectiva 
+arquitetura.
+Faremos uma discussão de como os \textbf{requisitos fundamentais e de integração} apresentados no Capítulo \ref{cap:proposta} serão atendidos em cada ferramenta.
 
 \subsection{InterSCSimulator}
 
@@ -37,20 +37,21 @@ O InterSCSimulator é um simulador de código aberto baseado em agentes para Cid
 cenários de larga escala \cite{santana_17}.
 Pelo fato de ser possível configurar o tempo que dura um ciclo de simulação na ferramenta, ela já atende um dos \textbf{requisitos fundamentais}.
 Com isso, podemos dizer que um ciclo de simulação é igual a um segundo real.
-Como apresentado anteriormente, é necessário termos uma execução com noção de tempo real (um segundo de simulação igual a aproximadamente um segundo real) e permitir a
+É sabido que é necessário termos uma execução com noção de tempo real (um segundo de simulação igual a aproximadamente um segundo real) e permitir a
 interferência em tempo de execução por terceiros para a construção desse ambiente integrado de experimentação.
 
 Para atingir a escalabilidade mencionada, o InterSCSimulator foi implementado usando a linguagem \textit{Erlang}.
 Essa é uma linguagem funcional que visa facilitar a implementação de aplicações de larga escala, paralelas e distribuídas.
 Algumas características herdadas do modelo de atores, que é implementado pelo \textit{Erlang}, são: paralelismo, execução distribuída, tolerância a falhas e
 protocolo de comunicação \cite{santana_17}.
-Essa escalabilidade é importante para que possamos atender o \textbf{requisito fundamental} que diz respeito a capacidade de geração de grandes massas de dados
+Essa escalabilidade é importante para que possamos atender o \textbf{requisito fundamental} que diz respeito a capacidade de geração de grande massa de dados
 para a plataforma.
-O InterSCSimulator é capaz de simular cenários com milhões de agentes executando simultaneamente, sendo assim possível simular cenários em uma escala realista para cidades de grande porte.
+O InterSCSimulator é capaz de simular cenários com milhões de agentes executando simultaneamente, sendo assim possibilita trabalhar em uma escala realista para cidades de grande porte.
 
-O InterSCSimulator foi implementado por Eduardo Zambom Santana, doutorando de nosso grupo de pesquisa, baseado no simulador de âmbito geral \textit{Sim-Diasca}.
-A Figura \ref{fig:simulator_architecture} apresenta a sua arquitetura, onde, em azul, estão os diferentes tipos de agentes que podem existir no ambiente
-simulado e, em vermelho, a definição dos cenários de Cidades Inteligentes, tudo isso sendo executado no topo do simulador \textit{Sim-Diasca}.
+O InterSCSimulator foi implementado por Eduardo Zambom Santana, doutorando do nosso grupo de pesquisa, baseado no simulador de âmbito geral \textit{Sim-Diasca}.
+A Figura \ref{fig:simulator_architecture} representa a sua arquitetura da seguinte forma: em azul estão os diferentes tipos de agentes que podem existir no ambiente
+simulado e, em vermelho a definição dos cenários de Cidades Inteligentes.
+Tudo isso sendo executado no topo do simulador \textit{Sim-Diasca}.
 
 \begin{figure}[ht]
 	\centering
@@ -59,32 +60,30 @@ simulado e, em vermelho, a definição dos cenários de Cidades Inteligentes, tu
 	\label{fig:simulator_architecture}
 \end{figure}
 
-Fazendo um paralelo com um dos \textbf{requisito de integração} listados neste capítulo, cada \textit{Recurso} da cidade pode ser modelado como um agente da simulação.
-Ou seja, um carro, uma vaga de estacionamento ou um ponto de parada de ônibus serão representados como agentes (caixas azuis na Figura \ref{fig:simulator_architecture})
-na arquitetura do InterSCSimulator.
+Fazendo um paralelo com um dos \textbf{requisito de integração}, cada \textit{Recurso} da cidade pode ser modelado como um agente da simulação, ou seja, um carro, uma vaga de estacionamento ou um ponto
+de parada de ônibus serão representados como agentes (caixas azuis na Figura \ref{fig:simulator_architecture}) na arquitetura do InterSCSimulator.
 Na definição desses agentes especificamos o seu comportamento a cada passo da simulação.
-Com isso, podemos especificar quais as \textit{Capacidades} de cada agente e adotar modelos aderentes com a realidade das cidades modernas.
-O interessante dessa arquitetura baseada em agentes é o fato da implementação dos mesmos terem um grau de independência muito grande, onde é preciso apenas a definição
-das mensagens que serão trocadas em tempo de execução.
+Com isso, podemos descrever quais as \textit{Capacidades} de cada agente e adotar modelos compatíveis com a realidade das cidades modernas.
+O interessante dessa arquitetura baseada em agentes é o fato da implementação dos mesmos terem um alto grau de independência, onde é preciso apenas a definição das mensagens que serão trocadas em tempo
+de execução.
 
-Além disso, no contexto deste trabalho, foi adicionado um novo elemento a arquitetura da ferramenta para troca de dados com sistemas externos em tempo de execução,
-sendo esse um dos \textbf{requisitos fundamentais e de integração} para obtermos um ambiente realista de experimentação.
-Esse novo elemento nada mais é do que um novo agente onde o seu papel é receber e enviar mensagens de sensores e atuadores, seja no contexto de outros agentes ou de
-outros sistemas.
+No contexto desta dissertação, foi adicionado um novo elemento à arquitetura da ferramenta para troca de dados com sistemas externos em tempo de execução,
+sendo esse um dos \textbf{requisitos fundamental e de integração} para obtermos um ambiente realista de experimentação.
+Esse novo elemento nada mais é do que um novo agente, onde o seu papel é receber e enviar mensagens de sensores e atuadores, seja no contexto de outros agentes ou de outros sistemas.
 
 Na implementação de um agente do InterSCSimulator podemos definir diversos comportamentos em diferentes momentos do seu cliclo de vida.
-Podemos especificar o que será feito durante a sua criação, a sua destruição, a sua primeira ação na simulação e durante cada ciclo de execução.
+É possível especificar o que será feito durante a sua criação, a sua destruição, a sua primeira ação na simulação e durante cada ciclo de execução.
 Com isso, condições e caminhos dependentes do estado da simulação podem ser definidos para cada um dos tipos de agentes, flexibilizando a implementação dos
 mais diversos modelos e formas de prover suas capacidades.
 Essa liberdade para implementação de diversos comportamentos dos agentes nos permite usar modelos realistas e viabilizar as capacidades dos recursos no contexto das cidades,
-atendendo mais um \textbf{requisito fundamental} e outro de \textbf{integração}.
+atendendo os \textbf{requisitos fundamental e de integração}.
 Por exemplo, um carro após a sua partida em direção ao seu destino, calcula a cada ciclo de execução o fluxo de carros na via em que se encontra para o cálculo da
-sua velocidade naquele instante, além de publicar a seu atual posição.
+sua velocidade naquele instante, além de publicar a sua atual posição.
 Nesse caso, podemos utilizar os mais diversos modelos matemáticos para calcular o fluxo de carros ou para determinar a sua velocidade, ao passo que a sua capacidade
 de publicar sua localização georreferenciada também é atendida.
 
 Na Figura \ref{fig:simulator_components}, são apresentados os componentes do simulador.
-Inicialmente são passadas entradas para a simulação (arquivos XML) que em conjunto formam o cenário a ser simulado, esse cenário é executado e a
+Inicialmente são dadas entradas para a simulação (arquivos XML) que em conjunto formam o cenário a ser simulado, esse cenário é executado e a
 saída é criada com todos os eventos ocorridos na simulação.
 A partir dessa saída existe a possibilidade de geração de uma visualização em um mapa ou através de gráficos.
 
@@ -95,20 +94,21 @@ A partir dessa saída existe a possibilidade de geração de uma visualização 
 	\label{fig:simulator_components}
 \end{figure}
 
-Como entrada, o InterSCSimulator recebe três arquivos XML. O \textit{config.xml} contém parâmetros da simulação, sendo eles o tempo total, o formato do
+Como entrada, o InterSCSimulator recebe três arquivos XML.
+O \textit{config.xml} contém parâmetros da simulação, sendo eles o tempo total, o formato do
 arquivo de saída e o caminho para o diretório contendo os outros arquivos de entrada e para geração do arquivo de saída.
 O grafo representando a infraestrutura rodoviária da cidade é descrito no arquivo \textit{map.xml}, nesse grafo as vias são correspondentes as arestas e as esquinas entre
 duas ou mais vias aos nós.
 E por fim, as viagens a serem executadas são especificadas no arquivo \textit{trips.xml}, cada viagem contendo o seu tempo de início, modo de transporte, origem e destino.
-Todas as ações realizadas pelos agentes são salvos no arquivo \textit{output.xml}, podendo haver quatro ações possíveis: 1) início de viagem, 2) saída de uma via,
+Todas as ações realizadas pelos agentes são salvas no arquivo \textit{output.xml}, podendo haver quatro ações possíveis: 1) início de viagem, 2) saída de uma via,
 3) entrada em uma via, e 4) chegada ao destino final.
 O tempo, a localização e o modo de transporte utilizado pelo agente são registrados quando essas ações são salvas.
 
-No trabalho desenvolvido por Eduardo Zambom Santana foi desenvolvido um simulador de larga escala, que é capaz de simular mais de 4 milhões de
+No trabalho realizado por Eduardo Zambom Santana foi desenvolvido um simulador de larga escala, que é capaz de simular mais de 4 milhões de
 agentes se movendo pela cidade de São Paulo~\cite{santana_17}.
 Os modos de transportes suportados até então são: carro, ônibus, metrô e a pé.
-Neste trabalho além de melhorias feitas nos modelos existentes, novos agentes foram adicionados ao simulador, além de agora ser possível a publicação e recebimento de
-eventos em tempo de execução de maneira assícrona.
+Neste trabalho além de melhorias feitas nos modelos existentes, novos agentes foram adicionados ao simulador, além da nova possibilidade de publicação e o recebimento de
+eventos em tempo de execução de maneira assíncrona.
 
 \subsection{Plataforma InterSCity}
 \label{sec:interscity}
@@ -116,14 +116,14 @@ eventos em tempo de execução de maneira assícrona.
 A plataforma InterSCity é um projeto de código aberto, baseado em microsserviços que visa permitir a pesquisa colaborativa, desenvolvimento e experimentos em Cidades
 Inteligentes~\cite{arthur_17}.
 A plataforma foi desenvolvida baseada em uma arquitetura de referência para plataformas de Cidades Inteligentes~\cite{santana_2016}, ela provê um conjunto de serviços
-alto-nível baseado em nuvem para gerenciar recursos de \textit{IoT} heterogêneos~\cite{arthur_17}.
+alto-nível baseado em nuvem para gerenciar recursos de IoT heterogêneos~\cite{arthur_17}.
 
-O projeto InterSCity visa atacar dois dos principais problemas arquiteturais no desenvolvimento de uma plataforma de alta qualidade que possa ser usada na prática no
+O projeto InterSCity visa solucionar dois dos principais problemas arquiteturais no desenvolvimento de uma plataforma de alta qualidade que possa ser usada na prática, no
 contexto de Cidades Inteligentes: escalabilidade e evolução do software~\cite{arthur_17}.
-Escalabilidade é necessária pelo fato da plataforma ter que interagir com um grande número de dispositivos \textit{IoT} espalhados pela cidade, milhões de usuários e
+Escalabilidade é necessária pelo fato da plataforma ter que interagir com um grande número de dispositivos IoT espalhados pela cidade, milhões de usuários e
 um grande tráfego de dados.
-Como as cidades mudam constantemente, a questão da evolução é essencial, já que requisitos podem surgir ou mudar a qualquer momento, e adaptar a plataforma a fim de
-incorporar novas funcionalidades não deve ser um empecilho.
+Como as cidades mudam constantemente, a questão da evolução é essencial, já que requisitos podem surgir e/ou mudar a qualquer momento, adaptar a plataforma para modificar e/ou incorporar novas
+funcionalidades, não deve ser um empecilho.
 Para resolver esses dois problemas apresentados, foram adotadas as seguintes estratégias~\cite{arthur_17}:
 
 \begin{itemize}
@@ -137,13 +137,13 @@ Para resolver esses dois problemas apresentados, foram adotadas as seguintes est
 \end{itemize}
 
 A Figura \ref{fig:platform_architecture} apresenta a arquitetura da plataforma InterSCSity.
-Atualmente, ela é composta de 6 microsserviços:
-\textit{Resource Adaptor}, oferece uma abstração para comunicação com os dispositivos \textit{IoT};
+Atualmente, ela é composta de 7 microsserviços:
+\textit{Resource Adaptor}, oferece uma abstração para comunicação com os dispositivos IoT;
 \textit{Data Collector}, responsável por coletar os dados dos sensores conectados;
-\textit{Actuator Controller}, oferece uma interface para atuação junto aos dispositivos de \textit{IoT} com tais capacidades;
+\textit{Actuator Controller}, oferece uma interface para atuação junto aos dispositivos de IoT com tais capacidades;
 \textit{Resource Catalog}, possui dados estáticos dos recursos da cidade cadastrados;
 \textit{Resource Discovery}, provê um serviço de descoberta de recursos;
-\textit{Data Processor}, oferece um serviço de processamento de dados em tempo real e históricos;
+\textit{Data Processor}, oferece um serviço de processamento de dados em tempo real e histórico;
 e \textit{Resource Viewer}, disponibiliza uma visualização simples dos recursos da cidade. 
 
 \begin{figure}[ht]
@@ -160,7 +160,7 @@ A principal vantagem desse protocolo é permitir que o \textit{broker} de mensag
 desse processo~\cite{vinoski_2006}.
 
 A plataforma traz uma abstração chamada \textit{Resource}, que representa um recurso real da cidade, como ônibus, hospital, paradas de ônibus.
-Cada um desses \textit{Resources} possuem \textit{Capabilities}, que pode ser de sensoriamento ou atuação, usualmente vinculados a algum tipo dispositivo \textit{IoT},
+Cada um desses \textit{Resources} possuem \textit{Capabilities}, que podem ser de sensoriamento ou atuação, usualmente vinculados a algum tipo de dispositivo de IoT,
 como capacidade de medir temperatura ou capacidade de mudar o estado de um semáforo.
 Esses conceitos são os mesmos apresentados como requisitos para a construção de um ambiente integrado de experimentação para Cidades Inteligentes.
 Como apresentado na seção anterior, semânticamente, esses recursos e capacidades aqui apresentados estarão associados a agentes e a definição de ações durante o seu
@@ -171,32 +171,32 @@ para Cidades Inteligentes.
 
 \section{Estacionamento Inteligente}
 
-Neste estudo de caso, no contexto de estacionaento inteligentes, simulamos motoristas realizando seus respectivos percursos de carro e ao final procurando uma vaga disponível mais próxima ao
+Neste estudo de caso, no contexto de estacionamento inteligente, simulamos motoristas realizando seus respectivos percursos de carro e ao final procurando uma vaga disponível mais próxima ao
 seu destino, provavelmente utilizando um aplicativo móvel que se comunica com a plataforma InterSCity.
-Esse tipo de aplicativo poderia evitar alguns transtornos para os motoristas na árdua missão de estacionar seus carros no centro das grandes metrópoles, por exemplo.
+Esse tipo de aplicativo poderia evitar alguns transtornos para os motoristas na árdua missão de estacionar seus carros no centro das grandes metrópoles.
 
-A implementação feita deste cenário seguindo a arquitetura proposta apresentada no Capítulo \ref{cap:proposta}, bem como o experimento realizado, serão discutidos na seções seguintes.
+A implementação deste cenário seguindo a arquitetura proposta no Capítulo \ref{cap:proposta}, bem como o experimento realizado, serão discutidos nas seções seguintes.
 
 \subsection{Implementação}
 \label{sec:smart_parking}
 
-Trazendo os conceitos de recursos da cidade e capacidades para este cenário, temos os carros e as vagas de estacionamento sendo recursos, onde os carros são capazes de
-fornecer a sua geolocalização (por exemplo via GPS) e as vagas de fornecer informação quanto a sua disponibilidade (por exemplo através de sensores infravermelho e uma
+Ao resgatar os conceitos de recursos da cidade e capacidades para este cenário, temos os carros e as vagas de estacionamento sendo recursos, onde os carros são capazes de
+fornecer a sua geolocalização (por exemplo, via GPS) e as vagas de fornecer informação quanto a sua disponibilidade (por exemplo, através de sensores infravermelho e uma
 redes de sensores).
 
 Este cenário foi definido com o intuito de realizar experimentos envolvendo o serviço de descoberta de recursos da plataforma InterSCity.
 Portanto, o aplicativo enviaria a posição do carro naquele momento, o seu destino final e o raio de busca, e a plataforma traria uma lista de vagas de estacionamento
-disponíveis mais próximas.
+disponíveis nas proximidades.
 Já no InterSCSimulator, foi necessário realizar algumas melhorias para que os \textbf{requisitos fundamentais} fossem atendidos.
 Um novo agente para gerenciar as vagas de estacionamento da cidade, chamado \textit{Parking Controller}, foi implementado.
 Esse agente possui a responsabilidade de gerenciar e armazenar dados referentes as vagas de estacionamento, e fazer a interface de comunicação com o componente de
 integração que será apresentado mais adiante.
 Além disso, modificamos o modelo de viagem do agente \textit{Carro}.
-Anteriormente, o \textit{Carro} saia de uma origem e percorriar o seu trajeto até o destino, agora ao chegar próximo do seu destino ele requisita uma vaga disponível mais
+Anteriormente, o \textit{Carro} saia de uma origem e percorria o seu trajeto até o destino, agora, ao chegar próximo do seu destino, ele requisita uma vaga disponível mais
 próxima e se dirige até a mesma.
 Com essas melhorias pudemos simular um cenário que se aproxima da realidade.
 
-Para ilustrar o modelo descrito, a seguir será apresentado o ciclo de execução de um agente \textit{Carro} neste cenário:
+Para ilustrar o modelo descrito, apresentamos o ciclo de execução de um agente \textit{Carro} neste cenário:
 
 \begin{enumerate}
     \item O agente \textit{Carro} é criado
@@ -209,7 +209,7 @@ Para ilustrar o modelo descrito, a seguir será apresentado o ciclo de execuçã
 
     \item Ao receber a vaga de estacionamento, o seu trajeto é recalculado em direção a mesma
 
-    \item O agente se direciona e estaciona na vaga de estacionamento descoberta 
+    \item O agente se direciona e estaciona na vaga descoberta 
 \end{enumerate}
 
 Um fluxo alternativo a essa execução seria o carro modificar o seu percurso em direção da vaga de estacionamento (disponível até então), e ao chegar nela outro
@@ -223,7 +223,7 @@ Além do mais, esse agente é responsável por atualizar o estado da vaga de est
 
 Agora pensando nos \textbf{requisitos de integração}, o simulador precisa requisitar a plataforma em busca de vagas disponíveis mais próximas, e atualizar o estado
 das vagas de estacionamento.
-A plataforma InterSCity provê um \textit{API Restful} para comunicação com seus serviços (como o de descoberta de recursos), e o estado dos seus recursos podem ser
+A plataforma InterSCity provê uma API \textit{Restful} para comunicação com seus serviços (como o de descoberta de recursos), e o estado dos seus recursos podem ser
 atualizados através da própria API ou via protocolo AMQP (\textit{Advanced Message Queuing Protocol}).
 Esse levantamento é importante para a tomada de decisão de quais as responsabilidades e como será implementado o componente de integração.
 Tendo em vista que a complexidade do componente de integração deve ser a menor possível, e a não existência de um meio de publicação de eventos em tempo de execução
@@ -233,14 +233,14 @@ As requisições HTTP feitas ao serviço de descoberta da plataforma seriam feit
 síncronas, o que poderia travar a simulação na espera por uma resposta.
 
 Para facilitar o entendimento da integração realizada, dividiremos a explicação em duas partes: a primeira visando a requisição de vagas disponíveis mais próximas
-do carro ao serviço de descoberta da plataforma InterSCity; e a segunda apresentado o fluxo de atualização do estado de uma vaga de estacionamento (ocupada
-ou disponível) baseada na emulação.
+do carro ao serviço de descoberta da plataforma InterSCity; e a segunda apresentando o fluxo de atualização do estado de uma vaga de estacionamento (ocupada
+ou disponível) baseada na simulação.
 
 A Figura \ref{fig:descoberta} apresenta a integração realizada para utilização do serviço de descoberta provido pela plataforma InterSCity.
 O componente de integração foi chamado de \textit{Parking Spot Discoverer}, e foi implementado como um agente Erlang que consegue se comunicar com os agentes da
 simulação via troca de mensagens.
 O uso do componente de integração se fez necessário para que a simulação exerça a carga que aplicações exerceriam utilizando o protocolo HTTP para acessar
-a \textit{API Restful}.
+a API \textit{Restful}.
 Como dito, requisições HTTP são síncronas, e a realização das mesmas dentro da simulação atrasaria consideravelmente a sua finalização, já que bloquearia a
 execução dos agentes enquanto aguardariam a resposta da plataforma.
 Antes de chegarmos a tal solução implementamos uma versão onde o próprio simulador realizava requisições HTTP para a plataforma em tempo de execução, entretanto,
@@ -248,7 +248,7 @@ essa solução gerou um enorme gargalo.
 Descrevemos abaixo o fluxo de atividades apresentado na Figura \ref{fig:descoberta}.
 
 \begin{enumerate}
-    \item Ao chegar um nó antes do seu destino, o \textit{Car} solicita a vaga de estacionamento para o agente \textit{Parking Controller}, passando a sua
+    \item Ao chegar a um nó, antes do seu destino, o \textit{Car} solicita a vaga de estacionamento para o agente \textit{Parking Controller}, passando a sua
 	localização como parâmetro.
 
 	\item O agente \textit{Parking Controller} então envia a localização para o \textit{Parking Spot Discoverer} que solicita a vaga disponível mais próxima,
@@ -274,11 +274,11 @@ Descrevemos abaixo o fluxo de atividades apresentado na Figura \ref{fig:descober
 A Figura \ref{fig:atualizacao} apresenta a integração realizada com o intuito de atualizar o estado das vagas de estacionamento na plataforma baseado nos
 acontecimentos da simulação.
 Como foi adicionado a funcionalidade de publicação dos eventos da simulação via RabbitMQ para os interessados, não foi necesário a utilização do
-componente de integração, já que a plataforma também utiliza o mesmo protocolo para divulgação dos seus dados entre microsserviços.
+componente de integração, já que a plataforma também utiliza o mesmo protocolo para divulgação dos seus dados entre os microsserviços.
 O fluxo apresentado na Figura \ref{fig:atualizacao} contém os seguintes passos.
 
 \begin{enumerate}
-    \item O agente \textit{Car} estaciona na vaga de estacionamento e notifica o \textit{Parking Controller}.
+    \item O agente \textit{Car} estaciona na vaga do estacionamento e notifica o \textit{Parking Controller}.
 
 	\item O \textit{Parking Controller} informa, via \textit{RabbitMQ}, que a vaga está ocupada usando o seu identificador.
 
@@ -295,7 +295,7 @@ O fluxo apresentado na Figura \ref{fig:atualizacao} contém os seguintes passos.
 Vale ressaltar que as atividades 2 e 3 apresentadas na Figura \ref{fig:atualizacao} também são executadas quando a vaga é liberada.
 Após dez minutos que o agente está estacionado na vaga, o agente \textit{Parking Controller} libera a vaga na estrutura de dados mantida dentro do simulador e informa o
 ocorrido para a plataforma.
-Com isso, a plataforma atualiza os dados da vaga tanto quando ela é ocupada quando liberada.
+Com isso, a plataforma atualiza os dados da vaga quando ela é ocupada e quando liberada.
 
 Após a implementação da arquitetura descrita, fomos capazes de executar experimentos de larga escala no contexto de estacionamento inteligente.
 Os resultados obtidos serão apresentados na próxima seção.
@@ -326,10 +326,10 @@ A seguir, esses dados, bem como suas fontes, utilizados na configuração do exp
         (serviço de estacionamento rotativo da cidade de São Paulo).
 \end{itemize}
 
-Nas Figuras \ref{fig:map-spots-distribution} e \ref{fig:map-destinations-distribution}, são apresentadas as distribuições das vagas de estacionamento e destinos de viagens de carros respectivamente,
+Nas Figuras \ref{fig:map-spots-distribution} e \ref{fig:map-destinations-distribution}, são apresentadas as distribuições das vagas de estacionamento e destinos de viagens de carros, respectivamente,
 utilizadas nesse experimento.
 Os destinos apresentados na Figura \ref{fig:map-destinations-distribution}, são referentes a todas as viagens realizadas no decorrer de toda a simulação.
-É importante notar que a distribuição das vagas de estacionamento baseado nesses dados reais está mais concentrada no centro da cidade do que os destinos das viagens.
+É importante notar que a distribuição das vagas de estacionamento baseada nesses dados reais está mais concentrada no centro da cidade do que os destinos das viagens.
 Isso pode levar a situaçãoes onde o agente do tipo carro pode realizar mais de três tentativas de busca de vagas disponíveis e ainda sim não conseguir estacionar.
 Nesse caso, o usuário do aplicativo pararia de utilizá-lo e o agente do tipo carro terminaria sua execução, como apresentado na Seção \ref{sec:smart_parking}.
 
@@ -350,7 +350,7 @@ Nesse caso, o usuário do aplicativo pararia de utilizá-lo e o agente do tipo c
 Tendo ideia do contexto e dos dados a serem utilizados nesse cenário experimental, os passos a seguir foram executados no decorrer deste experimento:
 
 \begin{enumerate}
-    \item Executar uma instância em modo de produção da plataforma InterSCity em um ambiente de núvem. O ambiente de núvem proporciona maior flexibilidade para escalar os microsserviços em tempo
+    \item Executar uma instância em modo de produção da plataforma InterSCity em um ambiente de núvem. Esse ambiente proporciona maior flexibilidade para escalar os microsserviços em tempo
         de execução.
 
     \item Habilitar mecanismo de escala automática (\textit{auto-scaling}) para os microsserviços da plataforma baseado na variação de carga de trabalho.
@@ -359,12 +359,12 @@ Tendo ideia do contexto e dos dados a serem utilizados nesse cenário experiment
 
     \item Realizar a simulação do cenário de estacionamento inteligente.
 
-    \item Monitorar a performance e o uso de recursos da plataforma durante toda a simulação.
+    \item Monitorar o desempenho e o uso de recursos da plataforma durante toda a simulação.
 
     \item Analizar os resultados obtidos.
 \end{enumerate}
 
-Então, inicialmente, foi necessário a configuração de ambas as ferramentas em conjunto com seu componente de integração em um ambiente de núvem.
+Inicialmente, foi necessária a configuração de ambas as ferramentas em conjunto com seu componente de integração em um ambiente de núvem.
 Os microsserviços da plataforma InterSCity, o simulador InterSCSimulator e ferramentas auxiliares foram implantados na forma de \textit{containers} Docker \footnote{https://www.docker.com/}.
 Utilizamos a infraestrutura provida pelo Google Cloud Platform (GCP) \footnote{https://cloud.google.com/} para a realização do experimento, sendo esse o ambiente ideal para a execução da plataforma
 InteSCity, como visto na Seção \ref{sec:interscity}.
@@ -395,7 +395,7 @@ Finalmente, o InterSCSimulator é executado em sua própria máquina n1-highmem-
 
 
 Para o conjunto de nós da plataforma, o Kubernetes pode programar a implantação de vários \textit{containers} para a mesma máquina, dependendo da disponibilidade de recursos computacionais.
-A distribuição de \textit{containers} nos 25 nós pode diferir de uma rodada do experimento para a outra, e é uma variável que nós não controlamos durante o experimento.
+A distribuição de \textit{containers} nos 25 nós pode diferir de uma rodada do experimento para a outra, e é uma variável que não controlamos durante o experimento.
 Para avaliar o impacto de tais variações na análise, realizamos 15 rodadas deste experimento e verificamos a variabilidade dos resultados.
 
 Como estávamos interessados em avaliar a escalabilidade da plataforma considerando um cenário de Cidades Inteligentes com uma carga de trabalho variável, usamos dimensionamento automático
@@ -407,7 +407,7 @@ Este número pode aumentar a medida que os recursos computacionais ficarem dispo
 Os \textit{containers} são executados por trás de um serviço de balanceamento de carga.
 
 Embora possamos nos beneficiar das propriedades de elasticidade do GCP, adicionando e removendo automaticamente nós ao \textit{cluster} através da sua funcionalidade de dimensionamento automático,
-isso introduziria outro nível de incerteza em nosso experimento, já que na nossa experiência o tempo levado para criar novas máquinas virtuais pode variar consideravelmente.
+isso introduziria outro nível de incerteza em nosso experimento, já que, na nossa experiência, o tempo levado para criar novas máquinas virtuais pode variar consideravelmente.
 Sabendo disso, criamos todos os nós previamente, antes de iniciar o experimento, mantendo-os em execução ao longo de todo experimento.
 
 Como dito anteriormente, executamos 15 rodadas de experimentos, onde cada uma durou 3h, correspondendo ao horário de pico da manhã da cidade de São Paulo descrito no início desta seção.
@@ -449,7 +449,7 @@ Apesar das variações no comportamento dos condutores de carros ao longo do exp
 automático, descritos na Seção \ref{sec:interscity}.
 No entanto, devemos mencionar que a taxa de vazão não correspondeu exatamente à carga de trabalho gerada, pois algumas requisições falharam, representando quase 0,6\% de todas as requisições em média.
 As requisições com falha incluem aquelas que tiveram respostas com um código de erro HTTP, bem como aquelas que não foram concluídos devido a recusa de conexão ou \textit{timeout}.
-Todavia, nós consideramos que ser capaz de lidar com mais de 99,5\% das requisições sob alta carga é satisfatório; um usuário típico perceberia uma falha a cada 200 requisições, o que é muito bom para
+Todavia, consideramos que, ser capaz de lidar com mais de 99,5\% das requisições sob alta carga é satisfatório; um usuário típico perceberia uma falha a cada 200 requisições, o que é muito bom para
 este tipo de aplicação de Cidades Inteligentes em tempo real.
 
 \begin{figure}[ht]
@@ -486,19 +486,19 @@ Por outro lado, essa distribuição também pode introduzir um efeito benéfico 
 de rede e imprevisibilidade.
 
 Ao final desse estudo de caso, percebemos que não exercitamos todos os requisitos apresentados para a construção de um ambiente simulado e integrado para experimentação de plataformas de Cidades Inteligentes.
-Por isso, realizamos um segundo estudo de caso, que será apresentado na seção seguinte, onde, por exemplo, a atuação no ambiente simulado se fez necessária.
+Por isso, realizamos um segundo estudo de caso, onde a atuação no ambiente simulado se fez necessária.
+O mesmo será apresentado na seção seguinte.
 
 \section{Tráfego de Carros Inteligente}
 
-Com o objetivo de exercitar o envio de comandos de atuação da plataforma para o ambiente simulado, que não foi explorado no cenário de estacionamento inteligente apresentado
-anteriormente, definimos um novo cenário.
-Neste cenário, visamos identificar trechos em vias da cidade com tráfego de carros anômalo (devido ao fechamento de ruas, acidentes, desastres naturais e etc.) e notificar
+Com o objetivo de exercitar o envio de comandos de atuação da plataforma para o ambiente simulado, que não foi explorado no cenário de estacionamento inteligente, definimos um novo cenário.
+Neste caso, visamos identificar trechos em vias da cidade com tráfego de carros anômalo (devido ao fechamento de ruas, acidentes, desastres naturais e etc.) e notificar
 previamente os motoristas para evitarem passar naquele trecho através de Placas de Mensagens Variadas (PMVs).
 Consideramos aqui uma anomalia uma variação considerável na velocidade média dos carros que trafegam naquele trecho de via naquele horário.
 Essas PMVs são posicionadas em pontos estratégicos da cidade e apresentam alertas aos motoristas em tempo real sobre possíveis anomalias no trânsito, e com isso motoristas
 podem mudar o seu percurso evitando maiores congestionamentos na cidade.
 
-A implementação feita deste cenário seguindo a arquitetura proposta apresentada no Capítulo \ref{cap:proposta}, bem como o experimento realizado, serão discutidos na seções seguintes.
+A implementação deste cenário seguindo a arquitetura proposta no Capítulo \ref{cap:proposta}, bem como o experimento realizado, serão discutidos nas seções seguintes.
 
 \subsection{Implementação}
 \label{sec:smart_traffic}
@@ -507,7 +507,7 @@ Essencialmente, o cenário de tráfego de carros inteligente funciona da seguint
 
 \begin{enumerate}
     \item A plataforma coleta dados históricos de carros para definir limiares (\textit{thresholds}) de velocidade média para cada trecho de via da cidade em cada horário.
-        Para isso, o ambiente simulado envia dados de posicionamento georreferenciado dos carros a cada ciclo de execução, simulando por exemplo um dispositivo que contem um
+        Para isso, o ambiente simulado envia dados de posicionamento georreferenciado dos carros a cada ciclo de execução, simulando por exemplo um dispositivo que contém um
         sistema de GPRS (\textit{General Packet Radio Service}) + GPS (\textit{Global Positioning System}).
         Com uma série de pontos de onde o carro passou em cada instante, se torna possível calcular a velocidade média do mesmo, logo obtemos a velocidade média de carros
         que passaram naquele trecho naquele dado momento durante todo o dia.
@@ -583,19 +583,19 @@ de trechos de vias (arestas) onde foram encontradas alguma anomalia no trânsito
 Os agentes do tipo carro ao passar por um vértice que continha esse atributo, verificavam se alguma das arestas ali presentes faziam parte do seu trajeto ou não.
 Caso positivo, o seu percurso era recalculado, caso contrário o mesmo se mantinha inalterado.
 
-E a última implementação no InterSCSimulator necessária para atender os requisitos apresentados seguindo a arquitetura proposta foi o recebimento de comandos de atuação e
-processamento dos mesmos em tempo de execuação.
+E a última implementação no InterSCSimulator necessária para atender os requisitos apresentados seguindo a arquitetura proposta, foi o recebimento de comandos de atuação e
+processamento dos mesmos em tempo de execução.
 Sendo essa uma funcionalidade fundamental para a atualização das PMVs em tempo de execução pela plataforma.
 Diante disso, mais um novo agente foi criado para ficar a espera desses comandos enviados pela plataforma, sendo ele chamado de \textit{Listener}.
 Como um comando de atuação pode ser enviado a qualquer momento, foi necessário esse novo agente, cuja única responsabilidade é receber esse comando e armazená-lo em uma
 estrutura de dados, para que outros agentes não ficassem bloqueados (bloqueando também a simulação) a espera de tal acontecimento.
 Ou seja, esse agente fica em um laço (\textit{loop}) infinito a espera de uma mensagem que é enviada via AMQP (mesmo protocolo utilizado para publicação dos dados).
-A utilização do RabbitMQ foi escolhida devido a possibilidade da plataforma InterSCity enviar comandos de atuação através do mesmo, e como foi uma funcionalidade nova
-decidimos utilizar a mesma tecnologia, reduzindo assim o problema de interoperabilidade discutido neste capítulo.
+A utilização do RabbitMQ foi escolhida devido a possibilidade da plataforma InterSCity enviar comandos de atuação através do mesmo, e como foi uma funcionalidade nova,
+decidimos utilizar a mesma tecnologia, reduzindo assim o problema de interoperabilidade.
 Quando um comando é recebido, no caso uma aresta de trecho anômalo a ser atualizada em uma PMV, ele armazena essa mensagem em uma estrutura de dados que será acessada no
-próximo ciclo de execução pelo \textit{PMV Manager}, que por sua vez atualizará a atributo da referida PMV (vértice no grafo).
+próximo ciclo de execução pelo \textit{PMV Manager}, que por sua vez atualizará o atributo da referida PMV (vértice no grafo).
 
-Após a apresentação das funcionalidades e melhorias implementadas, as duas vias de fluxo de comunicação entre o simulador e a plataforma serão apresentados a seguir.
+Após a apresentação das funcionalidades e melhorias implementadas, as duas vias de fluxo de comunicação entre o simulador e a plataforma serão apresentadas a seguir.
 Na Figura \ref{fig:smart_traffic_publish_data}, o passo a passo para a publicação dos dados de posicionamento de cada um dos carros a cada ciclo de execução é exposto.
 
 \begin{figure}[ht]
@@ -639,26 +639,26 @@ Lembrando que o gatilho para a execução desse processo é o serviço de proces
     \item O agente \textit{Listener}, cujo único papel é esperar por esse tipo de mensagem, recebe a mesma e a armazena em uma estrutura de dados compatilhada pelos agentes do simulador.
 
     \item O agente \textit{PMV Manager} verifica a presença dessa nova mensagem na estrutura de dados compatilhada, e atualiza o atributo que representa a PMV no vértice do grafo
-        viário da cidade, adicionado mais esse trecho para a lista presente ou criando-a caso não existe nenhum outro trecho.
+        viário da cidade, adicionando mais esse trecho para a lista presente ou criando-a caso não exista nenhum outro trecho.
 \end{enumerate}
 
 Um ponto interessante desse segundo cenário, foi a não necessidade de um componente de integração, já que ambas as ferramentas se comunicam através do mesmo protocolo (inclusive a
 mesma ferramenta) e conseguem representar os mesmos conceitos de maneira equivalente.
 Esse é o cenário ideal para criação de um ambiente simulado de experimentação para uma plataforma de Cidades Inteligentes, já que não foi essencial a implementação desse
-componente extra, que como discutido traria mais complexidade para o sistema, podendo aumentar o tempo de resposta entra as ferramentas.
+componente extra, que como discutido, traria mais complexidade para o sistema, podendo aumentar o tempo de resposta entra as ferramentas.
 Claro que tudo isso foi possível porque neste mesmo trabalho fizemos toda a implementação dos \textbf{requisitos fundamentais} apresentados, portanto,
-tivemos a oportunidade de tomar as decisões técnicas que facilitaram a integração entra as duas ferramentas.
+tivemos a oportunidade de tomar as decisões técnicas que facilitaram a integração entre as duas ferramentas.
 
 
 \subsection{Experimento}
 
 Esse experimento consistiu em três etapas.
-Com discutido na Seção \ref{sec:smart_traffic}, limiares (\textit{thresholds}) de velocidade média para cada trecho de via em cada horário do dia deveriam ser definidos.
+Conforme descrito na Seção \ref{sec:smart_traffic}, limiares (\textit{thresholds}) de velocidade média para cada trecho de via em cada horário do dia deveriam ser definidos.
 Portanto, a primeira etapa consistiu na simulação do trânsito da cidade sem nenhum evento de fechamento de via, ou seja, o trânsito normal da cidade.
-Com isso, a aplicação de detecção de anomalias foi capaz de, com os dados de posicionamento de carros enviados a cada ciclo de execução, definir esses tais limiares.
-Já a segunda etapa, consistiu em simular o trânsito de carros na cidade com alguns eventos de fechamento de vias (representando ruas alagadas e acidentes de carro por exemplo).
+Para tanto, a aplicação de detecção de anomalias foi capaz de, com os dados de posicionamento de carros enviados a cada ciclo de execução, definir esses tais limiares.
+A segunda etapa, consistiu em simular o trânsito de carros na cidade com alguns eventos de fechamento de vias (representando ruas alagadas e acidentes de carro e etc.).
 Nessa etapa, simulamos o comportamento caótico visto nas grandes cidades, onde vias são interditadas e interferem diretamente no tráfego dos carros.
-Na última etapa, simulamos o mesmo comportamento da segunda etapa, mas adicionamos as PMVs para auxiliar os condutores de carros a contornar essas situações.
+Na última etapa, simulamos o mesmo comportamento da segunda etapa, mas adicionamos as PMVs para auxiliar os condutores de carros a contornar tais situações.
 Tendo em vista que os limiares já haviam sido definidos, a aplicação, sem ter conhecimento prévio dessas vias fechadas, detectava automaticamente esses trechos e notificava os motoristas através da
 atualização de mensagens nas PMVs.
 O objetivo dessas três etapas era verificar o impacto do uso de PMVs no tempo de duração médio das viagens de carro em situações de incidentes que inviabilizam a utilização de certas vias em uma cidade.
@@ -666,12 +666,12 @@ O objetivo dessas três etapas era verificar o impacto do uso de PMVs no tempo d
 Para verificar o bom funcionamento desse cenário no ambiente simulado, dividimos esse experimento em dois.
 Na primeira parte, realizamos um experimento numa escala menor e com dados fictícios, visando meramente a validação do comportamento esperado e interação entre os componentes.
 Na segunda parte, utilizamos dados abertos da cidade de São Paulo, aumentando a escala do experimento e se aproximando de um cenário mais realista.
-O código fonte para a execução do experimento e a análise apresentada aqui nesta seção estão disponível em nosso repositório aberto
+O código fonte para a execução do experimento e a análise apresentada, nesta seção, estão disponíveis em nosso repositório aberto
 \footnote{https://github.com/LSS-USP/pmv\_experiment/blob/master/Analysis.ipynb}.
 
-\subsection{Validação}
+\subsubsection{Validação}
 
-Nesse experimento inicial de validação, as três etapas se deram da seguinte forma com o que diz respeito a número de eventos de fechamento de via e PMVs:
+Nesse experimento inicial de validação, as três etapas com o que diz respeito ao número de eventos de fechamento de via e PMVs, se deram da seguinte forma:
 
 \begin{enumerate}
     \item Sem eventos de fechamento de via e sem PMVs
@@ -718,10 +718,10 @@ Em todas as iterações de todas as etapas, simulamos um total de 100 viagens pa
 Como o intuito desse experimento era validar o comportamento da implementação do ambiente de experimentação como um todo, antes de apresentar os resultados obtidos, descrevemos o resultado esperado para
 cada uma das etapas a seguir.
 
-Na Figura \ref{fig:mapa_etapa1}, pode-se ver o caminho esperado que os carros percorresem na primeira etapa do experimento, onde não há a presença de eventos de fechamento de vias, nem muito menos PMV.
-As arestas em \textbf{roxo} representam o trajeto do carro, as demais arestas não utilizadas forma removidas do grafo a título de legibilidade.
+Na Figura \ref{fig:mapa_etapa1}, pode-se ver o caminho esperado que os carros percorrecem na primeira etapa do experimento, onde não há a presença de eventos de fechamento de vias, e muito menos PMV.
+As arestas em \textbf{roxo} representam o trajeto do carro, as demais arestas não utilizadas foram removidas do grafo a título de legibilidade.
 Note que ao chegar no vértice 3, ele sempre optará o caminho seguindo pelo vértice 4.
-Isso acontece porque como mencionado anteriormente todas as arestas possuem o mesmo comprimento (ambos são um caminho mais curto até o destino), sendo o critério de desempate o menor índice.
+Isso acontece porque todas as arestas possuem o mesmo comprimento (ambos são um caminho mais curto até o destino), sendo critério de desempate o menor índice.
 
 \begin{figure}[ht]
 	\centering
@@ -747,9 +747,9 @@ Por fim, na Figura \ref{fig:mapa_etapa3}, temos a dinâmica esperada para a etap
 Mais uma vez, a via representada pela aresta 4 -> 5 é fechada, e a PMV é posicionada no vértice 2 representado em azul.
 Utilizamos aqui a mesma notação anterior.
 A aresta \textbf{roxa} representa o caminho inicialmente calculado e que foi percorrido;
-as arestas \textbf{pretas} faziam parte do caminho inicial, mas nesse caso não forma percorridas devido ao fechamento da via e da PMV;
-e as \textbf{verdes} simbolizam o novo caminho recalculado após o motorista ter sido notificado pela PMV do ocorrido.
-Devido ao modelo implementado, ainda assim era esperado que alguns carros percorresem o fluxo apresentado na Figura \ref{fig:mapa_etapa2}, já que acreditamos que nem todos os motoristas que vissem
+as arestas \textbf{pretas} faziam parte do caminho inicial, mas nesse caso não foram percorridas devido o fechamento da via e da PMV;
+e as \textbf{verdes} simbolizam o novo caminho recalculado após o motorista ter sido notificado pela PMV.
+Devido o modelo implementado, ainda assim, era esperado que alguns carros percorresem o fluxo apresentado na Figura \ref{fig:mapa_etapa2}, já que acreditamos que nem todos os motoristas que vissem
 a notificação iriam de fato mudar o seu trajeto.
 
 \begin{figure}[ht]
@@ -775,10 +775,10 @@ O passo a passo para execução desse experimento de validação foi o seguinte:
     \item Analizar os resultados obtidos ao final da simulação.
 \end{enumerate}
 
-A Figura \ref{fig:distancia_validacao}, apresenta o desvio padrão (no topo das barras) e a distância média percorrida pelos carros simulados nas três etapas deste experimento.
-Segundo nossas hipóteses, esperávamos que no cenário sem evento de fechamento de via e sem PMV para notificar os motoristas percorressem 6 arestas, no cenário com evento e sem PMV percorressem 8 arestas
-e no cenário com evento e PMV percorressem entre 6 e 8 arestas (alguns veículos ignoram as notificações).
-Nossas hipóteses foram confirmadas, como pode ser visto no gráfico.
+A Figura \ref{fig:distancia_validacao}, apresenta a distância média percorrida pelos carros simulados nas três etapas deste experimento.
+De acordo com as nossas hipóteses, esperávamos que no cenário sem evento de fechamento de via e sem PMV para notificar os motoristas, percorressem 6 arestas, no cenário com evento e sem PMV
+percorressem 8 arestas e no cenário com evento e PMV percorressem entre 6 e 8 arestas (alguns veículos ignoram as notificações).
+Nossas hipóteses foram confirmadas, conforme o gráfico.
 
 \begin{figure}[ht]
 	\centering
@@ -788,11 +788,11 @@ Nossas hipóteses foram confirmadas, como pode ser visto no gráfico.
 \end{figure}
 
 Uma análise semelhante foi realizada com a duração das viagens simuladas, como pode ser visto na Figura \ref{fig:duracao_validacao}.
-O desvio padrão (no topo das barras) e a duração média das viagens simuladas nas três etapas do experimento são apresentados no gráfico.
+A duração média das viagens simuladas nas três etapas do experimento são apresentadas no gráfico.
 Uma viagem dura sempre 2 ciclos de execução (criação e destruição do ator) mais o tempo utilizado para percorrer as arestas (uma aresta por ciclo de execução, já que possuem comprimento unitário)
-e o recálculo de um caminho custa um ciclo.
+e o recálculo de um caminho dura um ciclo.
 Por isso, esperávamos que para o cenário sem evento de fechamento de via durasse 8 ciclos (2 pelo ciclo de vida + 6 arestas);
-o cenário com evento e sem PMV para informar os motoristas durasse 11 ciclos (2 pelo ciclo de vida + 8 arestas + 1 pelo recálculo da rota);
+o cenário com evento e sem PMV, para informar os motoristas, durasse 11 ciclos (2 pelo ciclo de vida + 8 arestas + 1 pelo recálculo da rota);
 e o cenário com evento e PMV durasse entre 9 ciclos (2 pelo ciclo de vida + 6 arestas + 1 pelo recálculo) para motoristas que seguissem as instruções da PMV, e 11 ciclos (2 pelo ciclo de vida + 8 arestas +
 1 pelo recálculo) para os motoristas que ignorassem a PMV.
 Nossas hipóteses mais uma vez foram confirmadas, como pode ser visto na Figura \ref{fig:duracao_validacao}.
@@ -805,16 +805,16 @@ Nossas hipóteses mais uma vez foram confirmadas, como pode ser visto na Figura 
 \end{figure}
 
 Com isso, pudemos verificar os requisitos fundamentais e de integração, apresentados na Seção \ref{sec:requisitos}, para este cenário de tráfego de carros inteligentes.
-O modelo implementado no simulador correspondeu com o esperado e a comunicação entre as ferramentas foi validada, principalmente com o que diz respeito a atuação no ambiente simulado, sendo esse um
+O modelo implementado no simulador correspondeu com o esperado e a comunicação entre as ferramentas foi validada, principalmente com o que diz respeito à atuação no ambiente simulado, sendo esse um
 trabalho pioneiro.
 
-\subsection{Cidade de São Paulo}
+\subsubsection{Cidade de São Paulo}
 \label{sec:smart_traffic}
 
 Tendo em vista que a implementação dos modelos utilizados para este cenário e a integração estavam funcionando dentro do esperado, realizamos um outro experimento, envolvendo o mesmo cenário de tráfego de
 carros inteligente, mas dessa vez em uma escala maior, com dados abertos da cidade de São Paulo.
 
-Dividimos esse experimento em três etapas novamente, e elas se deram da seguinte forma quanto ao número de eventos de fechamento de via e PMVs:
+Dividimos esse experimento em três etapas novamente, quanto ao número de eventos de fechamento de via e PMVs. Elas se deram da seguinte forma:
 
 \begin{enumerate}
     \item Sem eventos de fechamento de via e sem PMVs
@@ -829,13 +829,13 @@ Neste experimento, utilizamos dados do OpenStreet Maps e a pesquisa Origem-Desti
 A seguir mais detalhes sobre esses dados.
 
 Dessa vez não utilizamos o mapa viário completo da cidade de São Paulo, realizamos um recorte de um trecho da avenida Rebouças com um raio de 5km, próximo ao cruzamento da avenida Paulista.
-O intuito desse recorte era reduzir o escopo do experimento para enfatizar a impacto das PMVs naquela região.
-E para criação das viagens de carros a serem realizadas, usamos os mesmos dados da pesquisa OD (Origem-Destino) utilizada no experimento de estacionamento inteligente.
-Contudo, como não utilizamos o mapa completo da cidade, filtramos apenas as viagens cuja origem e destino pertencessem ao recorte do mapa realizado.
+O intuito desse recorte era reduzir o escopo do experimento para enfatizar o impacto das PMVs naquela região.
+Para a criação das viagens de carros a serem realizadas, utilizamos os mesmos dados da pesquisa OD (Origem-Destino) apresentada no experimento de estacionamento inteligente.
+Contudo, como não utilizamos o mapa completo da cidade, filtramos apenas as viagens em que a origem e o destino pertencessem ao recorte do mapa realizado.
 Todos os \textit{scripts} utilizados para filtrar os dados de entrada estão disponíveis em nosso repositório aberto\footnote{https://github.com/LSS-USP/pmv\_experiment}.
 
 \begin{itemize}
-    \item \textbf{OpenStreet Maps}: para criar o grafo viário da cidade de São Paulo usado na simulação, usamos o mapa do OpenStreet Maps.
+    \item \textbf{OpenStreet Maps}: para criar o grafo viário da cidade de São Paulo usado na simulação, utilizamos o mapa do OpenStreet Maps.
         Este mapa contém todas as ruas e junções da cidade, em conjunto com um vasto número de atributos, como comprimento, capacidade e velocidade limite.
         Tais informações são usadas pelo simulador para definir as rotas percorridas pelos carros durante a realização de suas viagens, bem como simular o impacto do tráfego na velocidade dos carros.
         Neste experimento, diferente do apresentado na seção anterior, não utilizamos o mapa viário completo da cidade de São Paulo.
@@ -845,14 +845,14 @@ Todos os \textit{scripts} utilizados para filtrar os dados de entrada estão dis
         \footnote{Pesquisa Origem-Destino - http://goo.gl/Te2SX7.}
         Essa pesquisa descreve as viagens de 200.000 pessoas e extrapola os dados para toda a população da cidade.
         A pesquisa inclui informações sobre a origem, o destino, o modo de transporte e a hora de partida.
-        Esses dados forma utilizados para definir o comportamento dos agentes do tipo carro na simulação.
-        Por não termos utilizado o mapa completo da cidade, filtramos apenas as viagens cuja origem e destino pertencessem am recorte do mapa realizado.
+        Esses dados foram empregados para definir o comportamento dos agentes do tipo carro na simulação.
+        Por não termos utilizado o mapa completo da cidade, filtramos apenas as viagens em que a origem e destino pertencessem ao recorte do mapa realizado.
         Simulamos o tráfego em São Paulo durante o horário das 8h às 9h30.
         Na pesquisa OD, há 2.210 viagens de carro que começam durante o intervalo de tempo considerado e no recorte do mapa feito.
 \end{itemize}
 
-Na etapa 3 deste experimento, onde fizemos uso de 7 PMVs, posicionamos os mesmos nas principais vias presentes no recorte do mapa utilizado, como pode ser visto na Figura \ref{fig:pos_pmvs}.
-Decidimos utilizar tais vias acreditando que por nelas terem um maior fluxo de carros, possivelmente impactariam nas rotas de mais carros.
+Na etapa 3 deste experimento, onde fizemos uso de 7 PMVs, posicionamos os mesmos nas principais vias presentes no recorte do mapa, como pode ser visto na Figura \ref{fig:pos_pmvs}.
+Decidimos sinalizar tais vias acreditando que por possuírem um maior fluxo de carros, possivelmente impactariam nas rotas de mais carros.
 
 \begin{figure}[ht]
 	\centering
@@ -861,7 +861,7 @@ Decidimos utilizar tais vias acreditando que por nelas terem um maior fluxo de c
 	\label{fig:pos_pmvs}
 \end{figure}
 
-E na Figura \ref{fig:eventos}, pode-se ver os trechos de vias que foram fechadas nas etapas 2 e 3 deste experimento.
+Na Figura \ref{fig:eventos}, pode-se ver os trechos de vias que foram fechadas nas etapas 2 e 3 deste experimento.
 No grafo do mapa viário da cidade gerado a partir do OpenStreet Maps, uma mesma via é formada de várias pequenas arestas (trechos de via).
 Visando enfatizar um evento como um acidente de carro fatal ou um possível alagamento na região, fechamos um conglomerado de arestas nas proximidades das avenidas Rebouças e Paulista.
 
@@ -879,7 +879,7 @@ Contudo, a utilização das PMVs não deveria melhorar a média da duração das
 
 As três etapas desse experimento foram realizadas novamente em dois \textit{laptops} com 8 CPUs virtuais (1.80 GHz) e 8 GB de memória RAM.
 Mais uma vez, diferente do experimento apresentado na Seção \ref{sec:exp_smart_parking}, o foco desse experimento não é analisar o desempenho da plataforma, mas sim uma análise funcional. 
-O passo a passo para execução desse experimento de validação foi o seguinte:
+O passo a passo para execução desse experimento foi o seguinte:
 
 \begin{enumerate}
     \item Executar uma instância em modo de produção da plataforma InterSCity em um \textit{laptop}.
@@ -893,14 +893,14 @@ O passo a passo para execução desse experimento de validação foi o seguinte:
     \item Analizar os resultados obtidos ao final da simulação.
 \end{enumerate}
 
-A Figura \ref{fig:duracao_total}, apresenta o desvio padrão (no topo das barras) e a duração média das viagens de carro simuladas nas três etapas deste experimento.
+A Figura \ref{fig:duracao_total}, apresenta a duração média das viagens de carro simuladas nas três etapas deste experimento.
 No eixo Y, a duração é apresentada em segundos (ciclo de execução da simulação: 1 ciclo = 1 segundo), e no eixo X os diferentes cenários utilizados em cada uma das 3 etapas.
 Como podemos ver no gráfico apresentado, em geral, a média do tempo de duração das viagens não passou de 6 minutos.
 Isso pode ter ocorrido pelo fato das viagens nessa região serem mais curtas, ou por não terem viagens suficientes para gerar congestionamentos, já que filtramos apenas as viagens que se iniciavam e
 terminavam dentro do recorte do mapa utilizado.
-Outro fator importante que nos chamou a atenção, foi a média da duração das viagens da etapa 3, onde existem vias fechadas e o auxilio de PMVs, ser menor do que da etapa 1, onde não existe qualquer
-incidente.
-Após analisar os dados, percebemos que ao recalcular a rota quando deparado de uma PMV, os carros se distribuíam de uma melhor forma pela malha viária do cenário utilizado pelo experimento, com isso,
+Outro fator importante que nos chamou a atenção, foi a média da duração das viagens da etapa 3 (onde existem vias fechadas e o auxilio de PMVs) ser menor do que da etapa 1 (onde não existe qualquer
+incidente).
+Após analisar os dados, percebemos que ao recalcular a rota, na presença de uma PMV, os carros se distribuíam de uma melhor forma pela malha viária do cenário utilizado pelo experimento, com isso,
 evitavam congestionamentos que ocorriam anteriormente.
 Sendo isso um alvo de possível melhoria no simulador, já que ao criar o ator, apenas um dos menores caminhos entre a origem e destino do carro é calculado e utilizado, podendo essa rota coincidir entre
 múltiplos atores com origem e destinos similares, assim, deixando outros caminhos mais curtos inutilizados.
@@ -934,7 +934,7 @@ O posicionamento das PMVs pode não ter sido o ideal, já que não foi realizada
 O conjunto de viagens simulados após recortar o mapa da cidade de São Paulo pode não ter sido representativo, a decisão de reduzir o mapa para facilitar a visualização do impacto do fechamento de vias
 e PMVs pode não ter sido boa ideia.
 Além disso, os resultados obtidos podem ter sido influenciados devido a infraestrutura simples utilizada com apenas dois \textit{laptops}, já que em cenários realistas muitos recursos computationais são
-necessários, como memória e largura de bando da rede.
+necessários, como memória e largura de banda da rede.
 
 
 \section{Discussão}
@@ -944,10 +944,11 @@ necessários, como memória e largura de bando da rede.
 Após a realização dos dois estudos de caso apresentados neste capítulo, foi possível perceber que a solução proposta no Capítulo \ref{cap:proposta} é viável e nos permitiu realizar
 diferentes experimentos utilizando um ambiente simulado de uma cidade, podendo substituir \textit{testbeds} reais e aumentando a escala dos experimentos.
 Contudo, durante a implementação dos dois cenários de Cidades Inteligentes apresentados, algumas adversidades foram encontradas e solucionadas.
-A fim de contribuir com trabalhos futuros que sigam a solução aqui proposta, uma discussão sobre os principais problemas e dificuldades encontradas será feita
+A fim de contribuir com trabalhos futuros que sigam a solução proposta, uma discussão sobre os principais problemas e dificuldades encontradas será feita
 nesta seção.
 O intuito aqui é enfatizar os principais obstáculos a serem enfrentados durante a implementação de novos cenários no ambiente integrado usando o simulador InterSCSimulator e
-a plataforma InterSCity ou até mesmo envolvendo outras ferramentas.
+a plataforma InterSCity ou até mesmo envolvendo outras ferramentas, bem como discutir os resultados experimentais alcançados nos estudos de caso.
+
 
 \subsection{Implementação da Solução Proposta}
 
@@ -955,14 +956,14 @@ Como vem sendo discutido no decorrer deste trabalho, a integração de ferrament
 Apesar de tanto o simulador quanto a plataforma utilizada serem voltados para o contexto de Cidades Inteligentes, na maioria das vezes, elas não são concebidas inicialmente
 para serem integradas com outras ferramentas.
 Através dos próprios requisitos apresentados podemos antever o maior desafio a ser enfrentado: a interoperabilidade.
-Interoperabilidade essa tanto a nível de comunicação e quanto semanticamente.
+Essa tanto a nível de comunicação quanto semanticamente.
 
 Como constatado na implementação dos dois cenários apresentados, tentamos ao máximo reduzir a responsabilidade do componente de integração, que ao ser atribuído muitas
 tarefas pode se tornar um problema.
-Tanto que não foi necessária a implementação desse componente no segundo estudo de caso apresentado, tendo em vista que as ferramentas já atendiam os requisitos de integração.
+Tanto que não foi necessária a implementação desse componente no segundo estudo de caso, tendo em vista que as ferramentas já atendiam os requisitos de integração.
 Isso pode ser atribuído ao fato de ambas as ferramentas (InteSCSimulator e InterSCity) serem mantidas pelo nosso grupo de pesquisa, onde tivemos a liberdade de evoluir o
 que foi preciso nas próprias ferramentas para facilitar a integração.
-Em um contexto onde não existe essa flexibilidade o desafio se tornario bem mais complexo.
+Em um contexto onde não existe essa flexibilidade o desafio se tornaria bem mais complexo.
 
 Mesmo assim, enfrentamos problemas principalmente com a escalabilidade da solução.
 Em experimentos anteriores e isolados, foi demonstrado que ambas as ferramentas eram escaláveis, se comportando bem diante de uma grande carga de trabalho.
@@ -972,7 +973,7 @@ Semanticamente não tivemos muitos problemas, já que ambas as ferramentas foram
 pesquisa.
 Todavia, a comunicação entre as ferramentas foi a raíz da maior parte dos problemas enfrentados.
 
-Por exemplo, inicialmente, tentamos realizar qualquer interação com a plataforma através de requisições HTTP, usando a sua API \textit{Restful}.
+Inicialmente, tentamos realizar qualquer interação com a plataforma através de requisições HTTP, usando a sua API \textit{Restful}.
 Contudo, percebemos que o componente de integração necessitaria de uma complexidade muito maior para tratar todas essas requisições paralelamente sem se tornar um
 gargalo para o sistema.
 Por isso, decidimos explorar bastante o protocolo AMQP através da implementação do RabbitMQ.
@@ -981,7 +982,7 @@ uma solução adotada pelo mercado.
 Além do mais, pelo fato da comunicação via AMQP ser assíncrona e pela própria natureza dos cenários implementados, diferente de requisições HTTP, ela se apresentou uma
 solução mais adequada, não bloqueando agentes da simulação a espera de respostas.
 Logo, sempre que possível, transferir responsabilidades para ferramentas de terceiros comprovadamente capazes de atender os requisitos ao invés de implementar a sua
-própria solução é desejável.
+própria solução, é desejável.
 
 Nesse processo de melhoria da escalabilidade da solução integrada, várias mudanças foram feitas em ambas as ferramentas.
 Foram encontrados problemas de escalabilidade antes não evidenciados por outros experimentos isolados, demonstrado que a solução de ambiente de experimentação para
@@ -992,7 +993,7 @@ Na plataforma InterSCity, implementações envolvendo técnicas para armazenamen
 Ademais, melhorias envolvendo a automatização da implantação do plataforma foram realizadas.
 Já no InterSCSimulator, encontramos alguns problemas na implementação dos modelos apresentados que causaram problemas de escalabilidade.
 Ou seja, dependendo do cenário e de como foi implementado, apenas reduzir a complexidade do componente de integração (até mesmo a não existência) ainda não é a solução.
-Portanto, poder modificar as próprias ferramentas é algo interessante, haja vista que a forma que os modelos, métodos e funcionalidades foram implementados podem não
+Portanto, poder modificar as próprias ferramentas é algo interessante, haja vista que a forma em que os modelos, métodos e funcionalidades foram implementados podem não
 ter sido testados em ambientes de estresse, tornando-se gargalos durante experimentos de larga escala.
 Isso evidencia a importância da utilização de ferramentas livres para a construção de ambientes de experimentação para plataformas de Cidades Inteligentes.
 
@@ -1010,7 +1011,7 @@ Já no segundo estudo de caso, demonstramos a viabilidade da atuação em tempo 
  
 Contudo, como o foco principal do trabalho é prover uma solução de ambiente simulado para a realização de experimentos em plataformas de Cidade Inteligentes, acreditamos que algumas das análises
 apresentadas nos estudos de caso poderiam ser melhoradas.
-Ademais, especialmente no segundo estudo de caso, algumas decisões iniciais do experimento poderiam ser otimizadas, como o posicionamento das PMVs baseado em uma análise mais profunda da movimentação
+Ademais, especialmente no segundo estudo de caso, algumas decisões iniciais do experimento poderiam ter sido otimizadas, como o posicionamento das PMVs baseado em uma análise mais profunda da movimentação
 dos carros nas viagens selecionadas para o experimento, o que prejudicou os resultados obtidos.
 A utilização de \textit{laptops} para a execução do segundo experimento também contribuiu para o resultado final abaixo do esperado, tendo em vista que esse tipo de experimento requer muitos recursos
 computacionais.

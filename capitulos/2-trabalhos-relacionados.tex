@@ -1,14 +1,16 @@
 \chapter{Revisão Bibliográfica e Trabalhos Relacionados}
 \label{cap:trab-relacionados}
 
-Durante a realização desta pesquisa, não foi encontrada uma solução que provesse um ambiente de experimentação para plataformas de Cidades Inteligentes que permitisse a interação em tempo de execução 
-(viabilizando a execução de comandos de atuação, por exemplo) em larga escala, sendo esses requisitos ainda pouco explorados pela academia.
-Para um melhor entendimento de como esses experimentos estão sendo realizados, serão introduzidos trabalhos relacionados que apresentam ambientes de experimentação nessa área, apontando as suas
+Durante a realização desta pesquisa nos deparamos com dificuldades para encontrar uma solução que provesse um ambiente de experimentação para plataformas de Cidades Inteligentes capaz de permitir a
+interação em tempo de execução (viabilizando a execução de comandos de atuação, por exemplo) em larga escala, pois esses requisitos encontram-se pouco explorados pela academia.
+Para um melhor entendimento de como esses experimentos estão sendo realizados, serão descorridos relatos de trabalhos que apresentam ambientes de experimentação nessa área e apontando as suas
 principais limitações.
-Alguns trabalhos apontam a simulação como um método que pode solucionar algumas das limitações desses ambientes, esses também serão discutidos e explicitado o porquê de adotarmos tal solução.
+Alguns trabalhos apontam a simulação como um método que pode solucionar algumas das limitações desses ambientes.
+Apresentaremos essas discussões buscando explicitar o porquê de adotarmos tal solução.
 
-Além disso, existem pesquisas que já se utilizam da integração com simuladores para a execução de experimentos que se assemelham a contextos reais.
-Nesse sentido, apresentaremos as principais dificuldades na integração de simuladores e sistemas de software em geral.
+A título de ilustração faremos uma breve descrição sobre pesquisas existentes que utilizam a integração com simuladores para a execução de experimentos que se assemelham a contextos reais, demonstrando
+a viabilidade da solução adotada mesmo que de forma superficial.
+Em seguida, apresentaremos as principais dificuldades na integração de simuladores e sistemas de software em geral.
 
 
 \section{Ambientes de Experimentação para Plataformas de Cidades Inteligentes}
@@ -16,19 +18,20 @@ Nesse sentido, apresentaremos as principais dificuldades na integração de simu
 %Apresentar e discutir testbeds existentes
 
 Apesar dos significativos avanços tecnológicos, dificuldades associadas com a avaliação de plataformas para Cidades Inteligentes sob condições realísticas em ambientes experimentais ainda dificultam
-a sua maturidade e utilização significativa~\cite{sanchez_2014}.
-Por isso, encontrar soluções eficazes para melhorar e facilitar a criação de ambientes de experimentação ainda é um problema não resolvido.
+a sua maturidade e utilização significativas~\cite{sanchez_2014}.
+Portanto, encontrar soluções eficazes para melhorar e facilitar a criação de ambientes de experimentação ainda é um desafio.
 
-No contexto de Cidades Inteligentes, onde em grande parte interagimos com dispositivos de IoT (\textit{Internet of Things}), temos alguns desafios que dificultam a criação desses ambientes de
+No contexto de Cidades Inteligentes, onde em grande parte interagimos com dispositivos de IoT (\textit{Internet of Things}), temos alguns entraves que dificultam a criação desses ambientes de
 experimentação, sendo os pricipais \textit{escala}, \textit{heterogeneidade de dispositivos}, \textit{acesso concorrente}, \textit{mobilidade} e 
 \textit{reprodutibilidade}~\cite{gluhak_2011}~\cite{sanchez_2014}.
-O primeiro deles é a \textit{escala} desses ambientes, tendo em vista que as cidades e suas populações estão em uma constante crescente, os experimentos envolvendos essas plataformas devem ser capazes
-de refletir isso.
+O primeiro deles é a \textit{escala} desses ambientes, tendo em vista que as cidades e suas populações estão em uma constante crescente, os experimentos envolvendo essas plataformas devem ser capazes
+de refletir essa demanda.
 Na infraestrutura física de uma grande cidade, como São Paulo, teremos milhares de dispositivos de IoT de diferentes naturezas monitorando e atuando na cidade, e os experimentos para que sejam realistas
 precisam representar essa \textit{heterogeneidade de dispositivos}.
-Além disso, em uma Cidade Inteligente teremos diversas aplicações tentando acessar recursos da infraestrutura da cidade simultaneamente, esse \textit{acesso concorrente} deve também estar presente nos
+Destacamos que em uma Cidade Inteligente teremos diversas aplicações tentando acessar recursos da infraestrutura da cidade simultaneamente, esse \textit{acesso concorrente} deve também estar presente nos
 ambientes de experimentação.
-Todos esses desafios anteriores dificultam ainda mais a \textit{reprodutibilidade} desse ambiente, o que é necessário para reprodução dos experimentos. 
+Além disso, a \textit{mobilidade} é uma característica evidente.
+Todos esses desafios anteriores dificultam ainda mais a \textit{reprodutibilidade} desse ambiente.
 
 Podemos encontrar diversos trabalhos que tentaram solucionar os desafios citados, sendo grande parte dessas soluções através de \textit{testbeds} reais.
 Nesses \textit{testbeds}, dispositivos de IoT são implantados no ambiente, conectados através de redes de sensores e monitorados.
@@ -49,14 +52,14 @@ Ambientes de experimentação voltados especialmente para a \textit{heterogeneid
 em Antwerp na Bélgica, e Berlim na Alemanha, respectivamente.
 Nesses trabalhos, a heterogeneidade é tratada a nível de protocolos de rede para comunicação e tratamento de dados, considerando que cada dispositivo pode utilizar diferentes protocolos e se comunicar
 através de diferentes formatos de dados.
-Mais uma vez temos o problema de \textit{escala} que não é deixado claro nas apresentações dos \textit{testbeds}.
+Mais uma vez temos o problema de \textit{escala} que não é explicitado nas apresentações dos \textit{testbeds}.
 
 Em \cite{lanza_2015}, é apresentado uma parte do \textit{testbed} implantado na cidade de Santander na Espanha, com uma característica muito interessante que não é encontrada na maioria dos outros
 trabalhos, o seu foco principal é a \textit{mobilidade}.
 Ao perceberem que veículos são a melhor forma de obter dados da cidade reduzindo os gastos, já que circulam por vários pontos da cidade no mesmo dia, implantaram sensores em 140 ônibus, táxis e vans
 para coleta de diversos dados.
-Ao coletarem dados de diferentes naturezas, utilizaram diferentes dispositivos, trabalhando também a questão da \textit{heterogeneidade}.
-Todavia, todos os desafios foram atacados em uma \textit{escala} bem menor do que a esperada para uma grande cidade.
+Ao coletarem dados de diferentes naturezas utilizaram diferentes dispositivos, trabalhando, também, a questão da \textit{heterogeneidade}.
+Todavia, todos os desafios foram abordados em uma \textit{escala} bem menor do que a esperada para uma grande cidade.
 
 No contexto de Cidades Inteligentes, além da parte técnica, temos também que nos preocupar com o impacto dessa tecnologia na vida das pessoas.
 O \textit{testbed} introduzido por \cite{nati_2013}, tem o objetivo de viabilizar experimentos centrados no usuário, onde ao invés de ter os dispositivos e softwares envolvidos sob prova, temos
@@ -66,31 +69,31 @@ experimentação.
 Por isso, esse \textit{testbed} foi implantado no contexto de um escritório, e não ataca a maioria dos desafios citados nesta seção, como \textit{mobilidade} por exemplo.
 
 Temos também uma série de \textit{testbeds} voltados especificamente para apenas uma das áreas de Cidades Inteligentes.
-Por exemplo, \cite{braem_2016} foca na análise da qualidade do ar, \cite{lee_2015} apresenta um \textit{testbed} meteorológico, \cite{lu_2010} introduz um ambiente de experimentação envolvendo
-\textit{Smart Grid}, e \cite{amrutur_2017} demontra um \textit{testbed} de postes de iluminação pública.
+A pesquisa de \cite{braem_2016} foca na análise da qualidade do ar, \cite{lee_2015} apresenta um \textit{testbed} meteorológico, \cite{lu_2010} introduz um ambiente de experimentação envolvendo
+\textit{Smart Grid}, e \cite{amrutur_2017} demontra um \textit{testbed} de postes de iluminação pública, por exemplo.
 
 Existem também algumas iniciativas que visam realizar a federação de \textit{testbeds} em diferente localidades.
-Em \cite{mwangama_2013} e \cite{corici_2014}, visando balancear a carga de trabalho de ambientes de experimentação em Berlim na Alemanha e na Cidade do Cabo na África do Sul, ambos foram federados,
+Em \cite{mwangama_2013} e \cite{corici_2014} foram federados ambientes de experimentação em Berlim na Alemanha e na Cidade do Cabo na África do Sul visando balancear a carga de trabalho,
 tratando de pontos como autenticação, identificação segura e políticas de armazenamento e de redirecionamento.
 
-Além de todos esses ambientes de experimentação apresentados, temos provavelmente o mais conhecido dentre eles, o desenvolvido pelo projeto \textit{SmartSantander}~\cite{sanchez_2014}.
+Além de todos esses ambientes de experimentação apresentados temos provavelmente o mais conhecido dentre eles, o desenvolvido pelo projeto \textit{SmartSantander}~\cite{sanchez_2014}.
 Esse \textit{testbed} foi implantado na cidade de Santander na Espanha, e o mesmo visou atacar todos os desafios apresentados nesta seção.
 Além de ser um ambiente de teste, ele provê serviços para a população da cidade através de aplicações de Cidades Inteligentes, como por exemplo uma aplicação de estacionamento inteligente.
 A implantação desse \textit{testbed} só foi possível devido ao total apoio do governo da cidade e financiamento de diversas fontes.
-Todavia, apesar desse ser um dos ambientes de experimentação mais bem sucedidos que temos na literatura, ainda acreditamos que o mesmo não representa a escala de uma grande metrópole como
-São Paulo, sabendo que Santander possui aproximandamente $ 35 km^2 $ e 175 mil habitantes\footnote{https://pt.wikipedia.org/wiki/Santander\_(Cant\%C3\%A1bria)}.
+Todavia, apesar de ser um dos ambientes de experimentação mais bem sucedidos que temos na literatura, ainda acreditamos que o mesmo não representa a escala de uma grande metrópole como
+São Paulo, pois sabemos que Santander possui aproximandamente $ 35 km^2 $ e 175 mil habitantes\footnote{https://pt.wikipedia.org/wiki/Santander\_(Cant\%C3\%A1bria)}.
 
 Uma solução diferente da implantação de \textit{testbeds} como ambiente de experimentação no contexto de plataformas de Cidades Inteligentes foi apresentada em \cite{ali_2015}.
 O \textit{CityBench} é um \textit{benchmark} para motores de processamento de fluxo de dados (\textit{streaming}) presentes nesse tipo de plataforma.
 Esse \textit{becnhmark} foi construído através do fluxo de dados em tempo real de múltiplos sensores implantados na cidade de Aarhus na Dinamarca.
 Essa é uma abordagem interessante, onde seria possível coletar dados em \textit{escalas} maiores, adicionar dados referentes a \textit{mobilidade}, de dispositivos \textit{heterogeneos}, permitindo
 o \textit{acesso concorrente} e a \textit{reprodutibilidade}.
-Contudo, esse tipo de abordagem não permite que a plataforma interaja com o ambiente de experimentação em tempo de execução, não permitindo experimentos envolvendo comandos de atuação por exemplo.
-Além do mais, para a criação desse conjunto de dados para a contrução do \textit{benchmark} é necessário ter acesso a dispositivos reais implantados em \textit{testbeds} reais.
+Contudo, esse tipo de abordagem não permite que a plataforma interaja com o ambiente de experimentação em tempo de execução, invialibilizando experimentos envolvendo comandos de atuação, por exemplo.
+Concebemos que para a criação desse conjunto de dados para a contrução do \textit{benchmark} é necessário ter acesso a dispositivos reais implantados em \textit{testbeds} reais.
 
 
-Na Tabela \ref{tab:trabalhos_relacionados}, uma caracterização dos trabalhos relacionados aqui mencionados é feita.
-Foram levantadas as seguintes características de cada um dos ambientes de experimentação:
+A título de ilustração apresentamos a Tabela \ref{tab:trabalhos_relacionados}, com um levantamento das principais características que constam nos trabalhos aqui mencionados.
+Características de cada um dos ambientes de experimentação:
 
 \begin{itemize}
     \item \textit{Uso de dispositivos de IoT}: indica se o ambiente de experimentação faz uso ou não de dispositivos reais de IoT.
@@ -140,53 +143,53 @@ Foram levantadas as seguintes características de cada um dos ambientes de exper
 \end{landscape}
 
 
-Podemos ver na Tabela \ref{tab:trabalhos_relacionados} que praticamente todos os ambientes de experimentação apresentados fazem uso de dispositivos reais de IoT em ambientes externos, haja vista que seus 
+Podemos ver na Tabela \ref{tab:trabalhos_relacionados} que praticamente todos os ambientes de experimentação apresentados fazem uso de dispositivos reais de IoT em ambientes externos, fica evidente que seus 
 autores querem reproduzir ao máximo um ambiente real.
-Os poucos trabalhos que fazem uso de simulação, a utilizam como uma técnica auxiliar em contextos específicos, como por exemplo, para simular diversas topologias de rede em um dado cenário.
+Os poucos trabalhos que fazem uso de simulação, utilizam-se dessa técnica para auxiliar em contextos específicos, como por exemplo, para simular diversas topologias de rede em um dado cenário.
 Apenas um dos trabalhos, o CityBench, é de fato uma ferramenta de \textit{benchmarking} para plataformas de Cidades Inteligentes.
 Todavia, como discutido anteriormente, o mesmo não permite a interação necessária em ambientes reais.
-Além disso, uma pequena quantidade dos ambientes apresentados permitem a execução de comandos de atuação durante experimentos.
-Todos os trabalhos que permitem tal funcionalidade demandaram grandes investimentos para que isso fosse possível, sendo esse um limitante.
+Uma pequena quantidade dos ambientes apresentados permitem a execução de comandos de atuação durante experimentos, porém todos os trabalhos que disponibilizam tal funcionalidade demandaram grandes
+investimentos, fator limitante.
 
-Como pode ser visto, a maioria dos trabalhos apresentados não provê um ambiente de experimentação para plataforma de Cidades Inteligentes que permita a interação em tempo de execução, possibilitando
+Como pode ser visto, a maioria dos estudos apresentados não provê um ambiente de experimentação para plataforma de Cidades Inteligentes que permita a interação em tempo de execução, possibilitando
 atuação durante o experimento.
-Além disso, as solução apresentadas não são capazes de realizar experimentos na escala de grande metrópoles do mundo, como a cidade de São Paulo, apesar de alguns autores afirmarem que os ambiente são de
+As soluções apresentadas não são capazes de realizar experimentos na escala de grandes metrópoles do mundo, como a cidade de São Paulo, apesar de alguns autores afirmarem que os ambientes são de
 larga escala.
-Sendo assim, identificamos o potencial deste trabalho, onde visamos solucionar esses dois problemas apresentados e os desafios propostos para contrução desse ambiente de experimentação através
+Sendo assim, identificamos o potencial deste trabalho: a busca por uma solução viável aos problemas apresentados e os desafios propostos para construção desse ambiente de experimentação através
 de simulação.
 
 \section{Simulação e Cidades Inteligentes}
 
 Devido a complexidade de construção de ambientes de experimentação para plataformas de Cidades Inteligentes apresentada na seção anterior, propomos a utilização de simulação visando solucionar
 principalmente o problema da escalabilidade.
-Além de tentar adicionar a funcionalidade de atuação no ambiente de experimentação em tempo de execução, não apresentado por nenhum dos outros trabalhos.
+Além de tentar adicionar a funcionalidade de atuação no ambiente de experimentação em tempo de execução, não apresentado pelos outros trabalhos.
 
 A simulação já vem sendo utilizada na área de Cidades Inteligentes há algum tempo, sobretudo na área de \textit{Smart Grid}.
-Em \cite{jsan_2016} um \textit{framework} para simulação de \textit{smart grid} é apresentado visando integrar a modelagem, a contrução e controle da execução, e desacoplar do simulador de rede
+Em \cite{jsan_2016},  um \textit{framework} para simulação de \textit{smart grid} é apresentado visando integrar a modelagem, a contrução e o controle da execução, além de desacoplar o simulador de rede
 ou de energia desse processo.
 Esse simulador foi implementado usando componentes discretos.
-Já em \cite{schutte_2011}, outro \textit{framework} de simulação para \textit{smart grid} foi introduziso, contudo, o objetivo principal desse trabalho é conseguir integrar modelos de simulação
-heterogeneos automaticamente em tempo de execução.
+Já em \cite{schutte_2011}, outro \textit{framework} de simulação para \textit{smart grid} foi introduzido, contudo, o objetivo principal desse trabalho é conseguir integrar modelos de simulação
+heterogêneos automaticamente em tempo de execução.
 
 Além do mais, simulação é um tópico em discussão na área de IoT, já que a validação das novas tecnologias dessa área em diferente cenários é um requisito importante para uma crescente adoção.
 Os simuladores utilizados na área de IoT são divididos em três categorias segundo \cite{baig_2018}:
-(i) simuladores completos, que visam prover um suporte de ponta a ponta para todos os elemtendos de IoT;
+(i) simuladores completos, que visam prover um suporte de ponta a ponta para todos os elementos de IoT;
 (ii) simuladores com foco em aspectos de processamento de \textit{big data};
 e (iii) simuladores de rede de comunicação.
-A simulação de IoT introduz várias questões de aspectos quantitativos e qualitativos~\cite{angelo_2016}, a quantidade massiva e a heteregeneidade de dispositivos dificultam essa tarefa.
+A simulação de IoT introduz várias questões de aspectos quantitativos e qualitativos~\cite{angelo_2016}, a quantidade massiva e a heterogeneidade de dispositivos dificultam essa tarefa.
 A simulação distribuída e paralela baseada em agentes é o melhor mecanismo para contornar os problemas mencionados~\cite{angelo_2016}, já que a possibilidade de execução distribuída e paralela permite
 a execução de mais elementos dentro da simulação, e a definição de agentes facilita a representação de diferentes dispositivos.
 
 Simuladores de IoT tradicionais não focam na simulação de ambientes de larga escala~\cite{brambilla_2014}.
-A grande maioria deles são simuladotes de rede, que analisam e avaliam o comportamento de objetos inteligentes organizados em uma topologia específica.
-Mas como vem sendo discutido, Cidades Inteligentes, em geral, contemplarão ambientes de larga escala, sendo necessário avaliar as plataformas em tais condições.
-O DEUS é um ambiente de simulação de Cidades Inteligentes de propósito geral, baseado em eventos discretos, que tenta atender requisitos de mobilidade e escalabilidade principalmente~\cite{picone_2012}.
+A grande maioria deles são simuladores de rede, que analisam e avaliam o comportamento de objetos inteligentes organizados em uma topologia específica.
+Como vem sendo discutido, Cidades Inteligentes, em geral, contemplarão ambientes de larga escala, sendo necessário avaliar as plataformas em tais condições.
+O DEUS é um ambiente de simulação de Cidades Inteligentes de propósito geral, baseado em eventos discretos, que tenta atender principalmente requisitos de mobilidade e escalabilidade~\cite{picone_2012}.
 Apesar de um modelo de mobilidade interessante ter sido implementado no DEUS, o experimento apresentado não é de larga escala, atingindo o máximo de 2 mil nós~\cite{picone_2012}.
 Por esse motivo não conseguimos concluir se o DEUS é uma solução viável quanto a escala do ambiente simulado.
 
-Sabendo que o contexto de Cidades Inteligentes envolve múltiplas áreas conhecimento, ambientes de simulação realísticos muitas vezes podem envolver mais de um simulador.
+Sabendo que o contexto de Cidades Inteligentes envolve múltiplas áreas do conhecimento, ambientes de simulação realísticos muitas vezes podem envolver mais de um simulador.
 O TraNS é um ambiente de simulação de código aberto que tem como objetivo viabilizar experimentos com VANETs (\textit{Vehicular Ad Hoc Networks})~\cite{piorkowski_2008}.
-Para isso, nesse trabalho, o simulador de mobilidade SUMO e o simulador de rede NS2 foram integrados para construção desse ambiente realista.
+Para isso, nessa pesquisa, o simulador de mobilidade SUMO e o simulador de rede NS2 foram integrados para construção desse ambiente realista.
 O interessante dessa integração é o fato dos simuladores serem capazes de se comunicarem em tempo de execuação, sendo essa a abordagem que implementamos para permitir a interação entre a plataforma
 e o simulador de Cidades Inteligentes.
 
@@ -200,24 +203,24 @@ de um ambiente de larga escala e a interação em tempo de execução com outros
 %Exemplos de integração de simuladores, como o SUMO (simulador de tráfego) + ns2
 %(simulador de rede)
 
-A abordagem proposta neste trabalho envolve a integração entre a plataforma e o simulador de Cidades Inteligentes.
-Como discutido neste capítulo, a simulação é um mecanismo que pode nos auxiliar na obtenção de ambientes de experimentação de larga escala e que nos permita interagir e atuar no mesmo em tempo de execução.
-Entretanto, integração de sistemas de software não é uma tarefa trivial.
+A abordagem proposta em nosso trabalho envolve a integração entre a plataforma e o simulador de Cidades Inteligentes.
+Conforme discussão neste capítulo, a simulação é um mecanismo que pode nos auxiliar na obtenção de ambientes de experimentação de larga escala e que nos permita interagir e atuar no mesmo em tempo de execução.
+Entretanto, a integração de sistemas de software não é uma tarefa trivial.
 A integração de sistemas possui três dimensões: dados, controle e apresentação~\cite{wasserman_1990}.
 Neste trabalho, realizamos a integração nas dimensões de dados e controle.
-O principal desafio nesse processo de integração é o fato de, em geral, ela ser feita de maneira \textit{ad-hoc}, não havendo uma padronização~\cite{wasserman_1990}.
+O principal desafio nesse processo de integração é o fato dela ser feita, geralmente, de maneira \textit{ad-hoc}, não havendo uma padronização~\cite{wasserman_1990}.
 
 A integração de sistemas tem sido objeto de pesquisa na área de sistemas de informação, visando integrar principalmente dados de múltiplas fontes heterogêneas distribuídas para apresentá-los de forma
 centralizada e homogênea~\cite{genesereth_1997}.
 Esse interesse surge essencialmente pela necessidade de empresas integrarem seus diversos sistemas para gerar conhecimento baseado em seus dados.
-E segundo a experiência de pessoas envolvidas com a industria, dois dos principais problemas nesse tipo de integração são o desempenho e a escalabilidade da solução, como apresentado em \cite{halevy_2005}.
+Segundo a experiência de pessoas envolvidas com a industria, dois dos principais problemas nesse tipo de integração são o desempenho e a escalabilidade da solução, como apresentado em \cite{halevy_2005}.
 
-Apesar de padronização parecer ser a solução para o problema de integração de sistemas, ela não é tão simples devido aos diferentes propósitos e naturezas dos sistemas.
-Na área de Cidades Inteligentes, especificamente de VANETs, um trabalho interessante resultou em uma técnica para interconectar simuladores de rede e de trânsito chamada \textit{TraCI}~\cite{wegener_2008}.
+Apesar de padronização parecer ser a solução para o problema de integração de sistemas, ela não é tão simples, por conta dos diferentes propósitos e naturezas dos sistemas.
+Um trabalho interessante na área de Cidades Inteligentes, especificamente de VANETs, resultou em uma técnica para interconectar simuladores de rede e de trânsito chamada \textit{TraCI}~\cite{wegener_2008}.
 Devido o vasto número de simuladores desse tipo, foi proposto a implementação de uma interface para cada um dos simuladores, encapsulando o funcionamento dos mesmos.
 Ao implementar tais interfaces, elas se comunicam através de um protocolo, baseado em cliente-servidor, desenvolvido especificamente para comunicação entre simuladores de rede e de trânsito.
 Portanto, essa é uma técnica que independe do simulador a ser utilizado, bastando implementar essa interface que se comunicará através de um protocolo específico.
-Esse trabalho nos serviu de inspiração para a realização desta pesquisa, já que a nossa solução se baseia na integração de uma plataforma e um simulador de Cidades Inteligentes.
-Todavia, a definição de uma interface específica e de protocolo de comunicação introduzidos pela \textit{TraCI} só foi possível porque o escopo foi reduzido para VANETs somente.
+Essa experiência nos serviu de inspiração, já que a nossa solução se baseia na integração de uma plataforma e um simulador de Cidades Inteligentes.
+Todavia, a definição de uma interface específica e de protocolo de comunicação introduzidos pela \textit{TraCI} só foi possível porque o escopo foi reduzido para VANETs.
 Como esta pesquisa visa construir um ambiente de experimentação de âmbito geral no contexto de Cidades Inteligentes, desenvolvemos uma arquitetura mais alto nível com diretrizes para implementação de um
 componente de integração (\textit{middleware}) entre os dois sistemas.
