@@ -3,10 +3,10 @@
 
 % Contextualização: cidades inteligentes
 
-A utilização de Tecnologia da Informação e Comunicação (TIC) para solucionar os problemas das cidades está surgindo como uma boa estratégia para mitigar os problemas que são agravados pelo rápido crescimento da população urbana~\cite{chourabi_2012}.
-Essa abordagem visa otimizar os serviços e uso de recursos da cidade, assim como melhorar a qualidade de vida dos cidadãos~\cite{santana_2016}.
+A utilização de Tecnologia da Informação e Comunicação (TIC) para solucionar os problemas das cidades está surgindo como uma boa estratégia para mitigar os problemas que são agravados pelo rápido crescimento da população urbana~\citep{chourabi_2012}.
+Essa abordagem visa otimizar os serviços e uso de recursos da cidade, assim como melhorar a qualidade de vida dos cidadãos~\citep{santana_2016}.
 
-Para que plataformas de Cidades Inteligentes atendam as expectativas de governos e cidadãos na melhoria da qualidade de vida nas cidades, elas precisam ser capazes de lidar com todas as adversidades e
+Para que plataformas de Cidades Inteligentes atendam às expectativas de governos e cidadãos na melhoria da qualidade de vida nas cidades, elas precisam ser capazes de lidar com todas as adversidades e
 complexidade presentes nas cidades modernas.
 Devem ser flexíveis e capazes de escalar para atender as diferentes demandas no decorrer do dia, além de conseguir lidar com múltiplos aspectos que tornam o contexto de Cidades Inteligentes tão
 peculiar.
@@ -15,10 +15,10 @@ Nas cidades, tudo é conectado, um aspecto influencia e é influenciado por dive
 Em uma grande metrópole como São Paulo, milhões de recursos (ônibus, carros, hospitais, estacionamentos, escolas, etc.) deverão ser monitorados e gerenciados em tempo real.
 Dispositivos de Internet das Coisas (\textit{Internet of Things - IoT}) poderão enviar e receber dados a todo momento, concorrentemente, com o objetivo de obter dados e atuar sobre os recursos da cidade.
 Cidadãos e agentes do governo poderão requisitar esses serviços em diferentes horas do dia.
-Desta forma, uma plataforma de Cidades Inteligentes deve estar habilitada para atender toda essa demanda.
+Dessa forma, uma plataforma de Cidades Inteligentes deve estar habilitada para atender toda essa demanda.
 
-A realização de experimentos na escala de grandes cidades se apresenta como um meio de validar o funcionamento de plataformas de Cidades Inteligentes em condições reais, todavia, a realização de
-experimentos em tais condições não é uma tarefa fácil.
+A realização de experimentos na escala de grandes cidades se apresenta como um meio de validar o funcionamento de plataformas de Cidades Inteligentes em condições reais.
+Todavia, a realização de experimentos em tais condições não é uma tarefa fácil.
 Experimentos que fazem uso apenas de \textit{scripts} para geração de carga de trabalho sintética (usando ferramentas como \textit{ApacheBench}\footnote{https://httpd.apache.org/docs/2.4/programs/ab.html})
 não exercitam as plataformas em condições reais de uma cidade.
 Conforme citado anteriormente, praticamente tudo no contexto de uma cidade está conectado.
@@ -30,11 +30,11 @@ Portanto, esse tipo de experimento é válido, mas não representa uma situaçã
 
 %Para solucionar essa falta de interação apresentada na solução anterior, podemos fazer uso de \textit{testbeds} na realização dos experimentos.
 Para solucionar a falta de interação na utilização de \textit{scripts} para geração de carga de trabalho sintética, podemos fazer uso de \textit{testbeds} na realização dos experimentos.
-Esses por sua vez, são plataformas para execução de testes onde no contexto de IoT, em geral, são implantações de dispositivos reais.
-O projeto \textit{SmartSantander}~\cite{sanchez_2014} possui um dos \textit{testbeds} mais famosos na área de Cidades Inteligentes.
+Esses por sua vez, são plataformas para execução de testes onde, no contexto de IoT, em geral, são implantações de dispositivos reais.
+O projeto \textit{SmartSantander}~\citep{sanchez_2014} possui um dos \textit{testbeds} mais famosos na área de Cidades Inteligentes.
 Vários sensores e atuadores foram implantados na cidade de Santander na Espanha e, com isso, eles se tornaram capazes de realizar experimentos mais realistas.
 Entretanto, construir \textit{testbeds} como esse, na escala de uma cidade (mesmo sendo uma cidade pequena), não é trivial.
-Existem procedimentos, envolvendo governos e um alto custo associado a compra, instalação e manutenção de toda a infraestrutura necessária.
+Existem procedimentos, envolvendo governos e um alto custo associado à compra, instalação e manutenção de toda a infraestrutura necessária.
 Sendo assim, construir \textit{testbeds} reais na escala de grandes metrópoles do mundo não é uma solução factível na maioria das vezes.
 
 Nesse sentido, apresentamos a simulação como uma saída viável para o problema.
@@ -46,15 +46,15 @@ a plataforma não tem conhecimento se o ambiente é simulado ou não.
 Ressaltamos que caso o simulador possa executar na escala de grandes cidades, poderá realizar experimentos em cenários realistas.
 Acrescentamos o fato de nos tornamos capazes de realizar experimentos envolvendo tecnologias que ainda não são amplamente adotas ou ainda estão em fase de projeto.
 
-Ao fazer uso de um ambiente simulado para realizar experimentos, possibilitamos que os mesmos sejam reprodutíveis.
-Utilizar \textit{scripts} para geração de carga também oportunizará reproduzir experimentos (caso os mesmos estejam disponíveis).
+Ao fazer uso de um ambiente simulado para realizar experimentos, possibilitamos que sejam reprodutíveis.
+Utilizar \textit{scripts} para geração de carga também permitirá reproduzir experimentos (caso os \textit{scripts} estejam disponíveis).
 Porém, ao usar \textit{testbeds} reais contendo dispositovs de IoT, essa característica não poderá ser garantida, haja vista que, ambientes externos podem apresentar grande variabilidade independentemente da
 execucação de um protocolo (por exemplo, elementos climáticos).
-A utilização de simulação para resolver problemas similares aos apresentados vem sendo adotada em diversos trabalhos~\cite{karnouskos_2009}~\cite{fleischer_1994}~\cite{dupuy_1990}~\cite{boukerche_2001}.
+A utilização de simulação para resolver problemas similares aos apresentados vem sendo adotada em diversos trabalhos~\citep{karnouskos_2009}~\citep{fleischer_1994}~\citep{dupuy_1990}~\citep{boukerche_2001}.
 
-Com o intuito de viabilizar experimentos com plataformas de Cidades Inteligentes, apresentamos nesta dissertação uma proposta de solução para criação de um ambiente simulado de experimentação.
-Para a construção desse ambiente fizemos uso de um simulador e de uma plataforma de Cidades Inteligentes, onde ambos são integrados de acordo com o cenário desejado.
-Para tanto, realizamos a implementação dessa solução utilizando o simulador InterSCSimulator~\cite{santana_17} e a plataforma InterSCity~\cite{arthur_17} atraveś de dois cenários de Cidades Inteligentes
+Com o intuito de viabilizar experimentos com plataformas de Cidades Inteligentes, apresentamos nesta dissertação uma proposta para criação de um ambiente simulado de experimentação.
+Para a construção desse ambiente, fizemos uso de um simulador e de uma plataforma de Cidades Inteligentes, onde ambos são integrados de acordo com o cenário desejado.
+Para tanto, realizamos a implementação dessa solução utilizando o simulador InterSCSimulator~\citep{santana_17} e a plataforma InterSCity~\citep{arthur_17} atraveś de dois cenários de Cidades Inteligentes
 apresentados como estudo de caso e descritos posteriormente.
 
 \section{Motivação}
