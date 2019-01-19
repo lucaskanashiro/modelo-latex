@@ -6,36 +6,35 @@
 
 Com o intuito de validar a arquitetura proposta foram realizados dois estudos de caso envolvendo diferentes cenários de Cidades Inteligentes em um ambiente simulado de experimentação.
 Priorizamos implementar cenários de experimentação onde pudéssemos explorar todos os requisitos apresentados no Capítulo \ref{cap:proposta}.
-Através desses dois experimentos pudemos validar a proposta de solução apresentada para construção de um ambiente simulado de experimentação para plataformas de Cidades Inteligentes.
+Através desses dois experimentos, pudemos validar a solução apresentada para construção de um ambiente simulado de experimentação para plataformas de Cidades Inteligentes.
 Foi possível exercitar as principais funcionalidades necessárias para a realização de experimentos desse tipo, através da integração do InterSCSimulator e a plataforma InterSCity.
 
-No primeiro cenário realizamos experimentos no contexto de estacionamento inteligente (conhecido com \textit{Smart Parking}), onde carros circulam pela cidade e ao
-final do seu percurso procuram por uma vaga de estacionamento disponível mais próxima do seu destino, utilizando-se da plataforma para isso.
+No primeiro cenário, realizamos experimentos no contexto de estacionamento inteligente (conhecido com \textit{Smart Parking}), onde carros circulam pela cidade e, ao
+final do seu percurso, procuram por uma vaga de estacionamento disponível mais próxima do seu destino, utilizando-se da plataforma para isso.
 Nesse cenário, incluímos um novo agente à simulação e implementamos um mecanismo para publicação dos eventos ocorridos e requisição a serviços da plataforma em tempo real
 e de forma assíncrona.
 
 O segundo cenário de experimentação envolve o tráfego de carros inteligente através da utilização de Placas de Mensagens Variadas (PMVs) espalhadas pela cidade.
 Nesse cenário, a plataforma identifica trechos de maior trânsito e atua na cidade atualizando as mensagens apresentadas pelas PMVs em tempo real, notificando os
 motoristas da lentidão no trecho, que por sua vez podem recalcular a sua rota evitando congestionamentos.
-Para viabilizar esse experimento utilizamos das melhorias implementadas no primeiro cenário, modificamos o modelo de trânsito para melhor se adequar a realidade e
-implementamos o mecanismo de recebimento de comandos de atuação em tempo de execução.
+Para viabilizar esse experimento fizemos uso das melhorias implementadas no primeiro cenário acrescidas de outras tais como: modificação do modelo de trânsito para melhor se adequar a realidade e
+implementação do mecanismo de recebimento de comandos de atuação em tempo de execução.
 
-A seguir a arquitetura do simulador InterSCSimulator e da plataforma InterSCity para Cidades Inteligentes serão apresentadas, haja vista que essas foram as ferramentas utilizadas para o desenvolvimento
+A seguir a arquitetura do simulador InterSCSimulator e da plataforma InterSCity serão apresentadas, haja vista que essas foram as ferramentas utilizadas para o desenvolvimento
 dos estudos de caso.
 Além disso, cada um dos cenários de Cidades Inteligentes mencionados serão apresentados detalhadamente, visando exemplificar a implementação da arquitetura proposta e os resultados experimentais obtidos.
 Ao final, realizaremos uma análise crítica sobre os resultados obtidos, apontando possíveis melhorias a serem feitas.
 
 \section{Ferramentas}
 
-Neste trabalho integramos o simulador InterSCSimulator e a plataforma InterSCity para Cidades Inteligentes a fim de realizar os estudos de caso, para tanto, ambos serão detalhados quanto a sua respectiva 
-arquitetura.
+O simulador InterSCSimulator e a plataforma InterSCity serão detalhados quanto as suas respectivas arquiteturas.
 Faremos uma discussão de como os \textbf{requisitos fundamentais e de integração} apresentados no Capítulo \ref{cap:proposta} serão atendidos em cada ferramenta.
 
 \subsection{InterSCSimulator}
 
 O InterSCSimulator é um simulador de código aberto baseado em agentes para Cidades Inteligentes que oferece uma interface simples para definição de
-cenários de larga escala \cite{santana_17}.
-Pelo fato de ser possível configurar o tempo que dura um ciclo de simulação na ferramenta, ela já atende um dos \textbf{requisitos fundamentais}.
+cenários de larga escala \citep{santana_17}.
+Pelo fato de ser possível configurar o tempo que dura um ciclo de simulação na ferramenta, ela já atende um dos \textbf{requisitos fundamentais} descritos na Seção \ref{sec:requisitos}.
 Com isso, podemos dizer que um ciclo de simulação é igual a um segundo real.
 É sabido que é necessário termos uma execução com noção de tempo real (um segundo de simulação igual a aproximadamente um segundo real) e permitir a
 interferência em tempo de execução por terceiros para a construção desse ambiente integrado de experimentação.
@@ -43,10 +42,10 @@ interferência em tempo de execução por terceiros para a construção desse am
 Para atingir a escalabilidade mencionada, o InterSCSimulator foi implementado usando a linguagem \textit{Erlang}.
 Essa é uma linguagem funcional que visa facilitar a implementação de aplicações de larga escala, paralelas e distribuídas.
 Algumas características herdadas do modelo de atores, que é implementado pelo \textit{Erlang}, são: paralelismo, execução distribuída, tolerância a falhas e
-protocolo de comunicação \cite{santana_17}.
-Essa escalabilidade é importante para que possamos atender o \textbf{requisito fundamental} que diz respeito a capacidade de geração de grande massa de dados
+protocolo de comunicação \citep{santana_17}.
+Essa escalabilidade é importante para que possamos atender o \textbf{requisito fundamental} que diz respeito à capacidade de geração de grande massa de dados
 para a plataforma.
-O InterSCSimulator é capaz de simular cenários com milhões de agentes executando simultaneamente, sendo assim possibilita trabalhar em uma escala realista para cidades de grande porte.
+O InterSCSimulator é capaz de simular cenários com milhões de agentes executando simultaneamente, possibilitando trabalhar-se em uma escala realista para cidades de grande porte.
 
 O InterSCSimulator foi implementado por Eduardo Zambom Santana, doutorando do nosso grupo de pesquisa, baseado no simulador de âmbito geral \textit{Sim-Diasca}.
 A Figura \ref{fig:simulator_architecture} representa a sua arquitetura da seguinte forma: em azul estão os diferentes tipos de agentes que podem existir no ambiente
@@ -60,32 +59,33 @@ Tudo isso sendo executado no topo do simulador \textit{Sim-Diasca}.
 	\label{fig:simulator_architecture}
 \end{figure}
 
-Fazendo um paralelo com um dos \textbf{requisito de integração}, cada \textit{Recurso} da cidade pode ser modelado como um agente da simulação, ou seja, um carro, uma vaga de estacionamento ou um ponto
-de parada de ônibus serão representados como agentes (caixas azuis na Figura \ref{fig:simulator_architecture}) na arquitetura do InterSCSimulator.
+Fazendo um paralelo com um dos \textbf{requisitos de integração}, cada \textit{Recurso} da cidade pode ser modelado como um agente da simulação, ou seja, um carro, uma vaga de estacionamento ou um ponto
+de parada de ônibus serão representados como agentes (caixas azuis na Figura \ref{fig:simulator_architecture}).
 Na definição desses agentes especificamos o seu comportamento a cada passo da simulação.
 Com isso, podemos descrever quais as \textit{Capacidades} de cada agente e adotar modelos compatíveis com a realidade das cidades modernas.
-O interessante dessa arquitetura baseada em agentes é o fato da implementação dos mesmos terem um alto grau de independência, onde é preciso apenas a definição das mensagens que serão trocadas em tempo
+Por exemplo, podemos determinar que um agente do tipo carro envie sua localização a cada passo da simulação e que ele recalcule a sua rota apenas quando deparado com uma PMV.
+O interessante dessa arquitetura baseada em agentes é o fato da sua implementação ter um alto grau de independência, onde é preciso apenas a definição das mensagens que serão trocadas em tempo
 de execução.
 
 No contexto desta dissertação, foi adicionado um novo elemento à arquitetura da ferramenta para troca de dados com sistemas externos em tempo de execução,
-sendo esse um dos \textbf{requisitos fundamental e de integração} para obtermos um ambiente realista de experimentação.
-Esse novo elemento nada mais é do que um novo agente, onde o seu papel é receber e enviar mensagens de sensores e atuadores, seja no contexto de outros agentes ou de outros sistemas.
+sendo esse um dos \textbf{requisitos fundamentais e de integração} para obtermos um ambiente realista de experimentação.
+Esse novo elemento nada mais é do que um novo agente, cujo papel é receber e enviar mensagens de sensores e atuadores, seja no contexto de outros agentes ou de outros sistemas.
 
-Na implementação de um agente do InterSCSimulator podemos definir diversos comportamentos em diferentes momentos do seu cliclo de vida.
+Na implementação de um agente do InterSCSimulator, podemos definir diversos comportamentos em diferentes momentos do seu cliclo de vida.
 É possível especificar o que será feito durante a sua criação, a sua destruição, a sua primeira ação na simulação e durante cada ciclo de execução.
 Com isso, condições e caminhos dependentes do estado da simulação podem ser definidos para cada um dos tipos de agentes, flexibilizando a implementação dos
 mais diversos modelos e formas de prover suas capacidades.
 Essa liberdade para implementação de diversos comportamentos dos agentes nos permite usar modelos realistas e viabilizar as capacidades dos recursos no contexto das cidades,
-atendendo os \textbf{requisitos fundamental e de integração}.
-Por exemplo, um carro após a sua partida em direção ao seu destino, calcula a cada ciclo de execução o fluxo de carros na via em que se encontra para o cálculo da
-sua velocidade naquele instante, além de publicar a sua atual posição.
+atendendo aos \textbf{requisitos fundamentais e de integração}.
+Por exemplo, um carro, após a sua partida em direção ao seu destino, calcula a cada ciclo de execução o fluxo de carros na via em que se encontra para o cálculo da
+sua velocidade naquele instante, além de publicar a sua posição atual.
 Nesse caso, podemos utilizar os mais diversos modelos matemáticos para calcular o fluxo de carros ou para determinar a sua velocidade, ao passo que a sua capacidade
 de publicar sua localização georreferenciada também é atendida.
 
 Na Figura \ref{fig:simulator_components}, são apresentados os componentes do simulador.
-Inicialmente são dadas entradas para a simulação (arquivos XML) que em conjunto formam o cenário a ser simulado, esse cenário é executado e a
-saída é criada com todos os eventos ocorridos na simulação.
-A partir dessa saída existe a possibilidade de geração de uma visualização em um mapa ou através de gráficos.
+Inicialmente são dadas entradas para a simulação (arquivos XML) que em conjunto formam o cenário a ser simulado.
+Esse cenário é executado e a saída é criada com todos os eventos ocorridos na simulação.
+A partir dessa saída, existe a possibilidade de geração de uma visualização em um mapa ou através de gráficos.
 
 \begin{figure}[ht]
 	\centering
@@ -95,42 +95,40 @@ A partir dessa saída existe a possibilidade de geração de uma visualização 
 \end{figure}
 
 Como entrada, o InterSCSimulator recebe três arquivos XML.
-O \textit{config.xml} contém parâmetros da simulação, sendo eles o tempo total, o formato do
+O \textit{config.xml} contém parâmetros da simulação: o tempo total, o formato do
 arquivo de saída e o caminho para o diretório contendo os outros arquivos de entrada e para geração do arquivo de saída.
-O grafo representando a infraestrutura rodoviária da cidade é descrito no arquivo \textit{map.xml}, nesse grafo as vias são correspondentes as arestas e as esquinas entre
-duas ou mais vias aos nós.
-E por fim, as viagens a serem executadas são especificadas no arquivo \textit{trips.xml}, cada viagem contendo o seu tempo de início, modo de transporte, origem e destino.
+O grafo representando a infraestrutura rodoviária da cidade é descrito no arquivo \textit{map.xml}: as vias são representadas pelas arestas e as esquinas entre
+duas ou mais vias pelos nós.
+Por fim, as viagens a serem executadas são especificadas no arquivo \textit{trips.xml}, cada viagem contendo o seu tempo de início, modo de transporte, origem e destino.
 Todas as ações realizadas pelos agentes são salvas no arquivo \textit{output.xml}, podendo haver quatro ações possíveis: 1) início de viagem, 2) saída de uma via,
 3) entrada em uma via, e 4) chegada ao destino final.
 O tempo, a localização e o modo de transporte utilizado pelo agente são registrados quando essas ações são salvas.
 
-No trabalho realizado por Eduardo Zambom Santana foi desenvolvido um simulador de larga escala, que é capaz de simular mais de 4 milhões de
-agentes se movendo pela cidade de São Paulo~\cite{santana_17}.
-Os modos de transportes suportados até então são: carro, ônibus, metrô e a pé.
-Neste trabalho além de melhorias feitas nos modelos existentes, novos agentes foram adicionados ao simulador, além da nova possibilidade de publicação e o recebimento de
+Os modos de transportes suportados até o momento são: carro, ônibus, metrô e a pé.
+Neste trabalho, além de melhorias feitas nos modelos existentes, novos agentes foram adicionados ao simulador, além da nova possibilidade de publicação e o recebimento de
 eventos em tempo de execução de maneira assíncrona.
 
 \subsection{Plataforma InterSCity}
 \label{sec:interscity}
 
 A plataforma InterSCity é um projeto de código aberto, baseado em microsserviços que visa permitir a pesquisa colaborativa, desenvolvimento e experimentos em Cidades
-Inteligentes~\cite{arthur_17}.
-A plataforma foi desenvolvida baseada em uma arquitetura de referência para plataformas de Cidades Inteligentes~\cite{santana_2016}, ela provê um conjunto de serviços
-alto-nível baseado em nuvem para gerenciar recursos de IoT heterogêneos~\cite{arthur_17}.
+Inteligentes~\citep{arthur_17}.
+A plataforma foi desenvolvida baseada em uma arquitetura de referência para plataformas de Cidades Inteligentes~\citep{santana_2016}, ela provê um conjunto de serviços de
+alto-nível baseado em nuvem para gerenciar recursos de IoT heterogêneos.
 
-O projeto InterSCity visa solucionar dois dos principais problemas arquiteturais no desenvolvimento de uma plataforma de alta qualidade que possa ser usada na prática, no
-contexto de Cidades Inteligentes: escalabilidade e evolução do software~\cite{arthur_17}.
+O InterSCity visa solucionar dois dos principais problemas arquiteturais no desenvolvimento de uma plataforma de alta qualidade que possa ser usada na prática, no
+contexto de Cidades Inteligentes: escalabilidade e evolução do software~\citep{arthur_17}.
 Escalabilidade é necessária pelo fato da plataforma ter que interagir com um grande número de dispositivos IoT espalhados pela cidade, milhões de usuários e
 um grande tráfego de dados.
-Como as cidades mudam constantemente, a questão da evolução é essencial, já que requisitos podem surgir e/ou mudar a qualquer momento, adaptar a plataforma para modificar e/ou incorporar novas
-funcionalidades, não deve ser um empecilho.
-Para resolver esses dois problemas apresentados, foram adotadas as seguintes estratégias~\cite{arthur_17}:
+Como as cidades mudam constantemente, a questão da evolução é essencial, já que requisitos podem surgir e/ou mudar a qualquer momento.
+Adaptar a plataforma para modificar e/ou incorporar novas funcionalidades, não deve ser um empecilho.
+Para resolver esses dois problemas apresentados, foram adotadas as seguintes estratégias:
 
 \begin{itemize}
 	\item Modularidade via microsserviços
 	\item Modelos e dados distribuídos
 	\item Evolução descentralizada
-	\item Reuso de projetos de software livre
+	\item Reúso de projetos de software livre
 	\item Adoção de padrões abertos
 	\item Comunicação síncrona e assíncrona
 	\item Serviços livres de estado
@@ -140,7 +138,7 @@ A Figura \ref{fig:platform_architecture} apresenta a arquitetura da plataforma I
 Atualmente, ela é composta de 7 microsserviços:
 \textit{Resource Adaptor}, oferece uma abstração para comunicação com os dispositivos IoT;
 \textit{Data Collector}, responsável por coletar os dados dos sensores conectados;
-\textit{Actuator Controller}, oferece uma interface para atuação junto aos dispositivos de IoT com tais capacidades;
+\textit{Actuator Controller}, oferece uma interface para atuação junto aos dispositivos de IoT com tal capacidade;
 \textit{Resource Catalog}, possui dados estáticos dos recursos da cidade cadastrados;
 \textit{Resource Discovery}, provê um serviço de descoberta de recursos;
 \textit{Data Processor}, oferece um serviço de processamento de dados em tempo real e histórico;
@@ -153,25 +151,25 @@ e \textit{Resource Viewer}, disponibiliza uma visualização simples dos recurso
 	\label{fig:platform_architecture}
 \end{figure}
 
-A comunicação entre esses microsserviços pode se dar de maneira síncrona ou assíncrona dependendo da situação.
+A comunicação entre esses microsserviços pode se dar de maneira síncrona ou assíncrona, dependendo da situação.
 A comunicação síncrona é feita via API \textit{Restful}, ou seja, requisições HTTP; e a assíncrona se dá via RabbitMQ\footnote{https://www.rabbitmq.com/}, uma implementação do protocolo AMQP.
-O objetivo do protocolo AMQP é criar um padrão aberto para troca de mensagens assíncronas interoperável e de larga escala~\cite{vinoski_2006}.
+O objetivo do protocolo AMQP é criar um padrão aberto para troca de mensagens assíncronas interoperável e de larga escala~\citep{vinoski_2006}.
 A principal vantagem desse protocolo é permitir que o \textit{broker} de mensagens tome as decisões de roteamento, não necessitando a aplicação ter conhecimento
-desse processo~\cite{vinoski_2006}.
+desse processo~\citep{vinoski_2006}.
 
 A plataforma traz uma abstração chamada \textit{Resource}, que representa um recurso real da cidade, como ônibus, hospital, paradas de ônibus.
 Cada um desses \textit{Resources} possuem \textit{Capabilities}, que podem ser de sensoriamento ou atuação, usualmente vinculados a algum tipo de dispositivo de IoT,
 como capacidade de medir temperatura ou capacidade de mudar o estado de um semáforo.
-Esses conceitos são os mesmos apresentados como requisitos para a construção de um ambiente integrado de experimentação para Cidades Inteligentes.
-Como apresentado na seção anterior, semânticamente, esses recursos e capacidades aqui apresentados estarão associados a agentes e a definição de ações durante o seu
+Esses conceitos são os mesmos apresentados na Seção \ref{sec:requisitos}, como requisitos para a construção de um ambiente integrado de experimentação para Cidades Inteligentes.
+Como apresentado na seção anterior, semanticamente, esses recursos e capacidades aqui apresentados estarão associados a agentes e à definição de ações durante o seu
 ciclo de vida no InterSCSimulator.
 
-Nas seções a seguir serão apresentados os dois estudos de caso envolvendo estacionamento e tráfego de carros inteligente que fizeram uso do simulador InterSCSimulator e da plataforma InterSCity
+Nas seções a seguir, serão apresentados os dois estudos de caso envolvendo estacionamento e tráfego de carros inteligente que fizeram uso do InterSCSimulator e da plataforma InterSCity
 para Cidades Inteligentes.
 
 \section{Estacionamento Inteligente}
 
-Neste estudo de caso, no contexto de estacionamento inteligente, simulamos motoristas realizando seus respectivos percursos de carro e ao final procurando uma vaga disponível mais próxima ao
+Neste estudo de caso, simulamos motoristas realizando seus respectivos percursos de carro e ao final procurando uma vaga disponível mais próxima ao
 seu destino, provavelmente utilizando um aplicativo móvel que se comunica com a plataforma InterSCity.
 Esse tipo de aplicativo poderia evitar alguns transtornos para os motoristas na árdua missão de estacionar seus carros no centro das grandes metrópoles.
 
@@ -181,22 +179,22 @@ A implementação deste cenário seguindo a arquitetura proposta no Capítulo \r
 \label{sec:smart_parking}
 
 Ao resgatar os conceitos de recursos da cidade e capacidades para este cenário, temos os carros e as vagas de estacionamento sendo recursos, onde os carros são capazes de
-fornecer a sua geolocalização (por exemplo, via GPS) e as vagas de fornecer informação quanto a sua disponibilidade (por exemplo, através de sensores infravermelho e uma
-redes de sensores).
+fornecer a sua geolocalização (por exemplo, via GPS) e as vagas de fornecer informação quanto à sua disponibilidade (por exemplo, através de sensores infravermelhos e uma
+rede de sensores).
 
 Este cenário foi definido com o intuito de realizar experimentos envolvendo o serviço de descoberta de recursos da plataforma InterSCity.
 Portanto, o aplicativo enviaria a posição do carro naquele momento, o seu destino final e o raio de busca, e a plataforma traria uma lista de vagas de estacionamento
 disponíveis nas proximidades.
 Já no InterSCSimulator, foi necessário realizar algumas melhorias para que os \textbf{requisitos fundamentais} fossem atendidos.
 Um novo agente para gerenciar as vagas de estacionamento da cidade, chamado \textit{Parking Controller}, foi implementado.
-Esse agente possui a responsabilidade de gerenciar e armazenar dados referentes as vagas de estacionamento, e fazer a interface de comunicação com o componente de
+Esse agente possui a responsabilidade de gerenciar e armazenar dados referentes às vagas de estacionamento e fazer a interface de comunicação com o componente de
 integração que será apresentado mais adiante.
-Além disso, modificamos o modelo de viagem do agente \textit{Carro}.
+Além disso, modificamos o modelo de viagem do agente do tipo carro.
 Anteriormente, o \textit{Carro} saia de uma origem e percorria o seu trajeto até o destino, agora, ao chegar próximo do seu destino, ele requisita uma vaga disponível mais
-próxima e se dirige até a mesma.
-Com essas melhorias pudemos simular um cenário que se aproxima da realidade.
+próxima e se dirige até ela.
+Com essas melhorias, pudemos simular um cenário que se aproxima da realidade.
 
-Para ilustrar o modelo descrito, apresentamos o ciclo de execução de um agente \textit{Carro} neste cenário:
+Para ilustrar o modelo descrito, apresentamos o ciclo de execução de um agente carro neste cenário:
 
 \begin{enumerate}
     \item O agente \textit{Carro} é criado
@@ -207,29 +205,29 @@ Para ilustrar o modelo descrito, apresentamos o ciclo de execução de um agente
 
     \item Ao chegar no nó anterior ao seu destino, uma vaga de estacionamento disponível é requisitada ao agente \textit{Parking Controller}
 
-    \item Ao receber a vaga de estacionamento, o seu trajeto é recalculado em direção a mesma
+    \item Ao receber a vaga de estacionamento, o seu trajeto é recalculado em direção a ela
 
     \item O agente se direciona e estaciona na vaga descoberta 
 \end{enumerate}
 
-Um fluxo alternativo a essa execução seria o carro modificar o seu percurso em direção da vaga de estacionamento (disponível até então), e ao chegar nela outro
+Um fluxo alternativo a essa execução seria o carro modificar o seu percurso em direção à vaga de estacionamento (disponível até então), e ao chegar a ela outro
 carro a ter ocupado antes, sendo esse um caso comum nas grandes cidades.
 Nesse caso, outra vaga de estacionamento é requisitada aumentando o seu raio de busca com o intuito de sempre encontrar vagas disponíveis.
 Caso o agente do tipo carro necessitar realizar mais de três buscas de vagas disponíveis, o mesmo encerra a sua execução.
 
 Quando o agente \textit{Carro} por fim estaciona em uma vaga disponível, o agente \textit{Parking Controller} é notificado e atualiza a sua estrutura de dados indicando
 que a vaga foi ocupada pelo carro.
-Além do mais, esse agente é responsável por atualizar o estado da vaga de estacionamento na plataforma.
+Esse agente é responsável também por atualizar o estado da vaga de estacionamento na plataforma.
 
-Agora pensando nos \textbf{requisitos de integração}, o simulador precisa requisitar a plataforma em busca de vagas disponíveis mais próximas, e atualizar o estado
+Agora pensando nos \textbf{requisitos de integração}, o simulador precisa requisitar a plataforma em busca de vagas disponíveis mais próximas e atualizar o estado
 das vagas de estacionamento.
 A plataforma InterSCity provê uma API \textit{Restful} para comunicação com seus serviços (como o de descoberta de recursos), e o estado dos seus recursos podem ser
 atualizados através da própria API ou via protocolo AMQP (\textit{Advanced Message Queuing Protocol}).
 Esse levantamento é importante para a tomada de decisão de quais as responsabilidades e como será implementado o componente de integração.
 Tendo em vista que a complexidade do componente de integração deve ser a menor possível, e a não existência de um meio de publicação de eventos em tempo de execução
 no InterSCSimulator, decidimos utilizar o RabbitMQ (implementação do protocolo AMQP) na implementação desse novo meio de comunicação.
-Com isso, o simulador poderia atualizar o estado das vagas diretamente na plataforma de forma assíncrona, sem necessidade de auxílio do componente de integração.
-As requisições HTTP feitas ao serviço de descoberta da plataforma seriam feitas pelo componente de integração, principalmente pelo fato de requisições HTTP serem
+Com isso, o simulador pode atualizar o estado das vagas diretamente na plataforma de forma assíncrona, sem necessidade de auxílio do componente de integração.
+As requisições HTTP feitas ao serviço de descoberta da plataforma forma realizadas pelo componente de integração, principalmente pelo fato de requisições HTTP serem
 síncronas, o que poderia travar a simulação na espera por uma resposta.
 
 Para facilitar o entendimento da integração realizada, dividiremos a explicação em duas partes: a primeira visando a requisição de vagas disponíveis mais próximas
@@ -241,9 +239,9 @@ O componente de integração foi chamado de \textit{Parking Spot Discoverer}, e 
 simulação via troca de mensagens.
 O uso do componente de integração se fez necessário para que a simulação exerça a carga que aplicações exerceriam utilizando o protocolo HTTP para acessar
 a API \textit{Restful}.
-Como dito, requisições HTTP são síncronas, e a realização das mesmas dentro da simulação atrasaria consideravelmente a sua finalização, já que bloquearia a
+Como dito, requisições HTTP são síncronas, e sua realização dentro da simulação atrasaria consideravelmente a sua finalização, já que bloquearia a
 execução dos agentes enquanto aguardariam a resposta da plataforma.
-Antes de chegarmos a tal solução implementamos uma versão onde o próprio simulador realizava requisições HTTP para a plataforma em tempo de execução, entretanto,
+Antes de chegarmos a tal solução, implementamos uma versão onde o próprio simulador realizava requisições HTTP para a plataforma em tempo de execução, entretanto,
 essa solução gerou um enorme gargalo.
 Descrevemos abaixo o fluxo de atividades apresentado na Figura \ref{fig:descoberta}.
 
@@ -251,7 +249,7 @@ Descrevemos abaixo o fluxo de atividades apresentado na Figura \ref{fig:descober
     \item Ao chegar a um nó, antes do seu destino, o \textit{Car} solicita a vaga de estacionamento para o agente \textit{Parking Controller}, passando a sua
 	localização como parâmetro.
 
-	\item O agente \textit{Parking Controller} então envia a localização para o \textit{Parking Spot Discoverer} que solicita a vaga disponível mais próxima,
+	\item O agente \textit{Parking Controller} envia a localização para o \textit{Parking Spot Discoverer} que solicita a vaga disponível mais próxima,
 	em um raio de 500 metros.
 
 	\item O \textit{Parking Spot Discoverer} faz uma requisição HTTP para o serviço de descoberta da plataforma que retorna a vaga em questão.
@@ -303,27 +301,29 @@ Os resultados obtidos serão apresentados na próxima seção.
 \subsection{Experimento}
 \label{sec:exp_smart_parking}
 
-Neste experimento, tentamos verificar a escalabilidade dos microsserviços envolvidos da plataforma InterSCity, por isso utilizamos dados reais de uma das maiores megalópoles do mundo: São Paulo.
+Neste experimento, tentamos verificar a escalabilidade dos microsserviços envolvidos da plataforma InterSCity, para isso utilizamos dados reais de uma das maiores metrópoles do mundo: São Paulo.
 Dados abertos da cidade de São Paulo foram utilizados para a definição do cenário de simulação do ambiente integrado.
 Utilizamos dados extraídos da pesquida OD (Origem-Destino) realizada pela Companhia de Metrô da cidade de São Paulo e do OpenStreet Maps para a definição de cenário.
 A seguir, esses dados, bem como suas fontes, utilizados na configuração do experimento serão detalhados:
 
 \begin{itemize}
     \item \textbf{Pesquisa Origem-Destino (OD)}: criamos as viagens de carro simuladas com base na pesquisa OD realizada pela Companhia de Metrô de São Paulo em 2007.
-        \footnote{Pesquisa Origem-Destino - http://goo.gl/Te2SX7.}
+        \footnote{Pesquisa Origem-Destino - https://transparencia.metrosp.com.br/dataset/pesquisa-origem-e-destino/resource/dd9382bf-fbbe-4ca4-bd32-bf6150a59c4b}
         Essa pesquisa descreve as viagens de 200.000 pessoas e extrapola os dados para toda a população da cidade.
         A pesquisa inclui informações sobre a origem, o destino, o modo de transporte e a hora de partida.
         Esses dados foram utilizados para definir o comportamento dos agentes do tipo carro na simulação.
-        Para gerar a carga de trabalho para a plataforma, simulamos o tráfego em São Paulo durante um dos horário de pico, das 5h40 às 8h40.
+        Para gerar a carga de trabalho para a plataforma, simulamos o tráfego em São Paulo durante um dos horários de pico, das 5h40 às 8h40.
         Na pesquisa OD, há 492.976 carros que começam suas viagens durante o intervalo de tempo considerado.
 
     \item \textbf{OpenStreet Maps}: para criar o grafo viário da cidade de São Paulo usado na simulação, usamos o mapa do OpenStreet Maps.
-        Este mapa contém todas as ruas e junções da cidade, em conjunto com um vasto número de atributos, como comprimento, capacidade e velocidade limite.
+        Esse mapa contém todas as ruas e junções da cidade, em conjunto com um vasto número de atributos, como comprimento, capacidade e velocidade limite.
         Tais informações são usadas pelo simulador para definir as rotas percorridas pelos carros durante a realização de suas viagens, bem como simular o impacto do tráfego na velocidade dos carros.
 
     \item \textbf{Vagas de Estacionamento}: criamos as vagas de estacionamento na simulação baseado nos dados obtidos através do OpenStreet Maps e do Zona Azul
         \footnote{http://www.cetsp.com.br/consultas/zona-azul/mapa-zona-azul/mapa-zona-azul.aspx}
         (serviço de estacionamento rotativo da cidade de São Paulo).
+        Informações de 467.741 vagas de estacionamento foram coletadas, elas foram derivadas a partir de dados de estacionamentos obtidos através do OpenStreet Maps, onde é possível obter
+        a capacidade máxima (número de carros), e de vagas individuais do Zona Azul.
 \end{itemize}
 
 Nas Figuras \ref{fig:map-spots-distribution} e \ref{fig:map-destinations-distribution}, são apresentadas as distribuições das vagas de estacionamento e destinos de viagens de carros, respectivamente,
@@ -347,34 +347,34 @@ Nesse caso, o usuário do aplicativo pararia de utilizá-lo e o agente do tipo c
     \label{fig:map-destinations-distribution}
 \end{figure}
 
-Tendo ideia do contexto e dos dados a serem utilizados nesse cenário experimental, os passos a seguir foram executados no decorrer deste experimento:
+Os passos a seguir foram executados no decorrer desse experimento:
 
 \begin{enumerate}
-    \item Executar uma instância em modo de produção da plataforma InterSCity em um ambiente de núvem. Esse ambiente proporciona maior flexibilidade para escalar os microsserviços em tempo
+    \item Execução de uma instância em modo de produção da plataforma InterSCity em um ambiente de nuvem. Esse ambiente proporciona maior flexibilidade para variação do número de microsserviços em tempo
         de execução.
 
-    \item Habilitar mecanismo de escala automática (\textit{auto-scaling}) para os microsserviços da plataforma baseado na variação de carga de trabalho.
+    \item Habilitação do mecanismo de elasticidade automática (\textit{auto-scaling}) para os microsserviços da plataforma baseado na variação de carga de trabalho.
 
     \item Configuração do simulador em um ambiente isolado da plataforma. Assim, o gasto de recursos computacionais do simulador não interfere no uso da plataforma.
 
-    \item Realizar a simulação do cenário de estacionamento inteligente.
+    \item Realização da simulação do cenário de estacionamento inteligente.
 
-    \item Monitorar o desempenho e o uso de recursos da plataforma durante toda a simulação.
+    \item Monitoramento do desempenho e o uso de recursos da plataforma durante toda a simulação.
 
-    \item Analizar os resultados obtidos.
+    \item Analize os resultados obtidos.
 \end{enumerate}
 
-Inicialmente, foi necessária a configuração de ambas as ferramentas em conjunto com seu componente de integração em um ambiente de núvem.
-Os microsserviços da plataforma InterSCity, o simulador InterSCSimulator e ferramentas auxiliares foram implantados na forma de \textit{containers} Docker \footnote{https://www.docker.com/}.
+Inicialmente, foi necessária a configuração de ambas as ferramentas em conjunto com seu componente de integração em um ambiente de nuvem.
+Os microsserviços da plataforma InterSCity, o simulador InterSCSimulator e ferramentas auxiliares foram implantados na forma de contêineres Docker \footnote{https://www.docker.com/}.
 Utilizamos a infraestrutura provida pelo Google Cloud Platform (GCP) \footnote{https://cloud.google.com/} para a realização do experimento, sendo esse o ambiente ideal para a execução da plataforma
 InteSCity, como visto na Seção \ref{sec:interscity}.
-No contexto do GCP, fizemos bastante uso do Google Kubernetes Engine (GKE), sendo esse um serviço que provê um ambiente gerenciado e de produção para implantação de \textit{containers} de
+No contexto do GCP, fizemos bastante uso do Google Kubernetes Engine (GKE), sendo esse um serviço que provê um ambiente gerenciado e de produção para implantação de contêineres de
 aplicações.
-O Kubernetes foi utilizado principalemte para automatizar a reinicialização, a replicação e dimensionamento do número de \textit{containers}.
+O Kubernetes foi utilizado principalemte para automatizar a reinicialização, a replicação e dimensionamento do número de contêineres.
 Além disso, o kubernetes traz uma vantagem para a reprodutibilidade do experimento que é a especificação da infraestrutura como código, garantindo a correta aplicação das regras de implantação.
-Todo o código fonte utilizado para a realização desse experimento está disponível em repositório aberto na web \footnote{https://github.com/LSS-USP/interscity-k8s-experiment}.
+Todo o código fonte utilizado para a realização desse experimento está disponível como software livre na web \footnote{https://github.com/LSS-USP/interscity-k8s-experiment}.
 
-Nós dividimos o \textit{cluster} utilizado em cinco diferentes \textit{pools} de máquinas virtuais para que o Kubernetes pudesse gerenciar os \textit{containers} no contexto apropriado.
+Nós dividimos o \textit{cluster} utilizado em cinco diferentes \textit{pools} de máquinas virtuais para que o Kubernetes pudesse gerenciar os contêineres no contexto apropriado.
 Na Figura \ref{fig:node-pools}, são apresentados os \textit{pools} de nós, contendo o número e o tipo de máquinas virtuais utilizadas por cada um no GCP
 \footnote{https://cloud.google.com/compute/docs/machine-types}.
 O \textit{pool} da plataforma possui 25 máquinas do tipo n1-standard-2 (2 CPUs virtuais e 7.5GB memória) e executa os microsserviços da plataforma InterSCity.
@@ -394,17 +394,17 @@ Finalmente, o InterSCSimulator é executado em sua própria máquina n1-highmem-
 \end{figure}
 
 
-Para o conjunto de nós da plataforma, o Kubernetes pode programar a implantação de vários \textit{containers} para a mesma máquina, dependendo da disponibilidade de recursos computacionais.
-A distribuição de \textit{containers} nos 25 nós pode diferir de uma rodada do experimento para a outra, e é uma variável que não controlamos durante o experimento.
-Para avaliar o impacto de tais variações na análise, realizamos 15 rodadas deste experimento e verificamos a variabilidade dos resultados.
+Para o conjunto de nós da plataforma, o Kubernetes pode programar a implantação de vários contêineres para a mesma máquina, dependendo da disponibilidade de recursos computacionais.
+A distribuição de contêineres nos 25 nós pode diferir de uma rodada do experimento para a outra, e é uma variável que não controlamos durante o experimento.
+Para avaliar o impacto de tais variações na análise, realizamos 15 rodadas desse experimento e verificamos a variabilidade dos resultados.
 
 Como estávamos interessados em avaliar a escalabilidade da plataforma considerando um cenário de Cidades Inteligentes com uma carga de trabalho variável, usamos dimensionamento automático
 (\textit{auto-scaling}) para o \textit{Resource Catalog}, \textit{Resource Discovery}, \textit{Data Collector}, já que eles são projetados para escalar horizontalmente.
-Para este propósito, especificamos um valor alvo de 60\% de uso da CPU para cada um desses serviços, permitindo que o sistema aumente ou diminua o número de \textit{containers} por serviço baseado nisso.
-O sistema balanceia a carga de trabalho para corresponder ao valor alvo de uso da CPU, considerando o uso médio da CPU dos \textit{containers} em execução, que é medido a cada 30 segundos.
-Inicialmente, cada serviço tem quatro \textit{containers}, que é definido como o número mínimo de \textit{containers} em execução.
-Este número pode aumentar a medida que os recursos computacionais ficarem disponíveis no \textit{pool} de nós da plataforma.
-Os \textit{containers} são executados por trás de um serviço de balanceamento de carga.
+Para esse propósito, especificamos um valor alvo de 60\% de uso da CPU para cada um desses serviços, permitindo que o sistema aumente ou diminua o número de contêineres por serviço baseado nisso.
+O sistema balanceia a carga de trabalho para corresponder ao valor alvo de uso da CPU, considerando o uso médio da CPU dos contêineres em execução, que é medido a cada 30 segundos.
+Inicialmente, cada serviço tem quatro contêineres, que é definido como o número mínimo de contêineres em execução.
+Esse número pode aumentar à medida que os recursos computacionais ficarem disponíveis no \textit{pool} de nós da plataforma.
+Os contêineres são executados por trás de um serviço de balanceamento de carga.
 
 Embora possamos nos beneficiar das propriedades de elasticidade do GCP, adicionando e removendo automaticamente nós ao \textit{cluster} através da sua funcionalidade de dimensionamento automático,
 isso introduziria outro nível de incerteza em nosso experimento, já que, na nossa experiência, o tempo levado para criar novas máquinas virtuais pode variar consideravelmente.
@@ -425,13 +425,13 @@ Considerando que para responder cada uma dessas requisições requer um conjunto
 	\label{fig:workload}
 \end{figure}
 
-A Figura \ref{fig:auto-scaling} mostra a criação e destruição dinâmica de \textit{containers} da plataforma InterSCity devido à aplicação da estratégia de dimensionamento automático em uma única rodada
+A Figura \ref{fig:auto-scaling} mostra a criação e destruição dinâmica de contêineres da plataforma InterSCity devido à aplicação da estratégia de dimensionamento automático em uma única rodada
 do experimento.
-A replicação inicial das instâncias de Kong (balaceador de carga) foi suficiente para suportar toda a carga de trabalho durante todo o experimento, já que ele executa apenas a tarefa de baixa latência
+A replicação inicial das instâncias de Kong (balaceador de carga) foi suficiente para suportar toda a carga de trabalho durante todo o experimento, já que ele executa apenas a tarefa leve
 de encaminhar as requisições de entrada aos microsserviços apropriados.
 Por sua vez, os três microsserviços da plataforma, que são responsáveis por processar as requisições de fato, foram replicados de acordo com o aumento da carga de trabalho.
-Portanto, o número de \textit{containers} para esses serviços variou de 4 a 25.
-É importante mencionar que o mecanismo de elasticidade da plataforma InterSCity também reduziu o número de \textit{containers} à medida que a demanda diminuiu.
+Portanto, o número de contêineres para cada um desses serviços variou de 4 a 25.
+É importante mencionar que o mecanismo de elasticidade da plataforma InterSCity também reduziu o número de contêineres à medida que a demanda diminuiu.
 Como pode ser visto na Figura \ref{fig:auto-scaling}, dentre os microsserviços da plataforma, o \textit{Data Collector} foi o microsserviço que consumiu menos tempo de CPU.
 
 \begin{figure}[ht]
@@ -445,11 +445,10 @@ Como pode ser visto na Figura \ref{fig:auto-scaling}, dentre os microsserviços 
 A Figura \ref{fig:throughput} mostra a taxa de vazão (\textit{throughput}) média da plataforma InterSCity ao longo da duração do experimento.
 A taxa de vazão é definida como a taxa de respostas bem sucedidas recebidas pelo componente de integração.
 O resultado indica que a taxa de vazão corresponde de perto a carga de trabalho gerada, como pode ser visto comparando as Figuras \ref{fig:workload} e \ref{fig:throughput}.
-Apesar das variações no comportamento dos condutores de carros ao longo do experimento, a plataforma foi capaz de lidar com a demanda variável graças a sua escalabilidade e funcionalidade de dimensionamento
-automático, descritos na Seção \ref{sec:interscity}.
-No entanto, devemos mencionar que a taxa de vazão não correspondeu exatamente à carga de trabalho gerada, pois algumas requisições falharam, representando quase 0,6\% de todas as requisições em média.
+A plataforma foi capaz de lidar com a demanda variável graças à sua escalabilidade e funcionalidade de dimensionamento automático, descritos na Seção \ref{sec:interscity}.
+No entanto, devemos mencionar que a taxa de vazão não correspondeu exatamente à carga de trabalho gerada, pois algumas requisições falharam, representando em média quase 0,6\% de todas as requisições.
 As requisições com falha incluem aquelas que tiveram respostas com um código de erro HTTP, bem como aquelas que não foram concluídos devido a recusa de conexão ou \textit{timeout}.
-Todavia, consideramos que, ser capaz de lidar com mais de 99,5\% das requisições sob alta carga é satisfatório; um usuário típico perceberia uma falha a cada 200 requisições, o que é muito bom para
+Todavia, consideramos que, ser capaz de lidar com, em média, mais de 99,4\% das requisições sob alta carga é satisfatório; um usuário típico perceberia uma falha a cada 200 requisições, o que é muito bom para
 este tipo de aplicação de Cidades Inteligentes em tempo real.
 
 \begin{figure}[ht]
@@ -460,15 +459,15 @@ este tipo de aplicação de Cidades Inteligentes em tempo real.
 \end{figure}
 
 
-Outro aspecto fundamental da avaliação de um sistema é analisar o desempenho da plataforma para lidar com requisições de aplicação com uma carga de trabalho variável.
-A este respeito, estamos interessados principalmente em analisar a degradação do desempenho e verificar se a plataforma está sendo dimensionada adequadamente para atender seus clientes dentro de tempos
+Outro aspecto fundamental da avaliação de um sistema é analisar o desempenho da plataforma para lidar com requisições de aplicações com uma carga de trabalho variável.
+A esse respeito, estamos interessados principalmente em analisar a degradação do desempenho e verificar se a plataforma está sendo dimensionada adequadamente para atender seus clientes dentro de tempos
 de resposta aceitáveis.
 Para tanto, coletamos o tempo de resposta do ponto de vista do cliente, como mostrado Figura \ref{fig:responsetime}.
 Durante a maior parte do experimento, a plataforma foi capaz de responder em menos de um segundo.
 No entanto, diferente da taxa de vazão, o impacto do maior período de demanda no tempo de resposta observado é perceptível, uma vez que, durante um intervalo curto (após 110 minutos de execução),
 o tempo médio de resposta foi maior que 1 segundo.
 O tempo de resposta voltou para 500 milisegundos depois disso.
-Entretanto, podemos ver que mesmo em períodos de alta carga, o tempo de resposta foi mantido abaixo de 2 segundos, o que é um resultado muito bom para este tipo de aplicação.
+Entretanto, podemos ver que, mesmo em períodos de alta carga, o tempo de resposta foi mantido abaixo de 2 segundos, o que é um resultado muito bom para esse tipo de aplicação.
 
 \begin{figure}[ht]
 	\centering
@@ -478,25 +477,33 @@ Entretanto, podemos ver que mesmo em períodos de alta carga, o tempo de respost
 \end{figure}
 
 
-Devemos ter em mente que a distribuição de \textit{containers} nos nós disponíveis podem impactar o tempo de resposta, pois vários \textit{containers} podem competir por recursos computacionais se estiverem
+Devemos ter em mente que a distribuição de contêineres nos nós disponíveis podem impactar o tempo de resposta, pois vários contêineres podem competir por recursos computacionais se estiverem
 sendo executados na mesma máquina.
 Além disso, embora o sistema realize a tarefa de dimensionamento automático a cada 30 segundos, não temos controle sobre o tempo que leva para um \textit{container} ser criado, implantado e ficar pronto
 para receber novas requisições.
-Por outro lado, essa distribuição também pode introduzir um efeito benéfico devido a possível implantação de serviços que constantemente interagem uns com os outros na mesma máquina, reduzindo a latência
+Por outro lado, essa distribuição também pode introduzir um efeito benéfico devido à possível implantação de serviços que constantemente interagem uns com os outros na mesma máquina, reduzindo a latência
 de rede e imprevisibilidade.
 
 Ao final desse estudo de caso, percebemos que não exercitamos todos os requisitos apresentados para a construção de um ambiente simulado e integrado para experimentação de plataformas de Cidades Inteligentes.
-Por isso, realizamos um segundo estudo de caso, onde a atuação no ambiente simulado se fez necessária.
-O mesmo será apresentado na seção seguinte.
+Por isso, realizamos um segundo estudo de caso, onde a \textbf{atuação} no ambiente simulado se fez necessária, apresentado na seção seguinte.
 
 \section{Tráfego de Carros Inteligente}
 
 Com o objetivo de exercitar o envio de comandos de atuação da plataforma para o ambiente simulado, que não foi explorado no cenário de estacionamento inteligente, definimos um novo cenário.
 Neste caso, visamos identificar trechos em vias da cidade com tráfego de carros anômalo (devido ao fechamento de ruas, acidentes, desastres naturais e etc.) e notificar
 previamente os motoristas para evitarem passar naquele trecho através de Placas de Mensagens Variadas (PMVs).
+Veja na Figura \ref{fig:pmv} uma PMV.
 Consideramos aqui uma anomalia uma variação considerável na velocidade média dos carros que trafegam naquele trecho de via naquele horário.
 Essas PMVs são posicionadas em pontos estratégicos da cidade e apresentam alertas aos motoristas em tempo real sobre possíveis anomalias no trânsito, e com isso motoristas
 podem mudar o seu percurso evitando maiores congestionamentos na cidade.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figuras/pmv.jpg}
+    \caption{Exemplo de Placa de Mensagem Variada.}
+	\label{fig:pmv}
+\end{figure}
+
 
 A implementação deste cenário seguindo a arquitetura proposta no Capítulo \ref{cap:proposta}, bem como o experimento realizado, serão discutidos nas seções seguintes.
 
