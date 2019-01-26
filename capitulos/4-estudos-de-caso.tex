@@ -494,8 +494,8 @@ Neste caso, visamos identificar trechos em vias da cidade com tráfego de carros
 previamente os motoristas para evitarem passar naquele trecho através de Placas de Mensagens Variadas (PMVs).
 Veja na Figura \ref{fig:pmv} uma PMV.
 Consideramos aqui uma anomalia uma variação considerável na velocidade média dos carros que trafegam naquele trecho de via naquele horário.
-Essas PMVs são posicionadas em pontos estratégicos da cidade e apresentam alertas aos motoristas em tempo real sobre possíveis anomalias no trânsito, e com isso motoristas
-podem mudar o seu percurso evitando maiores congestionamentos na cidade.
+Essas PMVs são posicionadas em pontos estratégicos da cidade e apresentam alertas aos motoristas em tempo real sobre possíveis anomalias no trânsito.
+E, com isso, motoristas podem mudar o seu percurso evitando maiores congestionamentos na cidade.
 
 \begin{figure}[ht]
 	\centering
@@ -513,18 +513,20 @@ A implementação deste cenário seguindo a arquitetura proposta no Capítulo \r
 Essencialmente, o cenário de tráfego de carros inteligente funciona da seguinte forma:
 
 \begin{enumerate}
-    \item A plataforma coleta dados históricos de carros para definir limiares (\textit{thresholds}) de velocidade média para cada trecho de via da cidade em cada horário.
+    \item A plataforma coleta dados históricos de posicionamento dos carros em seus trajetos, a partir desses pontos a velocidade média dos carros é calculada e o método MAD (\textit{Median Absolute Deviation}
+        - Desvio Absoluto da Mediana)\citep{leys_2013} é utilizado para definir limiares (\textit{thresholds}) de velocidade média para cada trecho de via da cidade em cada horário, sendo esses limiares
+        valores de velocidade média aceitáveis em um dia comum.
         Para isso, o ambiente simulado envia dados de posicionamento georreferenciado dos carros a cada ciclo de execução, simulando por exemplo um dispositivo que contém um
         sistema de GPRS (\textit{General Packet Radio Service}) + GPS (\textit{Global Positioning System}).
-        Com uma série de pontos de onde o carro passou em cada instante, se torna possível calcular a velocidade média do mesmo, logo obtemos a velocidade média de carros
+        Com uma série de pontos de onde o carro passou em cada instante, se torna possível calcular a sua velocidade média, logo obtemos a velocidade média de carros
         que passaram naquele trecho naquele dado momento durante todo o dia.
-        Tendo esses limiares, a plataforma se torna capaz de identificar anomalias na velocidade média dos carros em tempo real, verificando se a variação naquele instante
+        Tendo esses limiares calculados usando o MAD, a plataforma se torna capaz de identificar anomalias na velocidade média dos carros em tempo real, verificando se a variação naquele instante
         extrapola ou não o que foi identificado com os dados históricos.
 
     \item Ao identifiar uma anomalia de trânsito em algum trecho, a plataforma identifica as PMVs mais próximas do incidente e atualiza a sua mensagem informando os motoristas
         do ocorrido.
 
-    \item Caso o motorista passe por uma PMV contendo essa mensagem, ele verifica se o trecho mencionado faz parte do seu percurso. Sendo verdade, o mesmo recalcula a sua
+    \item Caso o motorista passe por uma PMV contendo essa mensagem, ele verifica se o trecho mencionado faz parte do seu percurso. Sendo verdade, ele recalcula a sua
         rota evitando maiores congestionamentos na região.
 \end{enumerate}
 
@@ -535,32 +537,33 @@ implementando a atuação em tempo real no ambiente simulado.
 
 Para realizar experimentos envolvendo essas funcionalidades da plataforma InterSCity, foi necessário implementar o conceito de PMVs, eventos de fechamentos de via e de
 processamento de comandos de atuação em tempo de execuação no InterSCSimulator.
-Além do mais, foi utilizada a publicação de eventos (dados de sensores) implementado para o cenário anterior, já que para o funcionamento do serviço de processamento de dados
+Foi utilizada a publicação de eventos (dados de sensores) implementado para o cenário anterior, já que para o funcionamento do serviço de processamento de dados
 em tempo real da plataforma precisamos enviar a cada ciclo de execução da simulação o posicionamento de todos os carros presentes.
-Sendo essas melhorias necessárias para atender os \textbf{requisitos fundamentais} para esse cenário.
+Essas funcionalidades são essenciais para atender os \textbf{requisitos fundamentais} para esse cenário.
 
 O modo de publicação de dados em tempo de execução no InterSCSimulator foi refatorado para melhor atender ambos os cenários implementados.
 Como visto no cenário anterior, a publicação de eventos da simulação se dava através do agente \textit{Parking Controller} (como pode ser visto na Figura \ref{fig:atualizacao}), já que
 até então o único tipo de evento publicado pelo simulador era a atualização da disponibilidade de uma vaga de estacionamento.
 No intuito de permitir que outros agentes da simulação também pudessem publicar os seus eventos, um novo agente chamado \textit{Publisher} foi criado, removendo essa responsabilidade
 anteriormente atribuída ao agente \textit{Parking Controller}.
-Desse modo, o agente do tipo carro também se tornou capaz de publicar a sua posição, onde agora a cada ciclo de execução é enviada uma mensagem a um agente \textit{Publisher}
-contendo sua localização.
+%Desse modo, o agente do tipo carro também se tornou capaz de publicar a sua posição, onde a cada ciclo de execução é enviada uma mensagem a um agente \textit{Publisher} contendo sua localização.
+Agora, qualquer agente da simulação que deseje publicar um evento deve apenas enviar uma mensagem ao \textit{Publisher} com o conteúdo do evento.
+Desse modo, o agente do tipo carro envia a cada ciclo de execução uma mensagem a um agente \textit{Publisher} contendo sua localização, tornando-se capaz de pulicar a sua posição.
 
 Visando tornar factível a simulação de eventos de fechamento de vias na cidade, adicionamos o conceito de eventos de trânsito ao InterSCSimulator.
 Um novo arquivo de entrada para o simulador e um novo agente foram adicionados.
 O novo arquivo de entrada (chamado por padrão \textit{events.xml}), contem uma lista de eventos de fechamento de via que serão agendados na simulação.
-Como pode ser visto na Listagem \ref{code:events} abaixo, cada evento é representado da seguinte forma:
-(i) o tipo do evento de trânsito;
-(ii) a via a ser fechada (uma aresta no grafo da cidade);
-(iii) o momento de início do evento;
-(iv) a duração do evento;
-(v) a porcentagem da capacidade do fluxo de carros que ainda estará em funcionamento, usada no caso de um fechamento parcial do trecho.
+Como pode ser visto na Listagem \ref{code:events}, cada evento é representado por uma lista de atributos separados por ponto e vírgula ('';``), e os atributos são os seguintes:
+(i) o tipo do evento de trânsito (\textit{close\_street} para fechamento de vias e \textit{reduce\_capacity} para redução da capacidade de vias);
+(ii) o número identificador da via a ser fechada (aresta no grafo da cidade);
+(iii) o número do ciclo de simulação onde deve ser iniciado o evento;
+(iv) o número de ciclos de simulação que deve durar o evento;
+(v) a porcentagem da capacidade do fluxo de carros que ainda estará em funcionamento, usada no caso de um fechamento parcial do trecho (se o evento for de fechamento de via deve-se utilizar o valor 0).
 O novo agente chamado \textit{Events Manager} é responsável por agendar todos esses eventos no início da simulação e alterar o grafo da cidade no momento programado.
 Quando o trecho da via é fechado, a aresta do grafo da cidade é removida momentaneamnte até o evento ser encerrado, impedindo assim a possibilidade de passagem de qualquer
 carro.
-Agora quando o evento apenas reduz a capacidade de fluxo de carros da via, modificamos a sua capacidade para atender o que foi programado até o evento ser encerrado,
-onde essa capacidade é um atributo dado àquela aresta do grafo.
+Quando o evento apenas reduz a capacidade de fluxo de carros da via, modificamos a sua capacidade para atender o que foi programado até o evento ser encerrado.
+Essa capacidade é um atributo dado àquela aresta do grafo.
 
 \lstset{
     language=xml,
@@ -584,26 +587,31 @@ onde essa capacidade é um atributo dado àquela aresta do grafo.
     emph={uuid,node},emphstyle={\color{magenta}}}
     \lstinputlisting{files/events.csv}
 
-Para a representação das PMVs no InterSCSimulator, foi criado um agente chamado \textit{PMV Manager} onde o seu papel era atualizar as mensagens de PMVs.
-As PMVs em si foram implementadas como atributos de vértices do grafo da cidade (sendo os vértices o encontro de duas ou mais vias), onde nesse atributo é guardada uma lista
-de trechos de vias (arestas) onde foram encontradas alguma anomalia no trânsito.
-Os agentes do tipo carro ao passar por um vértice que continha esse atributo, verificavam se alguma das arestas ali presentes faziam parte do seu trajeto ou não.
-Caso positivo, o seu percurso era recalculado, caso contrário o mesmo se mantinha inalterado.
+Para a representação das PMVs no InterSCSimulator, foi criado um agente chamado \textit{PMV Manager}.
+Seu papel é atualizar as mensagens de PMVs.
+As PMVs em si foram implementadas como atributos de vértices do grafo da cidade (sendo os vértices o encontro de duas ou mais vias).
+Nesse atributo, é guardada uma lista de trechos de vias (arestas) onde foram encontradas alguma anomalia no trânsito.
+Os agentes do tipo carro, ao passar por um vértice que contém esse atributo, verificam se alguma das arestas ali presentes fazem parte do seu trajeto ou não.
+Caso positivo, o seu percurso é recalculado.
+Caso contrário, ele se mantém inalterado.
 
-E a última implementação no InterSCSimulator necessária para atender os requisitos apresentados seguindo a arquitetura proposta, foi o recebimento de comandos de atuação e
-processamento dos mesmos em tempo de execução.
-Sendo essa uma funcionalidade fundamental para a atualização das PMVs em tempo de execução pela plataforma.
-Diante disso, mais um novo agente foi criado para ficar a espera desses comandos enviados pela plataforma, sendo ele chamado de \textit{Listener}.
-Como um comando de atuação pode ser enviado a qualquer momento, foi necessário esse novo agente, cuja única responsabilidade é receber esse comando e armazená-lo em uma
+A última implementação no InterSCSimulator necessária para atender os requisitos apresentados seguindo a arquitetura proposta foi o recebimento de comandos de atuação e
+seu processamento em tempo de execução.
+Essa funcionalidade é fundamental para a atualização das PMVs em tempo de execução pela plataforma.
+Diante disso, mais um novo agente foi criado para ficar à espera desses comandos enviados pela plataforma: o \textit{Listener}.
+Como um comando de atuação pode ser enviado a qualquer momento, foi necessário criar esse novo agente, cuja única responsabilidade é receber esse comando e armazená-lo em uma
 estrutura de dados, para que outros agentes não ficassem bloqueados (bloqueando também a simulação) a espera de tal acontecimento.
 Ou seja, esse agente fica em um laço (\textit{loop}) infinito a espera de uma mensagem que é enviada via AMQP (mesmo protocolo utilizado para publicação dos dados).
-A utilização do RabbitMQ foi escolhida devido a possibilidade da plataforma InterSCity enviar comandos de atuação através do mesmo, e como foi uma funcionalidade nova,
-decidimos utilizar a mesma tecnologia, reduzindo assim o problema de interoperabilidade.
-Quando um comando é recebido, no caso uma aresta de trecho anômalo a ser atualizada em uma PMV, ele armazena essa mensagem em uma estrutura de dados que será acessada no
-próximo ciclo de execução pelo \textit{PMV Manager}, que por sua vez atualizará o atributo da referida PMV (vértice no grafo).
+%A utilização do RabbitMQ foi escolhida devido a possibilidade da plataforma InterSCity enviar comandos de atuação através do mesmo, e como foi uma funcionalidade nova,
+%decidimos utilizar a mesma tecnologia, reduzindo assim o problema de interoperabilidade.
+Por essa ser uma nova funcionalidade, decidimos utilizar o mesmo protocolo e a mesma tecnologia utilizada pela plataforma InterSCity visando reduzir o problema de interoperabilidade.
+O RabbitMQ, que já vinha sendo utilizado pela plataforma para envio de comandos de atuação, foi selecionado como ferramenta para tratamento de eventos da simulação, tanto para publicação quanto para 
+recebimento.
+Quando um comando é recebido, no caso uma aresta de trecho anômalo a ser atualizada em uma PMV, o \textit{Listener} armazena essa mensagem em uma estrutura de dados que é acessada no
+próximo ciclo de execução pelo \textit{PMV Manager} que, por sua vez, atualiza o atributo da referida PMV (vértice no grafo).
 
 Após a apresentação das funcionalidades e melhorias implementadas, as duas vias de fluxo de comunicação entre o simulador e a plataforma serão apresentadas a seguir.
-Na Figura \ref{fig:smart_traffic_publish_data}, o passo a passo para a publicação dos dados de posicionamento de cada um dos carros a cada ciclo de execução é exposto.
+Na Figura \ref{fig:smart_traffic_publish_data}, os passos para a publicação dos dados de posicionamento de cada um dos carros a cada ciclo de execução são expostos.
 
 \begin{figure}[ht]
 	\centering
@@ -615,7 +623,7 @@ Na Figura \ref{fig:smart_traffic_publish_data}, o passo a passo para a publicaç
 \begin{enumerate}
     \item O agente do tipo carro a cada ciclo de execução envia uma mensagem para o agente \textit{Publisher} contendo a sua posição naquele dado momento.
 
-    \item O agente \textit{Publisher} se conecta ao \textit{broker} do RabbitMQ e publica uma mensagem contendo: o identificador do carro, o seu posicionamento, e o \textit{timestamp}.
+    \item O agente \textit{Publisher} se conecta ao \textit{broker} do RabbitMQ e publica uma mensagem contendo: o identificador do carro, o seu posicionamento e o \textit{timestamp}.
 
     \item Os microsserviços \textit{Resource Catalog} e \textit{Data Collector} são notificados e recebem tais dados. O \textit{Resource Catalog} atualiza o último dado monitorado
         daquele carro, e o \textit{Data Collector} atualiza a sua base de dados contendo todas as medições.
@@ -636,14 +644,14 @@ Lembrando que o gatilho para a execução desse processo é o serviço de proces
 \end{figure}
 
 \begin{enumerate}
-    \item O \textit{Data Processor} ao identificar uma anomalia no trânsito em determinado ponto da cidade, ele requisita para o \textit{Resource Discovery} as PMVs mais próximas
-        daquele ponto, para que as mesmas possam ser atualizados.
+    \item O \textit{Data Processor}, ao identificar uma anomalia no trânsito em determinado ponto da cidade, requisita ao \textit{Resource Discovery} as PMVs mais próximas
+        daquele ponto, para que elas possam ser atualizadas.
 
     \item Ao serem identificados as PMVs, o \textit{Data Processor} envia os identificadores das PMVs e do trecho anômalo para o \textit{Actuator Controller}.
 
-    \item O \textit{Actuator Controller} formata essas mensagens e publica as mesmas em um dos canais do RabbitMQ.
+    \item O \textit{Actuator Controller} formata essas mensagens e as publica em um dos canais do RabbitMQ.
 
-    \item O agente \textit{Listener}, cujo único papel é esperar por esse tipo de mensagem, recebe a mesma e a armazena em uma estrutura de dados compatilhada pelos agentes do simulador.
+    \item O agente \textit{Listener}, cujo único papel é esperar por esse tipo de mensagem, a recebe e a armazena em uma estrutura de dados compartilhada pelos agentes do simulador.
 
     \item O agente \textit{PMV Manager} verifica a presença dessa nova mensagem na estrutura de dados compatilhada, e atualiza o atributo que representa a PMV no vértice do grafo
         viário da cidade, adicionando mais esse trecho para a lista presente ou criando-a caso não exista nenhum outro trecho.
@@ -652,23 +660,23 @@ Lembrando que o gatilho para a execução desse processo é o serviço de proces
 Um ponto interessante desse segundo cenário, foi a não necessidade de um componente de integração, já que ambas as ferramentas se comunicam através do mesmo protocolo (inclusive a
 mesma ferramenta) e conseguem representar os mesmos conceitos de maneira equivalente.
 Esse é o cenário ideal para criação de um ambiente simulado de experimentação para uma plataforma de Cidades Inteligentes, já que não foi essencial a implementação desse
-componente extra, que como discutido, traria mais complexidade para o sistema, podendo aumentar o tempo de resposta entra as ferramentas.
+componente extra que, como discutido, traria mais complexidade para o sistema, podendo aumentar o tempo de resposta entra as ferramentas.
 Claro que tudo isso foi possível porque neste mesmo trabalho fizemos toda a implementação dos \textbf{requisitos fundamentais} apresentados, portanto,
 tivemos a oportunidade de tomar as decisões técnicas que facilitaram a integração entre as duas ferramentas.
 
 
 \subsection{Experimento}
 
-Esse experimento consistiu em três etapas.
+Esse experimento consistiu em três cenários.
 Conforme descrito na Seção \ref{sec:smart_traffic}, limiares (\textit{thresholds}) de velocidade média para cada trecho de via em cada horário do dia deveriam ser definidos.
-Portanto, a primeira etapa consistiu na simulação do trânsito da cidade sem nenhum evento de fechamento de via, ou seja, o trânsito normal da cidade.
-Para tanto, a aplicação de detecção de anomalias foi capaz de, com os dados de posicionamento de carros enviados a cada ciclo de execução, definir esses tais limiares.
-A segunda etapa, consistiu em simular o trânsito de carros na cidade com alguns eventos de fechamento de vias (representando ruas alagadas e acidentes de carro e etc.).
-Nessa etapa, simulamos o comportamento caótico visto nas grandes cidades, onde vias são interditadas e interferem diretamente no tráfego dos carros.
-Na última etapa, simulamos o mesmo comportamento da segunda etapa, mas adicionamos as PMVs para auxiliar os condutores de carros a contornar tais situações.
+Portanto, o primeiro cenário consistiu na simulação do trânsito da cidade sem nenhum evento de fechamento de via, ou seja, o trânsito normal da cidade.
+Para tanto, a aplicação de detecção de anomalias foi capaz de, com os dados de posicionamento de carros enviados a cada ciclo de execução, definir esses tais limiares através do método MAD.
+O segundo cenário, consistiu em simular o trânsito de carros na cidade com alguns eventos de fechamento de vias (representando ruas alagadas, acidentes de carro, etc.).
+Nesse cenário, simulamos o comportamento caótico visto nas grandes cidades, onde vias são interditadas e interferem diretamente no tráfego dos carros.
+No último cenário, simulamos o mesmo comportamento do segundo cenário, mas adicionamos as PMVs para auxiliar os condutores de carros a contornar tais situações.
 Tendo em vista que os limiares já haviam sido definidos, a aplicação, sem ter conhecimento prévio dessas vias fechadas, detectava automaticamente esses trechos e notificava os motoristas através da
 atualização de mensagens nas PMVs.
-O objetivo dessas três etapas era verificar o impacto do uso de PMVs no tempo de duração médio das viagens de carro em situações de incidentes que inviabilizam a utilização de certas vias em uma cidade.
+O objetivo desses três cenários era verificar o impacto do uso de PMVs no tempo de duração médio das viagens de carro em situações de incidentes que inviabilizam a utilização de certas vias em uma cidade.
 
 Para verificar o bom funcionamento desse cenário no ambiente simulado, dividimos esse experimento em dois.
 Na primeira parte, realizamos um experimento numa escala menor e com dados fictícios, visando meramente a validação do comportamento esperado e interação entre os componentes.
@@ -678,7 +686,7 @@ O código fonte para a execução do experimento e a análise apresentada, nesta
 
 \subsubsection{Validação}
 
-Nesse experimento inicial de validação, as três etapas com o que diz respeito ao número de eventos de fechamento de via e PMVs, se deram da seguinte forma:
+Nesse experimento inicial de validação, os três cenários com o que diz respeito ao número de eventos de fechamento de via e PMVs, se deram da seguinte forma:
 
 \begin{enumerate}
     \item Sem eventos de fechamento de via e sem PMVs
@@ -688,8 +696,8 @@ Nesse experimento inicial de validação, as três etapas com o que diz respeito
     \item Com um evento de fechamento de via e uma PMV
 \end{enumerate}
 
-Foram executadas 20 iterações de cada uma das etapas, onde em cada iteração foram 10 minutos de simulação.
-Em todas as etapas, utilizamos um grafo com 8 vértices e 16 arestas, como pode ser visto na Figura \ref{fig:mapa_validacao}.
+Foram executadas 20 iterações de cada uma dos cenários, onde em cada iteração corresponde a 10 minutos de simulação.
+Em todos os cenários, utilizamos um grafo com 8 vértices e 16 arestas, como pode ser visto na Figura \ref{fig:mapa_validacao}.
 O grafo é direcionado, onde cada aresta na verdade representa duas, sendo uma entrando e outra saíndo de seus vértices, ou seja, simbolizam vias de mão dupla.
 
 \begin{figure}[ht]
@@ -704,28 +712,29 @@ O grafo da Figura \ref{fig:mapa_validacao} retrata o mapa viário da cidade simu
 \begin{itemize}
     \item Os vértices representam início e/ou fim de uma ou mais ruas.
 
-    \item As arestas representam as ruas da cidade.
+    \item As arestas representam segmentos de vias da cidade.
 
-    \item Todas as arestas possuem comprimento 1, por isso, a cada ciclo de simulação, caso seja possível, um carro percorre uma aresta.
+    \item Todas as arestas possuem comprimento 1. Por isso, a cada ciclo de simulação, caso seja possível, um carro percorre uma aresta.
 \end{itemize}
 
 Além disso, adotamos a seguinte forma para separar vértices e arestas que desempenham papel importante neste experimento:
 
 \begin{itemize}
-    \item A aresta pontilhada amarela representa a via da cidade que será fechada durante a simulação (essa aresta só será afetada nas etapas que posssuem tal evento).
+    \item A aresta pontilhada amarela representa a via da cidade que será fechada durante a simulação (essa aresta só será afetada nos cenários que posssuem tal evento).
 
-    \item O vértice cinza representa a origem de todas as viagens simuladas.
+    \item O vértice 1 (em cinza) representa a origem de todas as viagens simuladas.
 
-    \item O vértice alaranjado representa o destino das viagens.
+    \item O vértice 7 (em alaranjado) representa o destino das viagens.
 
-    \item O vértice azul representa o local da cidade que contém uma PMV que alertará os motoristas sobre possíveis anomalias nas vias.
+    \item O vértice 2 (em azul) representa o local da cidade que contém uma PMV que alertará os motoristas sobre possíveis anomalias nas vias.
 \end{itemize}
 
-Em todas as iterações de todas as etapas, simulamos um total de 100 viagens partindo do vértice 1 até o 7.
+Em todas as iterações de todos os cenários, simulamos um total de 100 carros realizando viagens partindo do vértice 1 até o 7, onde metade dos carros partem no início da simulação e o restante após 50 ciclos
+de execução.
 Como o intuito desse experimento era validar o comportamento da implementação do ambiente de experimentação como um todo, antes de apresentar os resultados obtidos, descrevemos o resultado esperado para
-cada uma das etapas a seguir.
+cada um dos cenários a seguir.
 
-Na Figura \ref{fig:mapa_etapa1}, pode-se ver o caminho esperado que os carros percorrecem na primeira etapa do experimento, onde não há a presença de eventos de fechamento de vias, e muito menos PMV.
+Na Figura \ref{fig:mapa_etapa1}, pode-se ver o caminho esperado que os carros percorrecem no primeiro cenário do experimento, onde não há a presença de eventos de fechamento de vias, e muito menos PMV.
 As arestas em \textbf{roxo} representam o trajeto do carro, as demais arestas não utilizadas foram removidas do grafo a título de legibilidade.
 Note que ao chegar no vértice 3, ele sempre optará o caminho seguindo pelo vértice 4.
 Isso acontece porque todas as arestas possuem o mesmo comprimento (ambos são um caminho mais curto até o destino), sendo critério de desempate o menor índice.
@@ -733,12 +742,12 @@ Isso acontece porque todas as arestas possuem o mesmo comprimento (ambos são um
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{figuras/mapa_etapa1.png}
-	\caption{Trajeto esperado da etapa 1 do experimento.}
+	\caption{Trajeto esperado do cenário 1 do experimento.}
 	\label{fig:mapa_etapa1}
 \end{figure}
 
-Na Figura \ref{fig:mapa_etapa2}, o trajeto esperado para que o carro percorra na etapa 2 do experimento é apresentado.
-Nessa etapa, temos uma via fechada, sendo ela entre os vétices 4 e 5, e nenhuma PMV para auxiliar os motoristas.
+Na Figura \ref{fig:mapa_etapa2}, o trajeto esperado para que o carro percorra no cenário 2 do experimento é apresentado.
+Nesse cenário, temos uma via fechada, sendo ela entre os vétices 4 e 5, e nenhuma PMV para auxiliar os motoristas.
 Em \textbf{roxo} podemos ver as arestas que serão percorridas inicialmente;
 em cor \textbf{preta}, as arestas que faziam parte do caminho inicialmente calculado, mas que não foram percorridas devido ao fechamento da via (aresta tracejada);
 e em cor \textbf{verde}, o caminho recalculado após se deparar com o fechamento de via no vértice 4.
@@ -746,29 +755,29 @@ e em cor \textbf{verde}, o caminho recalculado após se deparar com o fechamento
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{figuras/mapa_etapa2.png}
-	\caption{Trajeto esperado da etapa 2 do experimento.}
+	\caption{Trajeto esperado do cenário 2 do experimento.}
 	\label{fig:mapa_etapa2}
 \end{figure}
 
-Por fim, na Figura \ref{fig:mapa_etapa3}, temos a dinâmica esperada para a etapa 3, onde existe o fechamento da via, contudo a PMV se faz presente para notificar os condutores de veículos.
+Por fim, na Figura \ref{fig:mapa_etapa3}, temos a dinâmica esperada para o cenário 3, onde existe o fechamento da via. Contudo, a PMV se faz presente para notificar os condutores de veículos.
 Mais uma vez, a via representada pela aresta 4 -> 5 é fechada, e a PMV é posicionada no vértice 2 representado em azul.
 Utilizamos aqui a mesma notação anterior.
 A aresta \textbf{roxa} representa o caminho inicialmente calculado e que foi percorrido;
-as arestas \textbf{pretas} faziam parte do caminho inicial, mas nesse caso não foram percorridas devido o fechamento da via e da PMV;
+as arestas \textbf{pretas} faziam parte do caminho inicial, mas nesse caso não foram percorridas devido ao fechamento da via e da PMV;
 e as \textbf{verdes} simbolizam o novo caminho recalculado após o motorista ter sido notificado pela PMV.
-Devido o modelo implementado, ainda assim, era esperado que alguns carros percorresem o fluxo apresentado na Figura \ref{fig:mapa_etapa2}, já que acreditamos que nem todos os motoristas que vissem
+No modelo implementado, ainda assim, era esperado que alguns carros percorresem o fluxo apresentado na Figura \ref{fig:mapa_etapa2}, já que acreditamos que nem todos os motoristas que vissem
 a notificação iriam de fato mudar o seu trajeto.
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\textwidth]{figuras/mapa_etapa3.png}
-	\caption{Trajeto esperado da etapa 3 do experimento.}
+	\caption{Trajeto esperado do cenário 3 do experimento.}
 	\label{fig:mapa_etapa3}
 \end{figure}
 
-As três etapas desse experimento foram realizadas em dois \textit{laptops} com 8 CPUs virtuais (1.80 GHz) e 8 GB de memória RAM.
+Os três cenários desse experimento foram realizados em dois \textit{laptops} com 8 CPUs virtuais (1.80 GHz) e 8 GB de memória RAM.
 Diferente do experimento apresentado na Seção \ref{sec:exp_smart_parking}, o foco desse experimento não é analisar o desempenho da plataforma, mas sim uma análise funcional. 
-O passo a passo para execução desse experimento de validação foi o seguinte:
+Os passos para execução desse experimento de validação foram os seguintes:
 
 \begin{enumerate}
     \item Executar uma instância em modo de produção da plataforma InterSCity em um \textit{laptop}.
@@ -777,13 +786,13 @@ O passo a passo para execução desse experimento de validação foi o seguinte:
 
     \item Configurar rede local entre os \textit{laptops}, conectados de maneira cabeada via ethernet.
 
-    \item Realizar a simulação do cenário de tráfego de carros inteligente.
+    \item Realizar a simulação do cenário de tráfego inteligente de carros.
 
     \item Analizar os resultados obtidos ao final da simulação.
 \end{enumerate}
 
-A Figura \ref{fig:distancia_validacao}, apresenta a distância média percorrida pelos carros simulados nas três etapas deste experimento.
-De acordo com as nossas hipóteses, esperávamos que no cenário sem evento de fechamento de via e sem PMV para notificar os motoristas, percorressem 6 arestas, no cenário com evento e sem PMV
+A Figura \ref{fig:distancia_validacao}, apresenta a distância média percorrida pelos carros simulados nos três cenários deste experimento.
+De acordo com as nossas hipóteses, esperávamos que os carros no cenário sem evento de fechamento de via e sem PMV para notificar os motoristas, percorressem 6 arestas, no cenário com evento e sem PMV
 percorressem 8 arestas e no cenário com evento e PMV percorressem entre 6 e 8 arestas (alguns veículos ignoram as notificações).
 Nossas hipóteses foram confirmadas, conforme o gráfico.
 
@@ -795,7 +804,7 @@ Nossas hipóteses foram confirmadas, conforme o gráfico.
 \end{figure}
 
 Uma análise semelhante foi realizada com a duração das viagens simuladas, como pode ser visto na Figura \ref{fig:duracao_validacao}.
-A duração média das viagens simuladas nas três etapas do experimento são apresentadas no gráfico.
+As durações média das viagens simuladas nos três cenários do experimento são apresentadas no gráfico.
 Uma viagem dura sempre 2 ciclos de execução (criação e destruição do ator) mais o tempo utilizado para percorrer as arestas (uma aresta por ciclo de execução, já que possuem comprimento unitário)
 e o recálculo de um caminho dura um ciclo.
 Por isso, esperávamos que para o cenário sem evento de fechamento de via durasse 8 ciclos (2 pelo ciclo de vida + 6 arestas);
@@ -818,10 +827,10 @@ trabalho pioneiro.
 \subsubsection{Cidade de São Paulo}
 \label{sec:smart_traffic}
 
-Tendo em vista que a implementação dos modelos utilizados para este cenário e a integração estavam funcionando dentro do esperado, realizamos um outro experimento, envolvendo o mesmo cenário de tráfego de
-carros inteligente, mas dessa vez em uma escala maior, com dados abertos da cidade de São Paulo.
+Tendo em vista que a implementação dos modelos utilizados para este cenário e a integração estavam funcionando dentro do esperado, realizamos um outro experimento, envolvendo o mesmo cenário de tráfego 
+inteligente de carros, mas dessa vez em uma escala maior, com dados abertos da cidade de São Paulo.
 
-Dividimos esse experimento em três etapas novamente, quanto ao número de eventos de fechamento de via e PMVs. Elas se deram da seguinte forma:
+Dividimos esse experimento em três cenários novamente, quanto ao número de eventos de fechamento de via e PMVs. Eles se deram da seguinte forma:
 
 \begin{enumerate}
     \item Sem eventos de fechamento de via e sem PMVs
@@ -831,11 +840,12 @@ Dividimos esse experimento em três etapas novamente, quanto ao número de event
     \item Com eventos de fechamento de via e 7 PMVs
 \end{enumerate}
 
-Foram executadas 20 iterações de cada uma das etapas, onde em cada iteração simulamos 1 hora e 30 minutos.
+Foram executadas 20 iterações de cada uma dos cenários e, em cada iteração, simulamos 1 hora e 30 minutos.
 Neste experimento, utilizamos dados do OpenStreet Maps e a pesquisa Origem-Destino realizado pela companhia de metrô da cidade de São Paulo em 2007 para definição do cenário a ser simulado.
 A seguir mais detalhes sobre esses dados.
 
-Dessa vez não utilizamos o mapa viário completo da cidade de São Paulo, realizamos um recorte de um trecho da avenida Rebouças com um raio de 5km, próximo ao cruzamento da avenida Paulista.
+Dessa vez, não utilizamos o mapa viário completo da cidade de São Paulo.
+Realizamos um recorte de um trecho da avenida Rebouças com um raio de 5km, próximo ao cruzamento da avenida Paulista.
 O intuito desse recorte era reduzir o escopo do experimento para enfatizar o impacto das PMVs naquela região.
 Para a criação das viagens de carros a serem realizadas, utilizamos os mesmos dados da pesquisa OD (Origem-Destino) apresentada no experimento de estacionamento inteligente.
 Contudo, como não utilizamos o mapa completo da cidade, filtramos apenas as viagens em que a origem e o destino pertencessem ao recorte do mapa realizado.
@@ -845,32 +855,29 @@ Todos os \textit{scripts} utilizados para filtrar os dados de entrada estão dis
     \item \textbf{OpenStreet Maps}: para criar o grafo viário da cidade de São Paulo usado na simulação, utilizamos o mapa do OpenStreet Maps.
         Este mapa contém todas as ruas e junções da cidade, em conjunto com um vasto número de atributos, como comprimento, capacidade e velocidade limite.
         Tais informações são usadas pelo simulador para definir as rotas percorridas pelos carros durante a realização de suas viagens, bem como simular o impacto do tráfego na velocidade dos carros.
-        Neste experimento, diferente do apresentado na seção anterior, não utilizamos o mapa viário completo da cidade de São Paulo.
-        Realizamos um recorte de um trecho da avenida Rebouças com um raio de 5km, próximo ao cruzamento da avenida Paulista.
 
     \item \textbf{Pesquisa Origem-Destino (OD)}: criamos as viagens de carro simuladas com base na pesquisa OD realizada pela Companhia de Metrô de São Paulo.
         \footnote{Pesquisa Origem-Destino - http://goo.gl/Te2SX7.}
         Essa pesquisa descreve as viagens de 200.000 pessoas e extrapola os dados para toda a população da cidade.
         A pesquisa inclui informações sobre a origem, o destino, o modo de transporte e a hora de partida.
         Esses dados foram empregados para definir o comportamento dos agentes do tipo carro na simulação.
-        Por não termos utilizado o mapa completo da cidade, filtramos apenas as viagens em que a origem e destino pertencessem ao recorte do mapa realizado.
         Simulamos o tráfego em São Paulo durante o horário das 8h às 9h30.
         Na pesquisa OD, há 2.210 viagens de carro que começam durante o intervalo de tempo considerado e no recorte do mapa feito.
 \end{itemize}
 
-Na etapa 3 deste experimento, onde fizemos uso de 7 PMVs, posicionamos os mesmos nas principais vias presentes no recorte do mapa, como pode ser visto na Figura \ref{fig:pos_pmvs}.
+No cenário 3 deste experimento, onde fizemos uso de 7 PMVs, posicionamos os mesmos nas principais vias presentes no recorte do mapa, como pode ser visto na Figura \ref{fig:pos_pmvs}.
 Decidimos sinalizar tais vias acreditando que por possuírem um maior fluxo de carros, possivelmente impactariam nas rotas de mais carros.
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=.7\textwidth]{figuras/pmvs_locations.png}
-	\caption{Posicionamento das PMVs no experimento de tráfego de carros inteligente.}
+	\caption{Posicionamento das PMVs no experimento de tráfego inteligente de carros.}
 	\label{fig:pos_pmvs}
 \end{figure}
 
-Na Figura \ref{fig:eventos}, pode-se ver os trechos de vias que foram fechadas nas etapas 2 e 3 deste experimento.
-No grafo do mapa viário da cidade gerado a partir do OpenStreet Maps, uma mesma via é formada de várias pequenas arestas (trechos de via).
-Visando enfatizar um evento como um acidente de carro fatal ou um possível alagamento na região, fechamos um conglomerado de arestas nas proximidades das avenidas Rebouças e Paulista.
+Na Figura \ref{fig:eventos}, pode-se ver os trechos de vias que foram fechadas nos cenários 2 e 3 deste experimento.
+No grafo do mapa viário da cidade gerado a partir do OpenStreet Maps, uma mesma via é formada de várias pequenas arestas (segmentos de via).
+Visando enfatizar um evento como um acidente de carro fatal ou um possível alagamento na região, fechamos um conjunto de arestas nas proximidades das avenidas Rebouças e Paulista.
 
 \begin{figure}[ht]
 	\centering
@@ -882,11 +889,11 @@ Visando enfatizar um evento como um acidente de carro fatal ou um possível alag
 Sabendo o local dos eventos de fechamento de vias e o posicionamento das PMVs, esperávamos que a notificação prévia dos motoristas sobre o acidente reduzisse a média do tempo de viagem dos motoristas
 com relação a não existência das PMVs.
 Consideramos que, pelo fato das avenidas Rebouças e Paulista serem bem movimentadas, muitas das viagens simuladas neste experimento passassem por aquele trecho. 
-Contudo, a utilização das PMVs não deveria melhorar a média da duração das viagens em relação a etapa onde não acontece nenhum evento de fechamento de via.
+Contudo, a utilização das PMVs não deveria melhorar a média da duração das viagens em relação ao cenário onde não acontece nenhum evento de fechamento de via.
 
-As três etapas desse experimento foram realizadas novamente em dois \textit{laptops} com 8 CPUs virtuais (1.80 GHz) e 8 GB de memória RAM.
+Os três cenários desse experimento foram realizadas novamente em dois \textit{laptops} com 8 CPUs virtuais (1.80 GHz) e 8 GB de memória RAM.
 Mais uma vez, diferente do experimento apresentado na Seção \ref{sec:exp_smart_parking}, o foco desse experimento não é analisar o desempenho da plataforma, mas sim uma análise funcional. 
-O passo a passo para execução desse experimento foi o seguinte:
+Os passos para execução desse experimento foram os seguintes:
 
 \begin{enumerate}
     \item Executar uma instância em modo de produção da plataforma InterSCity em um \textit{laptop}.
@@ -900,18 +907,18 @@ O passo a passo para execução desse experimento foi o seguinte:
     \item Analizar os resultados obtidos ao final da simulação.
 \end{enumerate}
 
-A Figura \ref{fig:duracao_total}, apresenta a duração média das viagens de carro simuladas nas três etapas deste experimento.
-No eixo Y, a duração é apresentada em segundos (ciclo de execução da simulação: 1 ciclo = 1 segundo), e no eixo X os diferentes cenários utilizados em cada uma das 3 etapas.
+A Figura \ref{fig:duracao_total}, apresenta a duração média das viagens de carro simuladas nos três cenários deste experimento.
+No eixo X, a duração é apresentada em segundos (ciclo de execução da simulação: 1 ciclo = 1 segundo), e no eixo Y os três cenários do experimento.
 Como podemos ver no gráfico apresentado, em geral, a média do tempo de duração das viagens não passou de 6 minutos.
 Isso pode ter ocorrido pelo fato das viagens nessa região serem mais curtas, ou por não terem viagens suficientes para gerar congestionamentos, já que filtramos apenas as viagens que se iniciavam e
 terminavam dentro do recorte do mapa utilizado.
-Outro fator importante que nos chamou a atenção, foi a média da duração das viagens da etapa 3 (onde existem vias fechadas e o auxilio de PMVs) ser menor do que da etapa 1 (onde não existe qualquer
+Outro fator importante que nos chamou a atenção, foi a média da duração das viagens do cenários 3 (onde existem vias fechadas e o auxilio de PMVs) ser menor do que do cenário 1 (onde não existe qualquer
 incidente).
 Após analisar os dados, percebemos que ao recalcular a rota, na presença de uma PMV, os carros se distribuíam de uma melhor forma pela malha viária do cenário utilizado pelo experimento, com isso,
 evitavam congestionamentos que ocorriam anteriormente.
 Sendo isso um alvo de possível melhoria no simulador, já que ao criar o ator, apenas um dos menores caminhos entre a origem e destino do carro é calculado e utilizado, podendo essa rota coincidir entre
 múltiplos atores com origem e destinos similares, assim, deixando outros caminhos mais curtos inutilizados.
-Todavia, como esperado, a etapa 2, onde temos fechamento de vias mas não temos PMVs, teve a maior média de duração das viagens.
+Todavia, como esperado, o cenário 2, onde temos fechamento de vias mas não temos PMVs, teve a maior média de duração das viagens.
 
 \begin{figure}[ht]
 	\centering
@@ -921,12 +928,12 @@ Todavia, como esperado, a etapa 2, onde temos fechamento de vias mas não temos 
 \end{figure}
 
 Para garantirmos uma melhor acurácia na análise dos resultados obtidos, filtramos apenas as viagens que foram influencidas de alguma forma pelo fechamento de vias e/ou PMVs.
-Isso porque percebemos a existência de viagens que não eram modificadas em nenhuma das etapas do experimento, ou seja, a sua duração era sempre a mesma.
+Isso porque percebemos a existência de viagens que não eram modificadas em nenhum dos cenários do experimento, ou seja, a sua duração era sempre a mesma.
 Na Figura \ref{fig:duracao_filtered}, apresentamos o mesmo gráfico discutido anteriormente, só que incluindo apenas as viagens que foram afetadas.
 Agora analisando o gráfico com as viagens afetadas, obtivemos o resultado esperado no início do experimento.
-A etapa 1, onde não há vias fechadas, teve o menor tempo médio de duração de viagens, sendo esse o nosso limite inferior.
-A etapa 2, onde vias foram fechadas, o pior tempo médio de viagem foi obtido, sendo o limite superior.
-E a etapa 3, onde introduzimos as PMVs para auxiliar os motoristas na decisão da melhor rota a seguir, apresentou um tempo médio de viagem ligeiramente menor do que a etapa 2 e maior do que a etapa 1.
+O cenário 1, onde não há vias fechadas, teve o menor tempo médio de duração de viagens, sendo esse o nosso limite inferior.
+O cenário 2, onde vias foram fechadas, o pior tempo médio de viagem foi obtido, sendo o limite superior.
+E o cenário 3, onde introduzimos as PMVs para auxiliar os motoristas na decisão da melhor rota a seguir, apresentou um tempo médio de viagem ligeiramente menor do que o cenário 2 e maior do que o cenário 1.
 
 \begin{figure}[ht]
 	\centering
@@ -935,12 +942,12 @@ E a etapa 3, onde introduzimos as PMVs para auxiliar os motoristas na decisão d
 	\label{fig:duracao_filtered}
 \end{figure}
 
-Contudo, a melhora de aproximadamente 5\% na média do tempo de duração da viagem da etapa 3 com relação a etapa 2 não foi um resultado expressivo.
+Contudo, a melhora de aproximadamente 5\% na média do tempo de duração da viagem do cenário 3 com relação ao cenário 2 não foi um resultado expressivo.
 Avaliamos que alguns fatores podem ter influenciado nesse resultado, sendo a maioria deles voltado para os dados utilizados para a definicação do cenário de simulação deste experimento.
 O posicionamento das PMVs pode não ter sido o ideal, já que não foi realizada uma análise prévia de onde passariam a maior parte dos carros.
 O conjunto de viagens simulados após recortar o mapa da cidade de São Paulo pode não ter sido representativo, a decisão de reduzir o mapa para facilitar a visualização do impacto do fechamento de vias
 e PMVs pode não ter sido boa ideia.
-Além disso, os resultados obtidos podem ter sido influenciados devido a infraestrutura simples utilizada com apenas dois \textit{laptops}, já que em cenários realistas muitos recursos computationais são
+Além disso, os resultados obtidos podem ter sido influenciados devido à infraestrutura simples utilizada com apenas dois \textit{laptops}, já que em cenários realistas muitos recursos computationais são
 necessários, como memória e largura de banda da rede.
 
 
@@ -970,11 +977,11 @@ tarefas pode se tornar um problema.
 Tanto que não foi necessária a implementação desse componente no segundo estudo de caso, tendo em vista que as ferramentas já atendiam os requisitos de integração.
 Isso pode ser atribuído ao fato de ambas as ferramentas (InteSCSimulator e InterSCity) serem mantidas pelo nosso grupo de pesquisa, onde tivemos a liberdade de evoluir o
 que foi preciso nas próprias ferramentas para facilitar a integração.
-Em um contexto onde não existe essa flexibilidade o desafio se tornaria bem mais complexo.
+Em um contexto onde não existisse essa flexibilidade, o desafio se tornaria bem mais complexo.
 
 Mesmo assim, enfrentamos problemas principalmente com a escalabilidade da solução.
 Em experimentos anteriores e isolados, foi demonstrado que ambas as ferramentas eram escaláveis, se comportando bem diante de uma grande carga de trabalho.
-Entretanto, a integração traz alguns elementos extras que por menor que sejam interferem em cenários de larga escala.
+Entretanto, a integração traz alguns elementos extras que, por menor que sejam, interferem em cenários de larga escala.
 Em experimentos na escala de uma cidade como São Paulo, qualquer mínimo detalhe é potencializado.
 Semanticamente não tivemos muitos problemas, já que ambas as ferramentas foram implementadas seguindo conceitos similares, devido a própria sinergia do grupo de
 pesquisa.
@@ -992,12 +999,12 @@ Logo, sempre que possível, transferir responsabilidades para ferramentas de ter
 própria solução, é desejável.
 
 Nesse processo de melhoria da escalabilidade da solução integrada, várias mudanças foram feitas em ambas as ferramentas.
-Foram encontrados problemas de escalabilidade antes não evidenciados por outros experimentos isolados, demonstrado que a solução de ambiente de experimentação para
-plataformas de Cidades Inteligentes atingiu seus objetivos, apontando melhorias nos sistemas que só seriam evidenciadas ao enfrentar cargas de trabalho à nível de uma
+Foram encontrados problemas de escalabilidade antes não evidenciados por outros experimentos isolados, demonstrando que a solução de ambiente de experimentação para
+plataformas de Cidades Inteligentes atingiu seus objetivos, apontando melhorias nos sistemas que só seriam evidenciadas ao enfrentar cargas de trabalho da magnitude de uma
 cidade como São Paulo.
 
 Na plataforma InterSCity, implementações envolvendo técnicas para armazenamento em cache de dados mais utilizados foram feitas.
-Ademais, melhorias envolvendo a automatização da implantação do plataforma foram realizadas.
+Ademais, melhorias envolvendo a automatização da implantação da plataforma foram realizadas.
 Já no InterSCSimulator, encontramos alguns problemas na implementação dos modelos apresentados que causaram problemas de escalabilidade.
 Ou seja, dependendo do cenário e de como foi implementado, apenas reduzir a complexidade do componente de integração (até mesmo a não existência) ainda não é a solução.
 Portanto, poder modificar as próprias ferramentas é algo interessante, haja vista que a forma em que os modelos, métodos e funcionalidades foram implementados podem não
