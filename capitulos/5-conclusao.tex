@@ -15,24 +15,25 @@ A proposta de arquitetura para criação de um ambiente simulado de experimenta�
 realizar experimentos de diferentes naturezas utilizando implementações feitas a partir da sistematização guiada pela solução pensada.
 Durante a pesquisa, percebemos que a utilização de simulação é uma saída para a realização de experimentos na escala de grandes cidades, sem a necessidade de muitos investimentos em \textit{testbeds} reais.
 A experimentação de tecnologias ainda não difundidas ou até mesmo inexistentes, como por exemplo o uso de Placas de Mensagens Variadas (PMVs) notificando motoristas
-em tempo real sobre problemas no trânsito, carros autônomos, estacionamentos inteligentes, dentre outros nos aproximou da realidade, fazendo-nos acreditar nas diversas possibilidades quanto ao
-investimento na pesquisa de Cidades Inteligentes.
+em tempo real sobre problemas no trânsito, carros autônomos, estacionamentos inteligentes, dentre outros, nos aproxima da realidade onde tais tecnologias farão parte do nosso cotidiano, fazendo-nos
+acreditar nas diversas possibilidades quanto ao investimento na pesquisa de Cidades Inteligentes.
 
 Concluímos também que a tarefa de criar um ambiente de experimentação envolvendo a integração de ferramentas não é trivial, corroborando com a literatura.
 Apesar de ambas as ferramentas utilizadas para implementação da arquitetura proposta serem desenvolvidas pelo nosso grupo de pesquisa, encontramos diversos entraves durante o processo.
 Esses problemas nos mostraram a importância da utilização de ferramentas de código aberto, pois muitas vezes o componente de integração, introduzido pela nossa proposta de solução, não é capaz de
-solucionar problemas inerentes as ferramentas.
+solucionar problemas inerentes às ferramentas, necessitando modificá-las.
 Problemas esses que, em geral, são evidenciados somente em cenários similares ao contexto enfrentado por metrópoles, demonstrando a importância da realização desse tipo de experimento durante o ciclo de
 desenvolvimento de plataformas para Cidades Inteligentes.
 
-Ademais vimos que, apenas a existência de um ambiente simulado que permita a realização de experimentos em escalas maiores não soluciona todos os problemas, é necessário a definição precisa do cenário
-de simulação através de dados reais de cidades, portanto, esse elemento é de suma relevância.
-Como apresentado na Seção \ref{sec:smart_traffic}, os resultados obtidos no segundo estudo de caso não foram melhores devido o não conhecimento detalhado dos dados de entrada utilizados.
+Ademais, vimos que apenas a existência de um ambiente simulado que permita a realização de experimentos em escalas maiores não soluciona todos os problemas.
+É necessária a definição precisa do cenário de simulação através de dados reais de cidades.
+Portanto, esse elemento é de suma relevância.
+Como apresentado na Seção \ref{sec:smart_traffic}, os resultados obtidos no segundo estudo de caso não foram melhores devido ao não conhecimento detalhado dos dados de entrada utilizados.
 Outro ponto importante na realização de experimentos é a automatização desse processo, contribuindo com trabalhos que possam ser derivados através da reprodução dos mesmos, fazendo uso de ferramentas
 e técnicas de infraestrutura como código (IaC).
 
 Por fim, utilizando o ambiente de experimentação simulado desenvolvido neste trabalho, publicamos o artigo \textit{Design and evaluation of a scalable smart city software platform with
-large-scale simulations}\footnote{https://www.sciencedirect.com/science/article/pii/S0167739X18307301} juntamente com colegas do nosso grupo de pesquisa, na revista \textit{Future Generation of
+large-scale simulations}\citep{esposte_2019} juntamente com colegas do nosso grupo de pesquisa, na revista \textit{Future Generation of
 Computer Systems} edição 93 que será publicada em abril de 2019.  
 Essa publicação em uma revista bem conceituada foi de suma importância para demostrarmos que a abordagem apresentada neste estudo é factível e inovadora na área de Cidades Inteligentes.
 
@@ -44,11 +45,11 @@ Essa publicação em uma revista bem conceituada foi de suma importância para d
 A primeira limitação identificada é o fato da proposta de solução apresentada não ter sido validada com outras ferramentas além do InterSCSimulator e da InterSCity.
 Essa validação seria interessante para reafirmarmos que a solução proposta tem um âmbito genérico, contemplando quaisquer ferramentas.
 Ainda sobre a arquitetura de integração, não tivemos a oportunidade de implementar um módulo de tradução semântica, já que ambas as ferramentas tinham conceitos similares implementados.
-Sabemos que o mesmo é de suma importância em casos onde as ferramentas não são desenvolvidas pelo mesmo grupo de pessoas.
+Sabemos que o tal módulo é de suma importância em casos onde as ferramentas não são desenvolvidas pelo mesmo grupo de pessoas.
 
 Além disso, os estudos de casos apresentam algumas limitações, principalmente o que contempla o cenário de tráfego de carros inteligente.
-Como já foi dito, as entradas para a simulação deveriam ter sido melhor analisadas previamente, o que desencadeou a não obtenção de resultados mais expressivos.
-Todavia, acreditamos que apesar dessa limitação, o estudo de caso cumpriu o seu papel que era verificar a viabilidade de execução de experimentos fazendo uso de comandos de atuação no
+Como já foi dito, as entradas para a simulação deveriam ter sido melhor analisadas previamente, o que levou à não obtenção de resultados mais expressivos.
+Todavia, acreditamos que, apesar dessa limitação, o estudo de caso cumpriu o seu papel que era verificar a viabilidade de execução de experimentos fazendo uso de comandos de atuação no
 ambiente simulado.
 
 \section{Trabalhos Futuros}
@@ -73,6 +74,6 @@ Quanto mais cenários de Cidades Inteligentes ao ambiente de experimentação In
 plataforma InterSCity constantemente em condições realistas.
 
 A utilização de outros protocolos de rede para realizar a comunicação entre o simulador e a plataforma também seria algo interessante.
-Neste trabalho utilizamos apenas os protocolos HTTP e AMQP nas implementações dos dois cenários de Cidades Inteligentes, foco do estudo.
+Neste trabalho, utilizamos apenas os protocolos HTTP e AMQP nas implementações dos dois cenários de Cidades Inteligentes, foco do estudo.
 Protocolos como o MQTT\footnote{http://mqtt.org/} e CoAP\footnote{http://coap.technology/} vem sendo amplamente utilizados para a comunicação com dispositivos IoT, conforme as diversas implementações de
 plataformas desse tipo.
