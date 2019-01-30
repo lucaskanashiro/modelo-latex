@@ -444,7 +444,7 @@ Como pode ser visto na Figura \ref{fig:auto-scaling}, dentre os microsserviços 
 
 A Figura \ref{fig:throughput} mostra a taxa de vazão (\textit{throughput}) média da plataforma InterSCity ao longo da duração do experimento.
 A taxa de vazão é definida como a taxa de respostas bem sucedidas recebidas pelo componente de integração.
-O resultado indica que a taxa de vazão corresponde de perto a carga de trabalho gerada, como pode ser visto comparando as Figuras \ref{fig:workload} e \ref{fig:throughput}.
+O resultado indica que a taxa de vazão corresponde de perto à carga de trabalho gerada, como pode ser visto comparando as Figuras \ref{fig:workload} e \ref{fig:throughput}.
 A plataforma foi capaz de lidar com a demanda variável graças à sua escalabilidade e funcionalidade de dimensionamento automático, descritos na Seção \ref{sec:interscity}.
 No entanto, devemos mencionar que a taxa de vazão não correspondeu exatamente à carga de trabalho gerada, pois algumas requisições falharam, representando em média quase 0,6\% de todas as requisições.
 As requisições com falha incluem aquelas que tiveram respostas com um código de erro HTTP, bem como aquelas que não foram concluídos devido a recusa de conexão ou \textit{timeout}.
