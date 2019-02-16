@@ -88,15 +88,15 @@
 % Acrescenta tudo do arquivo .bib
 %\nocite{*}
 
-\title[The shortened title]{The full title, which may be quite,\\ quite long indeed}
-\subtitle{The (optional) subtitle}
+\title[The shortened title]{Experimentação baseada em Simulação em Sistemas para Cidades Inteligentes}
+\subtitle{}
 
-\author[Authors Name]{Authors Name}
+\author[Authors Name]{Lucas Kanashiro}
 
-\institute[USP]{\textbf{Workshop Name} \\ Computer Science Department \\ IME USP}
-%\institute[USP]{\textbf{Orientador:} \\ Computer Science Department \\ IME USP}
+%\institute[USP]{\textbf{Workshop Name} \\ Computer Science Department \\ IME USP}
+\institute[USP]{\textbf{Orientador: Prof. Dr. Fabio Kon} \\ Departamento de Ciência da Computação \\ IME USP}
 
-\date{Month and day, year}
+\date{7 de Março de 2019}
 
 % Coloca a imagem no fundo da página de título
 \bgimage{\includegraphics[width=\paperwidth]{fundo_predios_e_grafo}}
@@ -117,15 +117,15 @@
 %}
 
 % Usado para criar o qrcode com o endereço da apresentação
-\presentationurl{http://interscity.org}
+%\presentationurl{http://interscity.org}
 
 % Inclui o qrcode no sumário da apresentação
-\includeqrcodeintoc
+%\includeqrcodeintoc
 
 % O slide de sumário pode ser dividido em colunas; o parâmetro
 % determina após qual o número da seção fazer a quebra de coluna
 % (use zero para uma coluna ou simplesmente omita este comando).
-\toccolumns{4}
+\toccolumns{8}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -140,165 +140,272 @@
 \customtitlepage
 
 % Slide com o qrcode
-\showqrcode
+%\showqrcode
 
 \begin{frame}{Overview}
   \overview
 \end{frame}
 
+\section{Introdução}
 
-\section{Introduction}
-
-\begin{frame}{Context}
-  \begin{itemize}
-    \item The copyright compromise seeked to balance public and private interests
-    \item Nowadays, changes to the law and technological advances all but destroyed this balance
-    \item[]
-    \item As a reaction, the free software movement was created
-    \begin{itemize}
-      \item Return to sharing (of source code) and to collaboration (exchange of ideas and team work)
-      \item Formalization with the GNU project
-      \item Only really possible when there are favourable conditions for source code exchange
-      \begin{itemize}
-        \item as highlighted by the growth that accompanied the Internet boom
-      \end{itemize}
-    \end{itemize}
-  \end{itemize}
-
+\begin{frame}[plain]
+  \includegraphics[width=\textwidth]{chaotic_city.jpg}
+  {\tiny Fonte: \href{https://www.flickr.com/photos/joiseyshowaa/2402764792/in/photolist-4EjNgb-4PMpwr-dseMM4-o2wJVc-cmJa3q-6mhvwX-9zDqmR-9BM7uJ-9zJBBx-fQetpQ-53jKRx-rbqw9A-F5tZZQ-bWMNF9-4bkrPW-ah98ef-4Do6tv-27JPj4G-Wp2dZ7-9RoTmJ-4hEZQo-zBRL-26Eg3uQ-5y1Bd1-aPujXi-61s8PT-7thSkH-753JxR-9pvEQ4-8VZKNS-b8EWyn-4XH2Zz-8vijrs-85Qjwh-fLoDcx-i8uvZ-s359a-GAoNUV-8A5qDY-ojAZeF-dreQ72-cegU7h-5Yka8U-2FRunS-dovsLg-yzxzG-TTJKuT-6xJa2s-doMGg7-65H6ko}{World Class Traffic Jam} / joiseyshowaa / \href{https://creativecommons.org/licenses/by-sa/2.0/}{CC BY-SA 2.0} }
 \end{frame}
 
 \begin{frame}[plain]
-  \includegraphics[width=\textwidth]{interscity-logo}
+  \includegraphics[width=\textwidth]{smartcity2.jpg}
+    %{\tiny Fonte: \url{http://realtyplusmag.com/wp-content/uploads/2017/07/smartcity.jpg} }
 \end{frame}
 
 \begin{frame}[standout]
-	This is a problem!
+	Como realizar experimentos nesses sistemas na escala de grandes cidades?!
 \end{frame}
 
-\begin{frame}{Goals}
-  \begin{block}{Functional requirements}
+\section{Trabalhos Relacionados}
+
+\begin{frame}{Trabalhos Relacionados}
+    \begin{block}{Desafios em ambiente de experimentação para Cidades Inteligentes}
+        \begin{itemize}
+            \item Escala condizente com as cidades
+            \item Heterogeneidade dos dispositivos de IoT
+            \item Acesso concorrente aos diversos recursos da cidade
+            \item Mobilidade dos recursos da cidade
+            \item Reprodutibilidade desse ambientes
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Trabalhos Relacionados}
+  \begin{block}{Implantação de Infraestrutura de IoT}
     \begin{itemize}
-      \item Integration and Management of \alert{IoT} Devices
-      \item Data Acquisition, Storing, and Processing
-      \item Context-awareness
-      \item City Resource Discovery
-      \item Geolocation-based Services
-      \item External data access
+      \item Pequena escala
+      \item Custo de aquisição, implantação e manutenção
+      \item Menor flexibilidade
+      \item Dificulta a reprodutibilidade
     \end{itemize}
   \end{block}
 \end{frame}
 
-\section{Concepts}
+\begin{frame}{Trabalhos Relacionados}
+  \begin{block}{Uso de simulação}
+    \begin{itemize}
+      \item Simuladores de cidades inteligentes não são de larga escala
+      \item Foco principal é simular diferentes topologias de rede
+      \item Tentativa de representar mobilidade de recursos da cidade
+      \item Não viabiliza execução de comandos de atuação
+    \end{itemize}
+  \end{block}
+\end{frame}
 
-\begin{frame}{Concepts}
-  \begin{columns}[t]
-    \col
-      \begin{coloredblock}{red!90!black}{Functional requirements}
+\begin{frame}{Trabalhos Relacionados}
+\begin{table}[htb!]
+    \centering
+    \resizebox{\textwidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|l|}
+\hline
+    \thead{Ambiente de \\Experimentação}          & \thead{Uso de\\ dispositivos de IoT} & \thead{Uso de\\ simulação} & \thead{Implantação em \\ laboratório} & \thead{Implantação em \\ ambiente externo} & \thead{Larga\\ escala} & \multicolumn{1}{c|}{\thead{Execução de \\ comandos de atuação}} \\ \hline
+\makecell{I3ASensorBed}                        & \textbf{x}                          & \textbf{x}                     & \textbf{x}                          & \textbf{x}                               & \textbf{}                     &                                                                       \\ \hline
+\makecell{Padova Smart City}                   & \textbf{x}                          & \textbf{}                      & \textbf{}                           & \textbf{x}                               & \textbf{}                     &                                                                       \\ \hline
+\makecell{FIT IoT-LAB}                         & \textbf{x}                          & \textbf{}                      & \textbf{}                           & \textbf{x}                               & \textbf{x}                    & \multicolumn{1}{c|}{\textbf{x}}                                       \\ \hline
+\makecell{City of Things}                      & \textbf{x}                          & \textbf{x}                     & \textbf{}                           & \textbf{x}                               & \textbf{}                     &                                                                       \\ \hline
+\makecell{Smart Berlin Testbed}                & \textbf{x}                          & \textbf{}                      & \textbf{}                           & \textbf{x}                               & \textbf{}                     &                                                                       \\ \hline
+\makecell{SmartSantander}                      & \textbf{x}                          & \textbf{}                      & \textbf{}                           & \textbf{x}                               & \textbf{x}                    & \multicolumn{1}{c|}{\textbf{x}}                                       \\ \hline
+\makecell{SmartCampus}                         & \textbf{x}                          & \textbf{}                      & \textbf{x}                          & \textbf{}                                & \textbf{}                     & \multicolumn{1}{c|}{\textbf{x}}                                       \\ \hline
+\makecell{Birmingham Urban \\ Climate Laboratory} & \textbf{x}                          & \textbf{}                      & \textbf{}                           & \textbf{x}                               & \textbf{x}                    &                                                                       \\ \hline
+\makecell{SmartGridLab}                        & \textbf{x}                          & \textbf{}                      & \textbf{x}                          & \textbf{}                                & \textbf{}                     &                                                                       \\ \hline
+\makecell{Street Light Poles}                  & \textbf{x}                          & \multicolumn{1}{l|}{}          & \multicolumn{1}{l|}{}               & \textbf{x}                               & \multicolumn{1}{l|}{}         &                                                                       \\ \hline
+\makecell{OpenMTC}                             & \textbf{x}                          & \multicolumn{1}{l|}{}          & \multicolumn{1}{l|}{}               & \textbf{x}                               & \textbf{x}                    &                                                                       \\ \hline
+\makecell{CityBench}                           & \multicolumn{1}{l|}{}               & \multicolumn{1}{l|}{}          & \multicolumn{1}{l|}{}               & \multicolumn{1}{l|}{}                    & \textbf{x}                    &                                                                       \\ \hline
+\end{tabular}
+    }
+    \caption{Caracterização dos trabalhos relacionados}
+    \label{tab:trabalhos_relacionados}
+\end{table}
+\end{frame}
+
+\begin{frame}[standout]
+	Trabalhos ditos de larga escala não conseguem representar o contexto de grandes cidades!
+\end{frame}
+
+\section{Objetivo}
+
+\begin{frame}
+    \begin{block}{Objetivo Geral}
+        Prover um mecanismo para construção de um \textbf{ambiente de experimentação} de \textbf{larga escala} e \textbf{interativo} para sistemas de Cidades Inteligentes através de \textbf{simulação}.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Objetivos}
+    \begin{block}{Desafios}
         \begin{itemize}
-          \item Integration and Management of IoT Devices
-          \item Data Acquisition, Storing, and Processing
-          \item Context-awareness
-          \item City Resource Discovery
-          \item Geolocation-based Services
-          \item External data access
+            \item Definição de uma arquitetura de software para solução
+            \item Implementação e análise de estudos de caso para validação da solução
+                \begin{itemize}
+                    \item InterSCSimulator
+                    \item Plataforma InterSCity
+                \end{itemize}
         \end{itemize}
-      \end{coloredblock}
-
-    \col
-      \begin{coloredblock}{red!90!black}{Non-functional requirements}
-        \begin{itemize}
-          \item Interoperability
-          \item Scalability
-          \item Security
-          \item Privacy
-          \item Evolvability
-          \item Adaptability
-        \end{itemize}
-      \end{coloredblock}
-  \end{columns}
+    \end{block}
 \end{frame}
 
-\begin{frame}{Theorems and proofs}
-  \pause
-  \begin{theorem}[An example theorem]
-    Theorem\dots
-  \end{theorem}
 
-  \pause
-  \begin{example}[An example of an example]
-    Example\dots
-  \end{example}
+\section{Proposta de Solução}
+\section{Estudos de Caso}
+\section{Conclusão}
 
-  \pause
-  \begin{proof}[An example proof]
-    Proof\dots
-  \end{proof}
-
-  \pause
-  \begin{definition}[An example definition]
-    Definition\dots
-  \end{definition}
-
-  \pause
-  \begin{proposition}[An example proposition]
-    Proposition\dots
-  \end{proposition}
-\end{frame}
-
-\section{Related Works}
-
-\begin{frame}{Related Works}
-\end{frame}
-
-\section{Methodology}
-
-\begin{frame}{Methodology}
-\end{frame}
-
-\section{Results}
-
-\subsection{Validation and Analysis}
-
-\begin{frame}{Validation}
-\end{frame}
-
-\begin{frame}{Case Study}
-\end{frame}
-
-\section{Conclusion and Future works}
-
-\begin{frame}{Conclusion and Future works}
-\end{frame}
-
-\section{References}
-
-\begin{frame}[allowframebreaks]{References}
-  \printbibliography
-\end{frame}
-
-% Recapitulando
-\begin{frame}{\insertshorttitle}
-  \overview
-
-  % \begin{center} acrescenta espaço vertical;
-  % como possivelmente temos bem pouco espaço aqui,
-  % vamos usar centering
-  {
-    \centering\noindent%
-    \url{https://gitlab.com/link-of-your-repository}\par
-  }
-
-\end{frame}
-
-\showqrcode
-
-\appendix
-
-\begin{frame}{Extra info}
-  \begin{itemize}
-    \item It is usually useful to have some extra slides addressing likely questions from the audience at the end of the presentation
-    \item By putting them after the ``appendix'' command, they are not counted in the page count indicator
-  \end{itemize}
-\end{frame}
+%\section{Introduction}
+%
+%\begin{frame}{Context}
+%  \begin{itemize}
+%    \item The copyright compromise seeked to balance public and private interests
+%    \item Nowadays, changes to the law and technological advances all but destroyed this balance
+%    \item[]
+%    \item As a reaction, the free software movement was created
+%    \begin{itemize}
+%      \item Return to sharing (of source code) and to collaboration (exchange of ideas and team work)
+%      \item Formalization with the GNU project
+%      \item Only really possible when there are favourable conditions for source code exchange
+%      \begin{itemize}
+%        \item as highlighted by the growth that accompanied the Internet boom
+%      \end{itemize}
+%    \end{itemize}
+%  \end{itemize}
+%
+%\end{frame}
+%
+%\begin{frame}[plain]
+%  \includegraphics[width=\textwidth]{interscity-logo}
+%\end{frame}
+%
+%\begin{frame}[standout]
+%	This is a problem!
+%\end{frame}
+%
+%\begin{frame}{Goals}
+%  \begin{block}{Functional requirements}
+%    \begin{itemize}
+%      \item Integration and Management of \alert{IoT} Devices
+%      \item Data Acquisition, Storing, and Processing
+%      \item Context-awareness
+%      \item City Resource Discovery
+%      \item Geolocation-based Services
+%      \item External data access
+%    \end{itemize}
+%  \end{block}
+%\end{frame}
+%
+%\section{Concepts}
+%
+%\begin{frame}{Concepts}
+%  \begin{columns}[t]
+%    \col
+%      \begin{coloredblock}{red!90!black}{Functional requirements}
+%        \begin{itemize}
+%          \item Integration and Management of IoT Devices
+%          \item Data Acquisition, Storing, and Processing
+%          \item Context-awareness
+%          \item City Resource Discovery
+%          \item Geolocation-based Services
+%          \item External data access
+%        \end{itemize}
+%      \end{coloredblock}
+%
+%    \col
+%      \begin{coloredblock}{red!90!black}{Non-functional requirements}
+%        \begin{itemize}
+%          \item Interoperability
+%          \item Scalability
+%          \item Security
+%          \item Privacy
+%          \item Evolvability
+%          \item Adaptability
+%        \end{itemize}
+%      \end{coloredblock}
+%  \end{columns}
+%\end{frame}
+%
+%\begin{frame}{Theorems and proofs}
+%  \pause
+%  \begin{theorem}[An example theorem]
+%    Theorem\dots
+%  \end{theorem}
+%
+%  \pause
+%  \begin{example}[An example of an example]
+%    Example\dots
+%  \end{example}
+%
+%  \pause
+%  \begin{proof}[An example proof]
+%    Proof\dots
+%  \end{proof}
+%
+%  \pause
+%  \begin{definition}[An example definition]
+%    Definition\dots
+%  \end{definition}
+%
+%  \pause
+%  \begin{proposition}[An example proposition]
+%    Proposition\dots
+%  \end{proposition}
+%\end{frame}
+%
+%\section{Related Works}
+%
+%\begin{frame}{Related Works}
+%\end{frame}
+%
+%\section{Methodology}
+%
+%\begin{frame}{Methodology}
+%\end{frame}
+%
+%\section{Results}
+%
+%\subsection{Validation and Analysis}
+%
+%\begin{frame}{Validation}
+%\end{frame}
+%
+%\begin{frame}{Case Study}
+%\end{frame}
+%
+%\section{Conclusion and Future works}
+%
+%\begin{frame}{Conclusion and Future works}
+%\end{frame}
+%
+%\section{References}
+%
+%\begin{frame}[allowframebreaks]{References}
+%  \printbibliography
+%\end{frame}
+%
+%% Recapitulando
+%\begin{frame}{\insertshorttitle}
+%  \overview
+%
+%  % \begin{center} acrescenta espaço vertical;
+%  % como possivelmente temos bem pouco espaço aqui,
+%  % vamos usar centering
+%  {
+%    \centering\noindent%
+%    \url{https://gitlab.com/link-of-your-repository}\par
+%  }
+%
+%\end{frame}
+%
+%\showqrcode
+%
+%\appendix
+%
+%\begin{frame}{Extra info}
+%  \begin{itemize}
+%    \item It is usually useful to have some extra slides addressing likely questions from the audience at the end of the presentation
+%    \item By putting them after the ``appendix'' command, they are not counted in the page count indicator
+%  \end{itemize}
+%\end{frame}
 
 \end{document}
