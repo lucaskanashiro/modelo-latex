@@ -251,8 +251,322 @@
 
 
 \section{Proposta de Solução}
+
+\begin{frame}{Requisitos}
+    \begin{block}{Fundamentais}
+        \begin{itemize}
+            \item Modelos aderentes à realidade de uma cidade
+            \item Tempo de execução igual ao tempo real
+            \item Geração de grande massa de dados
+            \item Comunicação em tempo de execução
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Requisitos}
+    \begin{block}{Integração}
+        \begin{itemize}
+            \item Integração semântica
+                \begin{itemize}
+                    \item Recurso da cidade
+                    \item Capacidades inerentes de cada recurso da cidade
+                \end{itemize}
+            \item Interoperabilidade de protocolos de comunicação
+            \item Envio de dados de sensoriamento em tempo real
+            \item Recebimento de dados de atuação em tempo real
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{integration-general-architecture.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}[plain]
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{sequencia_eventos_sensores.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}[plain]
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{sequencia_eventos_atuacao.png}
+    \end{center}
+\end{frame}
+
 \section{Estudos de Caso}
+
+\begin{frame}{Estudos de Caso}
+    \begin{itemize}
+        \item Implementações da solução apresentada
+        \item Visando exercitar principais funcionalidades
+        \item Ferramentas utilizadas
+            \begin{itemize}
+                \item InterSCSimulator
+                \item Plataforma InterSCity
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\subsection{Estacionamento Inteligente}
+
+\begin{frame}{Estacionamento Inteligente}
+    \begin{itemize}
+        \item Busca de vaga de estacionamento disponível ao término da viagem 
+        \item Exercita o serviço de descoberta de recursos da plataforma InterSCity
+        \item Verificar escalabilidade horizontal da plataforma InterSCity
+        \item Modificações realizados no InterSCSimulator
+            \begin{itemize}
+                \item Adição do agente \textit{Parking Controller}
+                \item Modificação do modelo de viagem do agente Carro
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Estacionamento Inteligente}
+    \begin{block}{Fluxo do agente Carro}
+        \begin{enumerate}
+            \item O agente Carro é criado
+            \item O caminho mais curto entre a origem e o destino é calculado
+            \item O agente parte da sua origem no tempo determinado
+            \item Ao chegar no nó anterior ao seu destino, uma vaga de estacionamento disponível é requisitada ao agente \textit{Parking Controller}
+            \item Ao receber a vaga de estacionamento, o seu trajeto é recalculado em direção a ela
+            \item O agente se direciona e estaciona na vaga descoberta
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+    \begin{center}
+        \includegraphics[width=\textwidth]{integration_get_data_smart_parking.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}[plain]
+    \begin{center}
+        \includegraphics[width=\textwidth]{integration_publish_data_smart_parking.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Estacionameto Inteligente}
+    \begin{block}{Experimento}
+        \begin{itemize}
+            \item Cidade de São Paulo
+                \begin{itemize}
+                    \item Pesquisa de Origem e Destino de 2007 (Companhia de Metrô de SP)
+                    \item Zona Azul e \textit{Open Street Maps}
+                \end{itemize}
+            \item 492.976 carros realizando viagens entre 5h40 e 8h40 da manhã
+            \item 467.741 vagas de estacionamento
+            \item 15 rodadas
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Estacionameto Inteligente}
+    \begin{block}{Infraestrutura}
+        \begin{itemize}
+            \item \textit{Google Cloud Platform}
+                \begin{itemize}
+                    \item \textit{Google Kubernetes Engine}
+                \end{itemize}
+            \item Estado inicial
+                \begin{itemize}
+                    \item 4 contêineres \textit{Docker} de cada microsserviço da Plataforma InterSCity
+                \end{itemize}
+            \item Dimensionamento da quantidade de contêineres automática
+                \begin{itemize}
+                    \item 70\% do uso da CPU do contêiner
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{node-pools.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Estacionamento Inteligente}
+     \begin{figure}[ht]
+        \begin{minipage}[b]{0.45\linewidth}
+            \centering
+            \includegraphics[width=\textwidth]{workload.png}
+            \caption{Carga de trabalho}
+        \end{minipage}
+        \hspace{0.5cm}
+        \begin{minipage}[b]{0.45\linewidth}
+            \centering
+            \includegraphics[width=\textwidth]{throughput.png}
+            \caption{Taxa de vazão}
+        \end{minipage}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Estacionamento Inteligente}
+     \begin{figure}[ht]
+        \centering
+        \includegraphics[width=.45\textwidth]{response_time_mean.png}
+        \caption{Tempo de Resposta}
+    \end{figure}
+\end{frame}
+
+\subsection{Tráfego de Carros Inteligente}
+
+\begin{frame}{Tráfego de Carros Inteligente}
+    \begin{itemize}
+        \item Notificar motoristas previamente de eventos no trânsito (acidentes, desastres naturais, manifestações e etc.)
+            \begin{itemize}
+                \item Placas de Mensagens Variadas (PMV)
+            \end{itemize}
+        \item Dados históricos de movimentação de veículos são utilizados para definição de limiares de velocidade média para vias da cidade
+        \item Variações significativas de velocidade média representam anomalias de trânsito
+        \item Análise funcional: atuação em tempo de execução em ambiente simulado
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Tráfego de Carros Inteligente}
+    \begin{block}{Plataforma InterSCity}
+        \begin{itemize}
+            \item Envio de comandos de atuação (\textit{Actuator Controller})
+            \item Serviço de processamento de dados (históricos e de tempo real)
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{InterSCSimulator}
+        \begin{itemize}
+            \item Processamento de comandos de atuação em tempo de execução
+            \item Eventos de trânsito
+            \item Placas de Mensagens Variadas (PMVs)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[plain]
+    \begin{center}
+        \includegraphics[width=\textwidth]{integration-publish-car-position.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}[plain]
+    \begin{center}
+        \includegraphics[width=\textwidth]{integration-actuate-pmv.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Tráfego de Carros Inteligente}
+    \begin{block}{Experimento}
+        \begin{itemize}
+            \item Cidade de São Paulo, recorte na Av. Rebouças próximo a Av. Paulista
+                \begin{itemize}
+                    \item Pesquisa de Origem e Destino de 2007 (Companhia de Metrô de SP)
+                    \item \textit{Open Street Maps}
+                \end{itemize}
+            \item 2.210 carros realizando viagens entre 8h00 e 9h30 da manhã
+            \item 20 rodadas cada um dos cenários
+                \begin{itemize}
+                    \item Sem ocorrência de eventos de fechamento de vias
+                    \item Com ocorrência de eventos de fechamento de vias
+                    \item Com ocorrência de eventos de fechamento de vias e presença de PMVs para notificar motoristas
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Tráfego de Carros Inteligente}
+     \begin{figure}[ht]
+        \begin{minipage}[b]{0.45\linewidth}
+            \centering
+            \includegraphics[width=\textwidth]{pmvs_locations.png}
+            \caption{Posição das PMVs}
+        \end{minipage}
+        \hspace{0.5cm}
+        \begin{minipage}[b]{0.45\linewidth}
+            \centering
+            \includegraphics[width=\textwidth]{events_edges_map.png}
+            \caption{Vias fechadas}
+        \end{minipage}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Tráfego de Carros Inteligente}
+    \begin{block}{Infraestrutura}
+        \begin{itemize}
+            \item 2 \textit{laptops} com:
+                \begin{itemize}
+                    \item 2 CPUs físicas (1.8 Ghz), 8 CPUs virtuais
+                    \item 8 GB de memória RAM
+                    \item Debian testing (Linux 4.15)
+                \end{itemize}
+            \item Um executando o InterSCSimulator e o outro a Plataforma InterSCity
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Tráfego de Carros Inteligente}
+     \begin{figure}[ht]
+        \centering
+        \includegraphics[width=.7\textwidth]{duracao_filtered.png}
+        \caption{Duração das viagens de carro}
+    \end{figure}
+\end{frame}
+
 \section{Conclusão}
+
+\begin{frame}{Conclusão}
+    \begin{itemize}
+        \item A solução apresentada viabilizou a execução de experimentos de larga escala e interativos em sistemas de Cidades Inteligentes através de simulação
+        \item Integração do InterSCSimulator e da plataforma InterSCity foi realizada
+            \begin{itemize}
+                \item Envio/recebimento de dados de sensores
+                \item Envio/recebimento de dados de atuação
+            \end{itemize}
+        \item Estudos de caso demostraram diversos gargalos das ferramentas em ambientes de estresse (escala de uma cidade como São Paulo)
+        \item Apresentou a importância desse tipo de experimentos para sistemas de Cidades Inteligentes
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusão}
+     \begin{figure}[ht]
+        \centering
+        \includegraphics[width=.4\textwidth]{paper.png}
+    \end{figure}
+    
+    \begin{center}
+        \textbf{Paper publicado na FGCS:} \url{https://www.sciencedirect.com/science/article/pii/S0167739X18307301}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Conclusão}
+    \begin{block}{Limitações}
+        \begin{itemize}
+            \item Falta validação da solução proposta com outras ferramentas
+            \item Não necessidade de implementação de módulo de tradução semântica
+            \item Experimento do estudo de caso sobre Tráfego de Carros Inteligente
+                \begin{itemize}
+                    \item Falta de análise aprofundada das entradas da simulação
+                    \item Infraestrutura com poucos recursos computacionais
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Conclusão}
+    \begin{block}{Trabalhos Futuros}
+        \begin{itemize}
+            \item Utilização de diferentes ferramentas
+                \begin{itemize}
+                    \item Possível necessidade de tradutor semântico
+                \end{itemize}
+            \item Implementação de novos cenários de Cidades Inteligentes na solução já integrada
+                \begin{itemize}
+                    \item Identificação de novos gargalos
+                \end{itemize}
+            \item Utilização de outros protocolos para realização da comunicação entres as ferramentas
+        \end{itemize}
+    \end{block}
+\end{frame}
 
 %\section{Introduction}
 %
@@ -399,7 +713,8 @@
 %
 %\showqrcode
 %
-%\appendix
+\customtitlepage
+\appendix
 %
 %\begin{frame}{Extra info}
 %  \begin{itemize}
